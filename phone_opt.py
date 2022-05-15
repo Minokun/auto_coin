@@ -35,6 +35,7 @@ def opt_sys_command(command):
     p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     p.wait()
     result = p.communicate()[0].decode()
+    time.sleep(1.5)
     return result.split('\r\n')
 
 
@@ -90,6 +91,20 @@ def press_back(device_id):
 def mute(device_id):
     press_key(device_id, 164)
 
+
+# 截屏
+def screen_cap(device_id, help_txt=''):
+    png_name = "/sdcard/DCIM/screen_" + device_id + ".png"
+    command = "adb -s %s shell screencap %s" % (device_id, png_name)
+    opt_sys_command(command)
+    return png_name
+
+# 拷贝图片
+def screen_pull(png_name):
+    local_png = "media/" + png_name.split('/')[-1]
+    command = "adb pull %s %s" % (png_name, local_png)
+    opt_sys_command(command)
+    return local_png
 
 # 点击
 def tap(device_id, position):
