@@ -29,11 +29,14 @@ app_activity_name = {
     "dragon_read": "com.dragon.read/.pages.main.MainFragmentActivity"
 }
 
-# 多设备装饰器 带这个的装饰器会直接运行不需要调用
-def multiple_device(device_list):
+
+# 多设备装饰器 一定要注意参数顺序要一样
+def multiple_device(device_list, time_period=0):
     def _opt(func):
+        argv = [i for i in [device_list, time_period] if i]
         for device_id in device_list:
-            func(device_id)
+            argv[0] = device_id
+            func(*argv)
     return _opt
 
 # 执行系统命令
@@ -41,7 +44,7 @@ def opt_sys_command(command):
     p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     p.wait()
     result = p.communicate()[0].decode()
-    time.sleep(1.5)
+    time.sleep(1)
     return result.split('\r\n')
 
 
@@ -54,6 +57,8 @@ def get_all_device_id():
             device_id_list.append(i.split('\t')[0])
     return device_id_list
 
+
+CurrentDeviceList = get_all_device_id()
 
 # 按键
 def press_key(device_id, key):
@@ -99,7 +104,7 @@ def mute(device_id):
 
 
 # 截屏
-def screen_cap(device_id, help_txt=''):
+def screen_cap(device_id):
     png_name = "/sdcard/DCIM/screen_" + device_id + ".png"
     command = "adb -s %s shell screencap %s" % (device_id, png_name)
     opt_sys_command(command)

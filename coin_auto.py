@@ -34,6 +34,7 @@ class ArticleLiteOpt:
         self.ads_shut = (975, 160)
 
     def start_article_app(self):
+        @multiple_device(device_list=self.device_id_list)
         def _opt(device_id):
             start_app(device_id, self.app_name)
             # 启动后识别屏幕顶部 如果有跳过广告 则点击
@@ -49,11 +50,10 @@ class ArticleLiteOpt:
                     tap(device_id, (position_x, position_y))
                     break
 
-        for device_id in self.device_id_list:
-            _opt(device_id)
 
     def shut_app(self):
         # 关掉app
+        @multiple_device(device_list=self.device_id_list)
         def _opt(device_id):
             shut_app(device_id, self.app_name)
 
@@ -99,13 +99,13 @@ class ArticleLiteOpt:
                 position = i[0][0]
         return position
 
-    def browser_article(self, time_period=15000 * 60):
+    def browser_article(self, time_period=900000):
         # 浏览文章
-        @multiple_device(device_list=self.device_id_list)
+        @multiple_device(device_list=self.device_id_list, time_period=time_period)
         def _opt(device_id, time_period):
             per_time = 2 * 60 * 1000
-            num = math.floor(time_period / per_time)
-            print("即将总共循环浏览%s次" % str(num + 1))
+            num = math.floor(time_period / per_time) + 1
+            print("将循环浏览%s次" % str(num))
             n = 1
             for i in range(num):
                 print("第%s次" % str(n))
@@ -161,17 +161,17 @@ class ArticleLiteOpt:
     def look_goods(self):
         pass
 
-def auto_article_lite():
-    # 今日头条极速版刷金币
-    article_lite_opt = ArticleLiteOpt()
-    # 启动app
-    article_lite_opt.start_article_app()
-    # time.sleep(2)
-    # 浏览首页阅读文章
-    # article_lite_opt.browser_article(time_period=20 * 60 * 1000)
-    # 开宝箱
-    article_lite_opt.coin_box()
+    def auto_article_lite(self):
+        # 启动app
+        self.start_article_app()
+        time.sleep(1)
+        # 浏览首页阅读文章
+        self.browser_article(time_period=10000)
+        # 开宝箱
+        self.coin_box()
 
 
 if __name__ == "__main__":
-    auto_article_lite()
+    # 今日头条极速版刷金币
+    article_lite_opt = ArticleLiteOpt()
+    article_lite_opt.auto_article_lite()
