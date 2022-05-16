@@ -29,6 +29,12 @@ app_activity_name = {
     "dragon_read": "com.dragon.read/.pages.main.MainFragmentActivity"
 }
 
+# 多设备装饰器 带这个的装饰器会直接运行不需要调用
+def multiple_device(device_list):
+    def _opt(func):
+        for device_id in device_list:
+            func(device_id)
+    return _opt
 
 # 执行系统命令
 def opt_sys_command(command):

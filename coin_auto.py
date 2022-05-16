@@ -25,6 +25,7 @@ class ArticleLiteOpt:
     def __init__(self):
         self.device_id_list = get_all_device_id()
         self.paddle_detect = DetectPic()
+        self.app_name = "article_lite"
         self.first_page_menu_position = (110, 2330)
         self.tuijian_menu_position = (250, 320)
         self.coin_menu_position = (550, 2330)
@@ -34,7 +35,7 @@ class ArticleLiteOpt:
 
     def start_article_app(self):
         def _opt(device_id):
-            start_app(device_id, "article_lite")
+            start_app(device_id, self.app_name)
             # 启动后识别屏幕顶部 如果有跳过广告 则点击
             time.sleep(2)
             png_name = screen_cap(device_id)
@@ -47,6 +48,25 @@ class ArticleLiteOpt:
                     print("跳过启动页广告")
                     tap(device_id, (position_x, position_y))
                     break
+
+        for device_id in self.device_id_list:
+            _opt(device_id)
+
+    def shut_app(self):
+        # 关掉app
+        def _opt(device_id):
+            shut_app(device_id, self.app_name)
+
+        for device_id in self.device_id_list:
+            _opt(device_id)
+
+    def back_to_main(self):
+        def _opt(device_id):
+            # 回到首页
+            # 截屏识别是否有首页 没有则发送返回
+            png_name = screen_cap(device_id=device_id)
+            local_png_path = screen_pull(png_name)
+            self.paddle_detect.detect_bottom(local_png_path)
 
         for device_id in self.device_id_list:
             _opt(device_id)
@@ -81,6 +101,7 @@ class ArticleLiteOpt:
 
     def browser_article(self, time_period=15000 * 60):
         # 浏览文章
+        @multiple_device(device_list=self.device_id_list)
         def _opt(device_id, time_period):
             per_time = 2 * 60 * 1000
             num = math.floor(time_period / per_time)
@@ -101,11 +122,9 @@ class ArticleLiteOpt:
                     up_short_swipe(device_id)
                     time.sleep(get_random_time())
 
-        for device_id in self.device_id_list:
-            _opt(device_id, time_period)
-
     def coin_box(self):
         # 看宝箱的广告
+        @multiple_device(device_list=self.device_id_list)
         def _opt(device_id):
             # 点击菜单的开宝箱按钮
             print("点击开宝箱菜单")
@@ -129,20 +148,29 @@ class ArticleLiteOpt:
                 # 广告是否看完
                 status = self.ad_end(device_id)
 
-        for device_id in self.device_id_list:
-            _opt(device_id)
+        # 看一分钟小视频
+    def look_small_video(self):
+        # 到首页
+        pass
+
+    # 看广告
+    def look_ad(self):
+        pass
+
+    # 逛商品90s
+    def look_goods(self):
+        pass
 
 def auto_article_lite():
     # 今日头条极速版刷金币
     article_lite_opt = ArticleLiteOpt()
     # 启动app
     article_lite_opt.start_article_app()
-    time.sleep(2)
+    # time.sleep(2)
     # 浏览首页阅读文章
-    # article_lite_opt.browser_article(time_period=3 * 60 * 1000)
+    # article_lite_opt.browser_article(time_period=20 * 60 * 1000)
     # 开宝箱
     article_lite_opt.coin_box()
-    article_lite_opt.browser_article(time_period=3 * 60 * 1000)
 
 
 if __name__ == "__main__":
