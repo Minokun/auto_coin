@@ -142,6 +142,22 @@ def find_screen_text_position(device_id, text):
             break
     return status, box, paddle_detect.result
 
+
+# 查找某个功能文字下的按钮
+def find_screen_text_button_position(device_id, text, button_text):
+    # 先在屏幕上查询该功能的文字
+    status, box, result = find_screen_text_position(device_id, text)
+    if status:
+        # 如果找到了 则找下面的按钮
+        y_ad = box[0][1]
+        for line in result:
+            # 如果找到了该位置
+            if line[1][0].find(button_text) >= 0 and line[0][2][1] >= y_ad:
+                x, y = int((line[0][0][0] + line[0][1][0]) / 2), int((line[0][0][1] + line[0][1][1]) / 2)
+                return True, (x, y)
+    return False, ()
+
+
 # 点击
 def tap(device_id, position):
     '''
@@ -170,7 +186,7 @@ def up_short_swipe(device_id):
 
 # 长上滑
 def up_long_swipe(device_id):
-    swipe(device_id, (550, 2100), (550, 500), 1000)
+    swipe(device_id, (550, 2100), (550, 700), 1000)
 
 
 # 下滑 短程
@@ -200,7 +216,7 @@ def shut_app(device_id, app):
 
 # 重启adb server
 def reboot_adb():
-    device_id_list = ["192.168.31.123:5555"]
+    device_id_list = ["192.168.31.123:5555", "192.168.101.101"]
     command = "adb kill-server"
     opt_sys_command(command)
     command = "adb start-server"

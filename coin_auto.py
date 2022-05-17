@@ -20,17 +20,26 @@ class DouYinOpt:
         for device_id in self.device_id_list:
             tap(device_id, self.coin_menu_position)
 
+
 # 今日头条极速版
 class ArticleLiteOpt:
     def __init__(self):
         self.device_id_list = get_all_device_id()
         self.paddle_detect = DetectPic()
         self.app_name = "article_lite"
+        # 底部菜单的首页按钮坐标
         self.first_page_menu_position = (110, 2330)
+        # 首页上边菜单栏的推荐按钮坐标
         self.tuijian_menu_position = (250, 320)
+        # 首页底部菜单栏的开宝箱按钮坐标
         self.coin_menu_position = (550, 2330)
+        # 首页上边菜单栏的全部按钮坐标
+        self.main_task_position = (1000, 320)
+        # 任务界面的宝箱坐标
         self.coin_box_position = (900, 2130)
+        # 点击弹出的中间看广告按钮坐标
         self.ads_position = (550, 1450)
+        # 看完广告关闭按钮
         self.ads_shut = (975, 160)
 
     def start_article_app(self):
@@ -133,7 +142,7 @@ class ArticleLiteOpt:
             # 点击推荐
             tap(device_id, self.tuijian_menu_position)
             for i in range(num):
-                print("第%s次" % str(i+1))
+                print("第%s次" % str(i + 1))
                 # 开始滑动浏览
                 up_short_swipe(device_id)
                 time.sleep(get_random_time())
@@ -164,7 +173,7 @@ class ArticleLiteOpt:
         @multiple_device(device_list=self.device_id_list)
         def _opt(device_id):
             # 点击任务菜单
-            print("********** 点击任务菜单,开始开广告 ********** ")
+            print("********** 点击任务菜单,开始看广告 ********** ")
             tap(device_id, self.coin_menu_position)
             # 返会再点击一次 为了防止布局不一样
             press_back(device_id)
@@ -173,21 +182,72 @@ class ArticleLiteOpt:
             for i in range(5):
                 # 上滑
                 up_long_swipe(device_id)
-                status, box, result = find_screen_text_position(device_id, "看广告")
+                status, position = find_screen_text_button_position(device_id, "看广告", "领福利")
                 if status:
-                    y_ad = box[0][1]
-                    # 获取“领福利”的 xy
-                    for i in result:
-                        # 如果找到了该位置
-                        if i[1][0].find("领福利") >= 0 and i[0][2][1] >= y_ad:
-                            print("********** 点击看广告！ ********** ")
-                            x, y = i[0][0][0] + 15, i[0][0][1] + 15
-                            tap(device_id, (x, y))
-                            self.watch_ad(device_id)
-                            break
-                    break
-                else:
-                    print("********** 未找到 看广告领福利 的位置！ ********** ")
+                    print("************ 开始看广告 *************")
+                    tap(device_id, position)
+                    self.watch_ad(device_id)
+                    return True
+            print("********** 未找到 看广告领福利 的位置！ ********** ")
+
+    # 看一分钟小视频
+    def auto_watch_small_video(self):
+        @multiple_device(device_list=self.device_id_list)
+        def _opt(device_id):
+            print("********** 点击任务菜单，开始看小视频 ********** ")
+            tap(device_id, self.first_page_menu_position)
+            print("********** 点击首页任务栏 ********** ")
+            tap(device_id, (1000, 320))
+            # 找小视频
+            status, box, _ = find_screen_text_position(device_id, "小视频")
+            # 点击小视频
+            position = (box[0][0] + 10, box[0][1] + 10)
+            tap(device_id, position)
+            time.sleep(1)
+            # 点击一个视频
+            tap(device_id, (300, 720))
+            print("开始看小视频")
+            for i in range(12):
+                print("******** 第%s/15次 **************" % str(i))
+                up_short_swipe(device_id)
+                time.sleep(get_random_time())
+            # 返回
+            press_back(device_id)
+            # 点击任务栏
+            tap(device_id, self.main_task_position)
+            # 找推荐
+            status, box, _ = find_screen_text_position(device_id, "推荐")
+            position = (box[0][0] + 10, box[0][1] + 10)
+            tap(device_id, position)
+
+    # 逛商品90s （6分钟一次）
+    def auto_watch_goods(self):
+        @multiple_device(device_list=self.device_id_list)
+        def _opt(device_id):
+            # 点击任务菜单
+            print("********** 点击任务菜单,开始逛商品 ********** ")
+            tap(device_id, self.coin_menu_position)
+            # 返会再点击一次 为了防止布局不一样
+            press_back(device_id)
+            tap(device_id, self.coin_menu_position)
+            # 上滑找“逛商场” 最多5次
+            for i in range(5):
+                # 上滑
+                up_long_swipe(device_id)
+                status, position = find_screen_text_button_position(device_id, "逛商品", "去领取")
+                if status:
+                    # 点击
+                    tap(device_id, position)
+                    # 开始刷15次
+                    for n in range(15):
+                        number = n + 1
+                        print("******* 第%s/15次 ********" % number)
+                        up_short_swipe(device_id)
+                        time.sleep(get_random_time())
+                    # 返回
+                    press_back(device_id)
+                    return True
+            print("********** 未找到 逛商品 的位置！ ********** ")
 
     # 点亮屏幕
     def light_screen(self):
@@ -198,31 +258,31 @@ class ArticleLiteOpt:
             input_text(device_id, "910729")
 
     # 开始自动刷app
-    def auto_article_lite(self, light_screen=False, read_article=False, watch_coin_box=False, watch_ad=False):
+    def auto_article_lite(self, light_screen_stats=False, read_article=False, watch_small_video=False,
+                          watch_coin_box=False, watch_ad=False,
+                          watch_goods=False):
         # 点亮屏幕
-        if light_screen:
+        if light_screen_stats:
             self.light_screen()
         # 启动app
         self.start_article_app()
         time.sleep(1)
         if read_article:
             # 浏览首页阅读文章
-            self.browser_article(time_period=500000)
-        if watch_coin_box:
-            # 开宝箱
-            self.auto_coin_box()
+            self.browser_article()
+        if watch_small_video:
+            # 看小视频
+            self.auto_watch_small_video()
         if watch_ad:
             # 看广告
             self.auto_watch_ad()
+        if watch_coin_box:
+            # 开宝箱
+            self.auto_coin_box()
+        if watch_goods:
+            # 逛商品
+            self.auto_watch_goods()
 
-    # 看一分钟小视频
-    def look_small_video(self):
-        # 到首页
-        pass
-
-    # 逛商品90s
-    def look_goods(self):
-        pass
 
 if __name__ == "__main__":
     # 如果没有设备 则重启adb 服务
@@ -232,6 +292,8 @@ if __name__ == "__main__":
     else:
         print("本次连接设备：")
         [print(i) for i in CurrentDeviceList]
-    # 今日头条极速版刷金币
+    # 今日头条极速版刷金币 可以10分钟刷一次 广告一共10次 逛商场一共10次 开宝箱没限制
     article_lite_opt = ArticleLiteOpt()
-    article_lite_opt.auto_article_lite(light_screen=False, read_article=False, watch_coin_box=False, watch_ad=True)
+    article_lite_opt.auto_article_lite(light_screen_stats=True, read_article=False, watch_small_video=True,
+                                       watch_coin_box=True, watch_ad=True,
+                                       watch_goods=True)
