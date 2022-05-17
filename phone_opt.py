@@ -39,12 +39,13 @@ def multiple_device(device_list, time_period=0):
             func(*argv)
     return _opt
 
+
 # 执行系统命令
-def opt_sys_command(command):
+def opt_sys_command(command, sleep_time=1):
     p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     p.wait()
     result = p.communicate()[0].decode()
-    time.sleep(1)
+    time.sleep(sleep_time)
     return result.split('\r\n')
 
 
@@ -73,8 +74,13 @@ def press_key(device_id, key):
     208打开日历 209打开音乐 210打开计算器 220降低屏幕亮度 221提高屏幕亮度
     223系统休眠 224点亮屏幕 231打开语音助手 276如果没有wakelock让系统休眠
     '''
-
     command = "adb -s " + device_id + " shell input keyevent " + str(key)
+    opt_sys_command(command)
+
+
+# 输入文字
+def input_text(device_id, text):
+    command = "adb -s " + device_id + " shell input text " + str(text)
     opt_sys_command(command)
 
 
@@ -116,6 +122,25 @@ def screen_pull(png_name):
     command = "adb pull %s %s" % (png_name, local_png)
     opt_sys_command(command)
     return local_png
+
+# 查找屏幕中某个字的位置
+def find_screen_text_position(device_id, text):
+    from paddle_opt import DetectPic
+    paddle_detect = DetectPic()
+    # 截屏
+    png_name = screen_cap(device_id)
+    # 拷贝
+    local_png = screen_pull(png_name)
+    # 识别
+    paddle_detect.detect(local_png)
+    status = False
+    box = []
+    for i in paddle_detect.result:
+        if i[1][0].find(text) >= 0:
+            status = True
+            box = i[0]
+            break
+    return status, box, paddle_detect.result
 
 # 点击
 def tap(device_id, position):
@@ -171,6 +196,27 @@ def shut_app(device_id, app):
     global app_package_name
     command = "adb -s " + device_id + " shell am force-stop " + app_package_name[app]
     opt_sys_command(command)
+
+
+# 重启adb server
+def reboot_adb():
+    device_id_list = ["192.168.31.123:5555"]
+    command = "adb kill-server"
+    opt_sys_command(command)
+    command = "adb start-server"
+    opt_sys_command(command)
+    for i in device_id_list:
+        command = "adb connect " + i
+        opt_sys_command(command)
+    # 获取连接的device_list
+    connected_device_id_list = get_all_device_id()
+    no_device_id_list = set(device_id_list) - set(connected_device_id_list)
+    print(
+        "已连接%s设备：%s" % (len(connected_device_id_list), " ".join(connected_device_id_list))
+    )
+    print(
+        "未连接%s设备：%s" % (len(no_device_id_list), " ".join(no_device_id_list))
+    )
 
 def get_random_time():
     # 随机生产事件间隔
