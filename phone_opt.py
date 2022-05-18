@@ -172,7 +172,7 @@ def tap(device_id, position):
 
 
 # 滑动
-def swipe(device_id, position_start, position_end, time_period=100):
+def swipe(device_id, position_start, position_end, time_period=200):
     x_s, y_s = position_start
     x_e, y_e = position_end
     command = "adb -s %s shell input swipe %s %s %s %s %s" % (device_id, x_s, y_s, x_e, y_e, time_period)
@@ -186,7 +186,7 @@ def up_short_swipe(device_id):
 
 # 长上滑
 def up_long_swipe(device_id):
-    swipe(device_id, (550, 2100), (550, 700), 1000)
+    swipe(device_id, (550, 2100), (550, 650), 1000)
 
 
 # 下滑 短程
@@ -216,11 +216,13 @@ def shut_app(device_id, app):
 
 # 重启adb server
 def reboot_adb():
-    device_id_list = ["192.168.31.123:5555", "192.168.101.101"]
-    command = "adb kill-server"
-    opt_sys_command(command)
-    command = "adb start-server"
-    opt_sys_command(command)
+    device_id_list = ["192.168.31.123:5555", "192.168.101.101:5555"]
+    command = "tasklist | findstr adb"
+    p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out = p.stdout.readlines()
+    pid = [i for i in out[0].decode().split(' ') if i][1]
+    command = "taskkill /f /pid " + pid
+    subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     for i in device_id_list:
         command = "adb connect " + i
         opt_sys_command(command)

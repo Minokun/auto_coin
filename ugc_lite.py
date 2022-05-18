@@ -1,28 +1,13 @@
-# -*- coding:utf-8 -*-
-import math
-import sys
-import time
 
+# -*- coding:utf-8 -*-
+
+import math
 from phone_opt import *
 from paddle_opt import *
 
 
 # 抖音极速版
-class DouYinOpt:
-    def __init__(self):
-        self.device_id_list = get_all_device_id()
-        self.coin_menu_position = (550, 2330)
-        self.add_start_position = (550, 1450)
-        self.add_internal_time = 32
-        self.add_shut_menu_position = (980, 155)
-
-    def press_main_coin(self):
-        for device_id in self.device_id_list:
-            tap(device_id, self.coin_menu_position)
-
-
-# 今日头条极速版
-class ArticleLiteOpt:
+class UGCLiteOpt:
     def __init__(self):
         self.device_id_list = get_all_device_id()
         self.paddle_detect = DetectPic()
@@ -42,7 +27,7 @@ class ArticleLiteOpt:
         # 看完广告关闭按钮
         self.ads_shut = (975, 160)
 
-    def start_article_app(self):
+    def start_ugc_app(self):
         @multiple_device(device_list=self.device_id_list)
         def _opt(device_id):
             start_app(device_id, self.app_name)
@@ -100,7 +85,7 @@ class ArticleLiteOpt:
         while not status:
             time.sleep(15)
             # 如果有 查看详情 立即下载的按钮 则先点击后在返回
-            check_status, box, _ = find_screen_text_position(device_id, "立即下载")
+            check_status, box, _ = find_screen_text_position(device_id, "下载")
             if check_status:
                 position = (box[0][0] + 15, box[0][1] + 15)
                 print("******** 点击查看详情 *********")
@@ -132,7 +117,7 @@ class ArticleLiteOpt:
         # 浏览文章
         @multiple_device(device_list=self.device_id_list, time_period=time_period)
         def _opt(device_id, time_period):
-            per_time = 6000
+            per_time = 8000
             num = math.ceil(time_period / per_time)
             print("********** 将循环浏览%s次 ********** " % str(num))
             # 点击首页等2s
@@ -145,6 +130,16 @@ class ArticleLiteOpt:
                 print("第%s次" % str(i + 1))
                 # 开始滑动浏览
                 up_short_swipe(device_id)
+                # 检测 如果有阅读惊喜奖励 领金币
+                status, position = find_screen_text_button_position(device_id, "阅读惊喜奖励", "领金币")
+                if status:
+                    print("发现阅读惊喜奖励 开始领金币")
+                    tap(device_id, position)
+                    time.sleep(0.5)
+                    print("点击看广告")
+                    tap(device_id, self.ads_position)
+                    print("开始看广告")
+                    self.watch_ad(device_id)
                 time.sleep(get_random_time())
 
     def auto_coin_box(self):
@@ -239,9 +234,9 @@ class ArticleLiteOpt:
                     # 点击
                     tap(device_id, position)
                     # 开始刷15次
-                    for n in range(15):
+                    for n in range(13):
                         number = n + 1
-                        print("******* 第%s/15次 ********" % number)
+                        print("******* 第%s/13次 ********" % number)
                         up_short_swipe(device_id)
                         time.sleep(get_random_time())
                     # 返回
@@ -283,17 +278,6 @@ class ArticleLiteOpt:
             # 逛商品
             self.auto_watch_goods()
 
-
-if __name__ == "__main__":
-    # 如果没有设备 则重启adb 服务
-    if len(CurrentDeviceList) == 0:
-        print("重启adb服务")
-        reboot_adb()
-    else:
-        print("本次连接设备：")
-        [print(i) for i in CurrentDeviceList]
-    # 今日头条极速版刷金币 可以10分钟刷一次 广告一共10次 逛商场一共10次 开宝箱没限制
-    article_lite_opt = ArticleLiteOpt()
-    article_lite_opt.auto_article_lite(light_screen_stats=True, read_article=False, watch_small_video=True,
-                                       watch_coin_box=True, watch_ad=True,
-                                       watch_goods=True)
+    # TODO 自动领取所有奖励
+    def auto_take_award(self):
+        pass
