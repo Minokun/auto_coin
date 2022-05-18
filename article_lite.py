@@ -32,31 +32,15 @@ class ArticleLiteOpt:
             # 启动后识别屏幕顶部 如果有跳过广告 则点击
             jump_ad = False
             if jump_ad:
-                png_name = screen_cap(device_id)
-                local_png_path = screen_pull(png_name)
-                self.paddle_detect.detect_top(local_png_path)
-                for i in self.paddle_detect.top_list:
-                    if i[1][0].find("跳过广告") >= 0:
-                        position_x = i[0][1][0] - 20
-                        position_y = i[0][1][1] + 10
-                        print("********** 跳过启动页广告 ********** ")
-                        tap(device_id, (position_x, position_y))
-                        break
+                status, position = find_screen_text_button_position(device_id, "跳过广告", "跳过广告")
+                if status:
+                    tap(device_id, position)
 
     def shut_app(self):
         # 关掉app
         @multiple_device(device_list=self.device_id_list)
         def _opt(device_id):
             shut_app(device_id, self.app_name)
-
-    def back_to_main(self):
-        @multiple_device(device_list=self.device_id_list)
-        def _opt(device_id):
-            # 回到首页
-            # 截屏识别是否有首页 没有则发送返回
-            png_name = screen_cap(device_id=device_id)
-            local_png_path = screen_pull(png_name)
-            self.paddle_detect.detect_bottom(local_png_path)
 
     # 广告是否结束
     def ad_end(self, device_id):
@@ -100,17 +84,6 @@ class ArticleLiteOpt:
             if not status:
                 tap(device_id, self.ads_position)
 
-    # 获取开宝箱的位置
-    def get_coin_box_position(self, device_id):
-        png_name = screen_cap(device_id)
-        local_png_path = screen_pull(png_name)
-        self.paddle_detect.detect(local_png_path)
-        position = False
-        for i in self.paddle_detect.bottom_list:
-            if i[1][0].find("得金币") > 0:
-                position = i[0][0]
-        return position
-
     def browser_article(self, time_period=900000):
         # 浏览文章
         @multiple_device(device_list=self.device_id_list, time_period=time_period)
@@ -152,8 +125,8 @@ class ArticleLiteOpt:
             tap(device_id, self.coin_menu_position)
             # 点击宝箱
             print('********** 点击宝箱 ********** ')
-            coin_box_position = self.get_coin_box_position(device_id)
-            coin_box_position = coin_box_position if coin_box_position else self.coin_box_position
+            status, position = find_screen_text_button_position(device_id, "开宝箱得金币", "开宝箱得金币")
+            coin_box_position = position if status else self.coin_box_position
             tap(device_id, coin_box_position)
             time.sleep(0.5)
             # 点击查看视频

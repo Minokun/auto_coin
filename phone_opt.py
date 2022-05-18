@@ -111,7 +111,7 @@ def mute(device_id):
 
 # 截屏
 def screen_cap(device_id):
-    png_name = "/sdcard/DCIM/screen_" + device_id + ".png"
+    png_name = "/sdcard/DCIM/screen_" + device_id.split(":")[0] + ".png"
     command = "adb -s %s shell screencap %s" % (device_id, png_name)
     opt_sys_command(command)
     return png_name
