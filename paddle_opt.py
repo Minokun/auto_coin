@@ -31,6 +31,8 @@ class DetectPic:
                 self.bottom_list.append(i)
 
 
+paddle_ocr_obj = DetectPic()
+
 if __name__ == "__main__":
     detect_pic = DetectPic()
     detect_pic.detect_bottom('media/screen_QKXUT20329000108.png')
