@@ -1,6 +1,8 @@
 # -*- coding:utf-8 -*-
 
 import math
+import time
+
 from phone_opt import *
 from paddle_opt import *
 
@@ -11,6 +13,8 @@ class UGCLiteOpt:
         self.device_id_list = get_all_device_id()
         self.paddle_detect = paddle_ocr_obj
         self.app_name = "ugc_lite"
+        # 首页底部任务按钮
+        self.main_coin_position = (550, 2330)
         # 关闭广告的按键
         self.ad_shut = (980, 150)
         # 看广告中间的继续按钮
@@ -41,11 +45,11 @@ class UGCLiteOpt:
         # 点击底部菜单金币按钮 最多10次
         for i in range(10):
             print("回到首页")
-            status, position = find_screen_text_button_position(device_id, "首页", "金币")
+            status, _, _ = find_screen_text_position(device_id, "首页")
             # 如果在首页就点击，没有就返回
             if status:
                 print("进入金币页面")
-                tap(device_id, position)
+                tap(device_id, self.main_coin_position)
                 break
             else:
                 press_back(device_id)
@@ -60,7 +64,7 @@ class UGCLiteOpt:
         status = True
         while status:
             print("********** 看广告 ************")
-            time.sleep(30)
+            time.sleep(34)
             print("********** 关闭广告 ************")
             tap(device_id, self.ad_shut)
             time.sleep(2)
@@ -73,7 +77,7 @@ class UGCLiteOpt:
         # 进入金币页面
         self.back_main_coin(device_id)
         self.back_top(device_id)
-        for i in range(5):
+        for i in range(4):
             print("找看广告的按钮")
             status, position = find_screen_text_button_position(device_id, "看广告", "去领取")
             if status:
@@ -101,7 +105,7 @@ class UGCLiteOpt:
         # 进入金币页面
         self.back_main_coin(device_id)
         self.back_top(device_id)
-        for i in range(5):
+        for i in range(4):
             print("********** 找浏览爆款的按钮 ***********")
             status, position = find_screen_text_button_position(device_id, "浏览爆款", "赚金币")
             if status:
@@ -109,7 +113,7 @@ class UGCLiteOpt:
                 break
             up_long_swipe(device_id)
         print("********* 开始刷爆款1分钟 **********")
-        status, position = find_screen_text_button_position(device_id, "立即领取", "立即领取")
+        status, position = find_screen_text_button_position(device_id, "点击领取", "点击领取")
         if status:
             tap(device_id, position)
         for i in range(60):
@@ -118,8 +122,28 @@ class UGCLiteOpt:
         print("******** 返回 ***********")
         press_back(device_id)
 
+    # 逛街赚钱
+    def shopping(self, device_id):
+        self.back_main_coin(device_id)
+        self.back_top(device_id)
+        for i in range(4):
+            print("********** 找浏览爆款的按钮 ***********")
+            status, position = find_screen_text_button_position(device_id, "逛街", "去逛街")
+            if status:
+                tap(device_id, position)
+                break
+            up_long_swipe(device_id)
+        print("********* 开始逛街1分半 **********")
+        time.sleep(2)
+        for i in range(15):
+            print("******* 第%s/10次 ********" % str(i + 1))
+            time.sleep(get_random_time(8, 12))
+            up_short_swipe(device_id)
+        print("******** 返回 ***********")
+        press_back(device_id)
+
     def auto_run(self, light_screen_stats=True, watch_video=True, watch_baokuan=True, search=True, watch_coin_box=True,
-                 watch_ad=True, walk=True, eat=True):
+                 watch_ad=True, walk=True, shopping=True):
         @multiple_device(device_list=self.device_id_list)
         def _opt(device_id):
             # 解锁手机
@@ -139,13 +163,17 @@ class UGCLiteOpt:
             if watch_baokuan:
                 self.watch_baokuan(device_id)
             # 看广告
-            print("*********** 开始刷爆款 ***********")
+            print("*********** 开始看广告 ***********")
             if watch_ad:
                 self.watch_ad(device_id)
             # 看宝箱
             print("*********** 刷宝箱 ***********")
             if watch_coin_box:
                 self.coin_box(device_id)
+            # 看宝箱
+            print("*********** 逛街 ***********")
+            if shopping:
+                self.shopping(device_id)
 
 
 if __name__ == "__main__":

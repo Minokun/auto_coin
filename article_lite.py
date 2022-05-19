@@ -41,15 +41,6 @@ class ArticleLiteOpt:
 
     # 广告是否结束
     def ad_end(self, device_id):
-        # 截屏
-        print("********** 截屏 ********** ")
-        png_name = screen_cap(device_id)
-        # 拷贝到本地
-        print("********** 拷贝图片 ********** ")
-        local_png_path = screen_pull(png_name)
-        # ocr识别
-        print("********** ocr识别 ********** ")
-        self.paddle_detect.detect_bottom(local_png_path)
         # 如果底部菜单有首页 则看完了
         status, _, _ = find_screen_text_position(device_id, "首页")
         if status:

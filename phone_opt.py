@@ -3,6 +3,7 @@ import random
 import subprocess
 import time
 import os
+from concurrent.futures import ThreadPoolExecutor
 
 # app名称
 app_name = {
@@ -31,12 +32,26 @@ app_activity_name = {
 }
 
 device_passwd = {
-    "wxk": "910729"
+    "wxk": "910729",
+    "fl": "191729"
 }
 
 device_user = {
-    "wxk": ["192.168.31.123:5555", "192.168.101.101:5555"]
+    "wxk": ["192.168.31.123:5555", "192.168.101.102:5555"],
+    "fl": ["192.168.101.101:5555", "94P0220C01001100"]
 }
+
+
+# 获取目前所有device_id
+def get_all_device_id():
+    p = opt_sys_command("adb devices")
+    device_id_list = []
+    for i in p[1:]:
+        if i:
+            device_id_list.append(i.split('\t')[0])
+    return device_id_list
+
+CurrentDeviceList = get_all_device_id()
 
 def get_user_passwd(device_id):
     # 获取用户锁屏密码
@@ -51,13 +66,17 @@ def get_user_passwd(device_id):
         return ''
     return device_passwd[user]
 
+
+# 多设备多线程
+pool = ThreadPoolExecutor(max_workers=len(CurrentDeviceList))
 # 多设备装饰器 一定要注意参数顺序要一样
 def multiple_device(device_list, time_period=0):
     def _opt(func):
         argv = [i for i in [device_list, time_period] if i]
         for device_id in device_list:
             argv[0] = device_id
-            func(*argv)
+            # func(*argv)
+            pool.submit(func, *argv)
     return _opt
 
 
@@ -69,18 +88,6 @@ def opt_sys_command(command, sleep_time=1):
     time.sleep(sleep_time)
     return result.split('\r\n')
 
-
-# 获取目前所有device_id
-def get_all_device_id():
-    p = opt_sys_command("adb devices")
-    device_id_list = []
-    for i in p[1:]:
-        if i:
-            device_id_list.append(i.split('\t')[0])
-    return device_id_list
-
-
-CurrentDeviceList = get_all_device_id()
 
 # 按键
 def press_key(device_id, key):
@@ -114,6 +121,7 @@ def light_screen(device_id):
 def unlock_device(device_id):
     light_screen(device_id)
     up_short_swipe(device_id)
+    time.sleep(1)
     input_text(device_id, get_user_passwd(device_id))
 
 
@@ -145,9 +153,9 @@ def screen_cap(device_id):
     return png_name
 
 # 拷贝图片
-def screen_pull(png_name):
+def screen_pull(device_id, png_name):
     local_png = "media/" + png_name.split('/')[-1]
-    command = "adb pull %s %s" % (png_name, local_png)
+    command = "adb -s " + device_id + " pull %s %s" % (png_name, local_png)
     opt_sys_command(command)
     return local_png
 
@@ -158,7 +166,7 @@ def find_screen_text_position(device_id, text):
     # 截屏
     png_name = screen_cap(device_id)
     # 拷贝
-    local_png = screen_pull(png_name)
+    local_png = screen_pull(device_id, png_name)
     # 识别
     paddle_detect.detect(local_png)
     status = False

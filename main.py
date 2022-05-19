@@ -19,8 +19,8 @@ if __name__ == "__main__":
     if first_status:
         article_lite_opt.auto_run(light_screen_stats=True, read_article=True, watch_small_video=True,
                                            watch_coin_box=True, watch_ad=True, watch_goods=True)
-        ugc_lite_obj.auto_run()
+        ugc_lite_obj.auto_run(light_screen_stats=False)
     else:
-        article_lite_opt.auto_run(light_screen_stats=False, read_article=False, watch_small_video=False,
+        article_lite_opt.auto_run(light_screen_stats=True, read_article=False, watch_small_video=False,
                                            watch_coin_box=True, watch_ad=True, watch_goods=True)
-        ugc_lite_obj.auto_run(watch_video=False, watch_baokuan=False)
+        ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=True)
