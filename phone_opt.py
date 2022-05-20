@@ -2,8 +2,9 @@
 import random
 import subprocess
 import time
-import os
-from concurrent.futures import ThreadPoolExecutor
+import os, sys
+from paddle_opt import paddle_ocr_obj
+
 
 # app名称
 app_name = {
@@ -42,6 +43,20 @@ device_user = {
 }
 
 
+def print_help_text(device_id, help_text):
+    text = "*************************** 设备：%s  执行步骤：%s ***************************" % (device_id, help_text)
+    print(text)
+
+
+# 执行系统命令
+def opt_sys_command(command, sleep_time=1):
+    p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p.wait()
+    result = p.communicate()[0].decode()
+    time.sleep(sleep_time)
+    return result.split('\r\n')
+
+
 # 获取目前所有device_id
 def get_all_device_id():
     p = opt_sys_command("adb devices")
@@ -50,6 +65,39 @@ def get_all_device_id():
         if i:
             device_id_list.append(i.split('\t')[0])
     return device_id_list
+
+
+# 重启adb server
+def reboot_adb():
+    device_id_list = ["192.168.31.123:5555", "192.168.101.101:5555"]
+    for i in device_id_list:
+        command = "adb connect " + i
+        p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    device_id_list_current = get_all_device_id()
+    if len(device_id_list_current) == 0:
+        command = "tasklist | findstr adb"
+        p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        out = p.stdout.readlines()
+        pid = [i for i in out[0].decode().split(' ') if i][1]
+        command = "taskkill /f /pid " + pid
+        subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        for i in device_id_list:
+            command = "adb connect " + i
+            os.system(command)
+        # 获取连接的device_list
+    connected_device_id_list = get_all_device_id()
+    no_device_id_list = set(device_id_list) - set(connected_device_id_list)
+    print(
+        "已连接%s设备：%s" % (len(connected_device_id_list), " ".join(connected_device_id_list))
+    )
+    print(
+        "未连接%s设备：%s" % (len(no_device_id_list), " ".join(no_device_id_list))
+    )
+    if len(connected_device_id_list) == 0:
+        sys.exit(-1)
+
+
+reboot_adb()
 
 CurrentDeviceList = get_all_device_id()
 
@@ -65,28 +113,6 @@ def get_user_passwd(device_id):
     if user not in device_passwd.keys():
         return ''
     return device_passwd[user]
-
-
-# 多设备多线程
-pool = ThreadPoolExecutor(max_workers=len(CurrentDeviceList))
-# 多设备装饰器 一定要注意参数顺序要一样
-def multiple_device(device_list, time_period=0):
-    def _opt(func):
-        argv = [i for i in [device_list, time_period] if i]
-        for device_id in device_list:
-            argv[0] = device_id
-            # func(*argv)
-            pool.submit(func, *argv)
-    return _opt
-
-
-# 执行系统命令
-def opt_sys_command(command, sleep_time=1):
-    p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    p.wait()
-    result = p.communicate()[0].decode()
-    time.sleep(sleep_time)
-    return result.split('\r\n')
 
 
 # 按键
@@ -161,22 +187,20 @@ def screen_pull(device_id, png_name):
 
 # 查找屏幕中某个字的位置
 def find_screen_text_position(device_id, text):
-    from paddle_opt import DetectPic
-    paddle_detect = DetectPic()
     # 截屏
     png_name = screen_cap(device_id)
     # 拷贝
     local_png = screen_pull(device_id, png_name)
     # 识别
-    paddle_detect.detect(local_png)
+    result = paddle_ocr_obj.detect(local_png)
     status = False
     box = []
-    for i in paddle_detect.result:
+    for i in result:
         if i[1][0].find(text) >= 0:
             status = True
             box = i[0]
             break
-    return status, box, paddle_detect.result
+    return status, box, result
 
 
 # 查找某个功能文字下的按钮
@@ -250,34 +274,6 @@ def shut_app(device_id, app):
     opt_sys_command(command)
 
 
-# 重启adb server
-def reboot_adb():
-    device_id_list = ["192.168.31.123", "192.168.101.101"]
-    for i in device_id_list:
-        command = "adb connect " + i
-        p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    device_id_list_current = get_all_device_id()
-    if len(device_id_list_current) == 0:
-        # command = "tasklist | findstr adb"
-        # p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        # out = p.stdout.readlines()
-        # pid = [i for i in out[0].decode().split(' ') if i][1]
-        # command = "taskkill /f /pid " + pid
-        # subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        for i in device_id_list:
-            command = "adb connect " + i
-            os.system(command)
-        # 获取连接的device_list
-    connected_device_id_list = get_all_device_id()
-    no_device_id_list = set(device_id_list) - set(connected_device_id_list)
-    print(
-        "已连接%s设备：%s" % (len(connected_device_id_list), " ".join(connected_device_id_list))
-    )
-    print(
-        "未连接%s设备：%s" % (len(no_device_id_list), " ".join(no_device_id_list))
-    )
-
-
 def get_random_time(min=3, max=9):
     # 随机生产事件间隔
     return random.randint(min, max)
@@ -290,4 +286,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # reboot_adb()
+    os.system("adb connect 192.168.31.123:5555")

@@ -6,29 +6,30 @@ import numpy as np
 
 class DetectPic:
     def __init__(self):
-        self.ocr = PaddleOCR(use_angle_cls=True, lang='ch')
-        self.result = ''
+        self.ocr = PaddleOCR(use_angle_cls=True, lang='ch', show_log=False)
         self.top_y_position = 380
         self.bottom_y_position = 2220
         self.top_list = []
         self.bottom_list = []
 
     def detect(self, img):
-        self.result = self.ocr.ocr(img)
+        return self.ocr.ocr(img)
 
     def detect_top(self, img):
-        self.detect(img)
+        result = self.detect(img)
         self.top_list = []
-        for i in self.result:
+        for i in result:
             if i[0][3][1] < self.top_y_position:
                 self.top_list.append(i)
+        return result
 
     def detect_bottom(self, img):
-        self.detect(img)
+        result = self.detect(img)
         self.bottom_list = []
-        for i in self.result:
+        for i in result:
             if i[0][3][1] > self.bottom_y_position:
                 self.bottom_list.append(i)
+        return result
 
 
 paddle_ocr_obj = DetectPic()

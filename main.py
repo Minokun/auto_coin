@@ -1,21 +1,18 @@
-from article_lite import *
-from ugc_lite import *
+from phone_opt import CurrentDeviceList
+from article_lite import ArticleLiteOpt
+from ugc_lite import UGCLiteOpt
+from concurrent.futures import ThreadPoolExecutor, wait, as_completed
+from phone_opt import print_help_text
 
-if __name__ == "__main__":
-    # 如果没有设备 则重启adb 服务
-    if len(CurrentDeviceList) == 0:
-        print("重启adb服务")
-        reboot_adb()
-    else:
-        print("本次连接设备：")
-        [print(i) for i in CurrentDeviceList]
+total_num = 30
+total_end_num = 0
 
-    # ************************** 今日头条 **************************
-    # 今日头条极速版刷金币 可以10分钟刷一次 广告一共10次 逛商场一共10次 开宝箱没限制
-    article_lite_opt = ArticleLiteOpt()
-    ugc_lite_obj = UGCLiteOpt()
 
-    first_status = False
+def run(device_id, first_status=False):
+    global total_end_num, total_num
+    print_help_text(device_id, "启动程序!")
+    article_lite_opt = ArticleLiteOpt(device_id)
+    ugc_lite_obj = UGCLiteOpt(device_id)
     if first_status:
         article_lite_opt.auto_run(light_screen_stats=True, read_article=True, watch_small_video=True,
                                            watch_coin_box=True, watch_ad=True, watch_goods=True)
@@ -23,4 +20,24 @@ if __name__ == "__main__":
     else:
         article_lite_opt.auto_run(light_screen_stats=True, read_article=False, watch_small_video=False,
                                            watch_coin_box=True, watch_ad=True, watch_goods=True)
-        ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=True)
+        ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=False)
+    total_end_num += 1
+    return "设备：%s 第%s/%s次 运行结束" % (device_id, total_end_num, total_num)
+
+
+def main():
+    max_workers = len(CurrentDeviceList)
+    executor = ThreadPoolExecutor(max_workers=max_workers)
+    all_task = []
+    for i in CurrentDeviceList:
+        for _ in range(total_num):
+            all_task.append(
+                executor.submit(run, *(i, False))
+            )
+    for future in as_completed(all_task):
+        data = future.result()
+        print(data)
+
+
+if __name__ == "__main__":
+    main()
