@@ -36,7 +36,8 @@ paddle_ocr_obj = DetectPic()
 
 if __name__ == "__main__":
     detect_pic = DetectPic()
-    detect_pic.detect_bottom('media/screen_QKXUT20329000108.png')
-    for i in detect_pic.bottom_list:
-        if i[1][0].find("首页") >= 0:
-            print(i)
+    result = detect_pic.detect_bottom('media/screen_192.168.101.103.png')
+    print(result)
+    # for i in detect_pic.bottom_list:
+    #     if i[1][0].find("首页") >= 0:
+    #         print(i)

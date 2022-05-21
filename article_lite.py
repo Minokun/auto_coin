@@ -1,5 +1,7 @@
 # -*- coding:utf-8 -*-
 import math
+import time
+
 from phone_opt import *
 
 
@@ -40,53 +42,58 @@ class ArticleLiteOpt:
     def back_to_main(self):
         for i in range(6):
             print_help_text(self.device_id, "回到首页")
-            status, _, _ = find_screen_text_position(self.device_id, "首页")
+            status, position = find_screen_text_button_position(self.device_id, "首页", "首页")
             # 如果有就退出
             if status:
                 break
             else:
                 press_back(self.device_id)
 
-    # 广告是否结束
-    def ad_end(self):
-        # 如果底部菜单有首页 则看完了
-        status, _, _ = find_screen_text_position(self.device_id, "首页")
-        if status:
-            print_help_text(self.device_id, "结束本次广告视频！")
-        else:
-            print_help_text(self.device_id, "继续看广告")
-        return status
-
     # 看广告
     def watch_ad(self):
+        print_help_text(self.device_id, "开始看广告")
         status = False
         while not status:
-            time.sleep(16)
+            time.sleep(18)
             # 如果有 查看详情 立即下载的按钮 则先点击后在返回
-            check_status, box, _ = find_screen_text_position(self.device_id, "下载")
+            check_status, box, result = find_screen_text_position(self.device_id, "下载")
             if check_status:
-                position = (box[0][0] + 15, box[0][1] + 15)
+                xz_position = find_screen_by_result(result, "下载")
                 print_help_text(self.device_id, "点击查看详情")
-                tap(self.device_id, position)
+                tap(self.device_id, xz_position)
                 time.sleep(1)
                 print_help_text(self.device_id, "返回")
                 press_back(self.device_id)
-            # 点击关闭
             # 如果有再看视频 点击再看
-            continue_status, position = find_screen_text_button_position(self.device_id, "再看", "再看")
-            if continue_status:
-                tap(self.device_id, position)
-            else:
-                print_help_text(self.device_id, "点击关闭")
-                tap(self.device_id, self.ads_shut)
-                # 广告是否看完
-                status = self.ad_end()
-                # 没看完
-                if not status:
-                    tap(self.device_id, self.ads_position)
+            zk_position = find_screen_by_result(result, "再看")
+            # 新版 如果有再看就点击再看
+            if zk_position:
+                print_help_text(self.device_id, "继续看下一个")
+                tap(self.device_id, zk_position)
+                continue
+            # 如果有坚持再看
+            jczk_position = find_screen_by_result(result, "坚持再看")
+            if jczk_position:
+                print_help_text(self.device_id, "继续看下一个")
+                tap(self.device_id, jczk_position)
+                continue
+            # 都没有就点击右上角的X
+            print_help_text(self.device_id, "关掉当前广告")
+            tap(self.device_id, self.ads_shut)
+            # 看是否广告看完了
+            status, _ = find_screen_text_button_position(self.device_id, "首页", "首页")
+            if not status:
+                # 老版本 还得点一下看广告
+                print_help_text(self.device_id, "继续看下一个")
+                tap(self.device_id, self.ads_position)
 
-    def browser_article(self, time_period=900000):
+
+    def browser_article(self, first_stats=False):
         # 浏览文章
+        if first_stats:
+            time_period = 900000
+        else:
+            time_period = 80000
         per_time = 8000
         num = math.ceil(time_period / per_time)
         print_help_text(self.device_id, "将循环浏览%s次" % str(num))
@@ -98,39 +105,47 @@ class ArticleLiteOpt:
         tap(self.device_id, self.tuijian_menu_position)
         for i in range(num):
             print_help_text(self.device_id, "第%s/%s次" % (str(i + 1), str(num)))
-            # 开始滑动浏览
-            up_short_swipe(self.device_id)
+            # 开始滑动浏览 每天第一次短刷 其他长刷
+            if first_stats:
+                up_short_swipe(self.device_id)
+            else:
+                up_long_swipe(self.device_id)
             # 检测 如果有阅读惊喜奖励 领金币
             status, position = find_screen_text_button_position(self.device_id, "阅读惊喜奖励", "领金币")
             if status:
                 print_help_text(self.device_id, "发现阅读惊喜奖励 开始领金币")
                 tap(self.device_id, position)
-                time.sleep(0.5)
+                time.sleep(1)
                 print_help_text(self.device_id, "点击看广告")
                 tap(self.device_id, self.ads_position)
                 print_help_text(self.device_id, "开始看广告")
                 self.watch_ad()
-            time.sleep(get_random_time())
+            # 如果是第一次做活跃则慢慢刷 其他直接找阅读惊喜奖励
+            if first_stats:
+                time.sleep(get_random_time())
 
     def auto_coin_box(self):
         # 看宝箱的广告
+        print_help_text(self.device_id, "点击任务菜单，开始看宝箱广告")
         # 点击任务菜单
         self.back_to_main()
-        print_help_text(self.device_id, "点击任务菜单，开始看宝箱广告")
         tap(self.device_id, self.coin_menu_position)
         # 返会再点击一次 为了防止布局不一样
         press_back(self.device_id)
         tap(self.device_id, self.coin_menu_position)
-        # 点击宝箱
-        print_help_text(self.device_id, "点击宝箱")
+        time.sleep(1)
         status, position = find_screen_text_button_position(self.device_id, "开宝箱得金币", "开宝箱得金币")
-        coin_box_position = position if status else self.coin_box_position
-        tap(self.device_id, coin_box_position)
-        time.sleep(0.5)
-        # 点击查看视频
-        tap(self.device_id, self.ads_position)
-        # 循环查看
-        self.watch_ad()
+        if status:
+            print_help_text(self.device_id, "开宝箱")
+            # 点击宝箱
+            tap(self.device_id, position)
+            time.sleep(1)
+            # 点击”看视频再领“ 开始看广告
+            tap(self.device_id, self.ads_position)
+            # 循环查看
+            self.watch_ad()
+        else:
+            print_help_text(self.device_id, "目前不能点击宝箱！")
 
     # 看广告
     def auto_watch_ad(self):
@@ -215,7 +230,7 @@ class ArticleLiteOpt:
         pass
 
     # 开始自动刷app
-    def auto_run(self, light_screen_stats=True, read_article=True, watch_small_video=True,
+    def auto_run(self, first_status=True, light_screen_stats=True, read_article=True, watch_small_video=True,
                           watch_coin_box=True, watch_ad=True,
                           watch_goods=True):
         # 解锁屏幕
@@ -227,16 +242,16 @@ class ArticleLiteOpt:
         time.sleep(1)
         if read_article:
             # 浏览首页阅读文章
-            self.browser_article()
+            self.browser_article(first_status)
         if watch_small_video:
             # 看小视频
             self.auto_watch_small_video()
-        if watch_ad:
-            # 看广告
-            self.auto_watch_ad()
         if watch_coin_box:
             # 开宝箱
             self.auto_coin_box()
+        if watch_ad:
+            # 看广告
+            self.auto_watch_ad()
         if watch_goods:
             # 逛商品
             self.auto_watch_goods()

@@ -12,8 +12,8 @@ app_name = {
     "ugc_lite": "抖音极速版",
     "article_lite": "头条极速版",
     "wk_browser": "悟空浏览器",
-    "dragon_read": "番茄小说"
-
+    "dragon_read": "番茄小说",
+    "kuaishou": "快手"
 }
 # app package 名称 用于关闭应用
 app_package_name = {
@@ -21,15 +21,17 @@ app_package_name = {
     "ugc_lite": "com.ss.android.ugc.aweme.lite",
     "article_lite": "com.ss.android.article.lite",
     "wk_browser": "com.cat.readall",
-    "dragon_read": "com.dragon.read"
+    "dragon_read": "com.dragon.read",
+    "kuaishou": "com.kuaishou.nebula"
 }
 # app activity 名称 用于打开应用
 app_activity_name = {
     "ugc": "com.ss.android.ugc.aweme/com.ss.android.ugc.aweme.main.MainActivity",
     "ugc_lite": "com.ss.android.ugc.aweme.lite/com.ss.android.ugc.aweme.splash.SplashActivity",
     "article_lite": "com.ss.android.article.lite/.activity.SplashActivity",
+    "dragon_read": "com.dragon.read/.pages.splash.SplashActivity",
     "wk_browser": "com.cat.readall/.activity.BrowserMainActivity",
-    "dragon_read": "com.dragon.read/.pages.main.MainFragmentActivity"
+    "kuaishou": "com.kuaishou.nebula/com.yxcorp.gifshow.HomeActivity"
 }
 
 device_passwd = {
@@ -38,9 +40,14 @@ device_passwd = {
 }
 
 device_user = {
-    "wxk": ["192.168.31.123:5555", "192.168.101.102:5555"],
+    "wxk": ["192.168.31.123:5555", "192.168.101.103:5555"],
     "fl": ["192.168.101.101:5555", "94P0220C01001100"]
 }
+
+online_id_list = ["192.168.101.103:5555", "192.168.101.101:5555"]
+# offline_id_list = ["192.168.101.103:5555"]
+offline_id_list = []
+device_id_list = list(set(online_id_list) - set(offline_id_list))
 
 
 def print_help_text(device_id, help_text):
@@ -57,19 +64,28 @@ def opt_sys_command(command, sleep_time=1):
     return result.split('\r\n')
 
 
+def get_app_activity_name():
+    # 获取当前app的activity name
+    command = "shell dumpsys window | findstr mCurrentFocus"
+    command = "adb shell dumpsys activity activities | findstr 'Run'"
+    # 如果上面报错permission deny 有可能不是真的activity名称 然后查找LAUNCHER
+    command = "adb shell dumpsys package com.dragon.read"
+
+
 # 获取目前所有device_id
 def get_all_device_id():
+    global offline_id_list
     p = opt_sys_command("adb devices")
     device_id_list = []
     for i in p[1:]:
         if i:
             device_id_list.append(i.split('\t')[0])
-    return device_id_list
+    return list(set(device_id_list) - set(offline_id_list))
 
 
 # 重启adb server
 def reboot_adb():
-    device_id_list = ["192.168.31.123:5555", "192.168.101.101:5555"]
+    global device_id_list
     for i in device_id_list:
         command = "adb connect " + i
         p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -218,6 +234,16 @@ def find_screen_text_button_position(device_id, text, button_text):
     return False, ()
 
 
+# 查看本页某个按钮
+def find_screen_by_result(result, text):
+    for i in result:
+        if i[1][0].find(text) >= 0:
+            x = int((i[0][0][0] + i[0][1][0]) / 2)
+            y = int((i[0][1][1] + i[0][2][1]) / 2)
+            position = (x, y)
+            return position
+    return ()
+
 # 点击
 def tap(device_id, position):
     '''
@@ -241,22 +267,22 @@ def swipe(device_id, position_start, position_end, time_period=200):
 
 # 上滑 短程
 def up_short_swipe(device_id):
-    swipe(device_id, (550, 1800), (550, 1300))
+    swipe(device_id, (48, 2100), (48, 1600))
 
 
 # 长上滑
 def up_long_swipe(device_id):
-    swipe(device_id, (550, 2100), (550, 650), 1000)
+    swipe(device_id, (48, 2100), (48, 650), 800)
 
 
 # 下滑 短程
 def down_short_swipe(device_id):
-    swipe(device_id, (550, 1300), (550, 1800))
+    swipe(device_id, (48, 1600), (48, 2100))
 
 
 # 长下滑
 def down_long_swipe(device_id):
-    swipe(device_id, (550, 500), (550, 2100), 1000)
+    swipe(device_id, (48, 500), (48, 2100), 800)
 
 
 # 启动app
@@ -279,11 +305,18 @@ def get_random_time(min=3, max=9):
     return random.randint(min, max)
 
 
-def main():
-    device_id_list = get_all_device_id()
-    for device_id in device_id_list:
-        up_short_swipe(device_id)
-
+def unclock_all_devices():
+    from concurrent.futures import ThreadPoolExecutor, wait
+    # 解锁所有设备
+    max_workers = len(CurrentDeviceList)
+    executor_unlock = ThreadPoolExecutor(max_workers=max_workers)
+    unlock_task_list = []
+    for device_id in CurrentDeviceList:
+        print_help_text(device_id, "解锁设备！")
+        unlock_task_list.append(
+            executor_unlock.submit(unlock_device, device_id)
+        )
+    wait(unlock_task_list)
 
 if __name__ == "__main__":
     # reboot_adb()

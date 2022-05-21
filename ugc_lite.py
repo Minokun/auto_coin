@@ -41,6 +41,7 @@ class UGCLiteOpt:
     def back_main_coin(self):
         # 点击底部菜单金币按钮 最多10次
         for i in range(10):
+            press_back(self.device_id)
             print_help_text(self.device_id, "回到首页")
             status, _, _ = find_screen_text_position(self.device_id, "首页")
             # 如果在首页就点击，没有就返回
@@ -50,6 +51,9 @@ class UGCLiteOpt:
                 break
             else:
                 press_back(self.device_id)
+                stats, position = find_screen_text_button_position(self.device_id, "坚持退出", "坚持退出")
+                if stats:
+                    tap(self.device_id, position)
 
     # 上滑到最顶部
     def back_top(self):
@@ -97,7 +101,8 @@ class UGCLiteOpt:
         status, position = find_screen_text_button_position(self.device_id, "开宝箱得金币", "开宝箱得金币")
         if status:
             tap(self.device_id, position)
-            #点击看广告
+            time.sleep(0.5)
+            # 点击看广告
             tap(self.device_id, self.coin_box_ad)
             self.ad()
         else:
@@ -132,19 +137,28 @@ class UGCLiteOpt:
         self.back_top()
         for i in range(4):
             print_help_text(self.device_id, "找逛街的按钮")
-            status, position = find_screen_text_button_position(self.device_id, "逛街", "去逛街")
-            if status:
-                tap(self.device_id, position)
+            status, box, result = find_screen_text_position(self.device_id, "去逛街")
+            button_position = find_screen_by_result(result, "去逛街")
+            if button_position:
                 break
             up_long_swipe(self.device_id)
-        print_help_text(self.device_id, "开始逛街2分钟")
-        time.sleep(2)
-        for i in range(15):
-            print_help_text(self.device_id, "第%s/15次" % str(i + 1))
-            time.sleep(get_random_time(8, 12))
-            up_short_swipe(self.device_id)
-        print_help_text(self.device_id, "返回")
-        press_back(self.device_id)
+        # 如果未逛满15次 开始逛街
+        position = find_screen_by_result(result, "15/15")
+        if not position:
+            tap(self.device_id, button_position)
+            print_help_text(self.device_id, "开始逛街2分钟")
+            time.sleep(2)
+            for i in range(15):
+                print_help_text(self.device_id, "第%s/15次" % str(i + 1))
+                time.sleep(get_random_time(8, 12))
+                up_short_swipe(self.device_id)
+            print_help_text(self.device_id, "返回")
+            press_back(self.device_id)
+            # 如果没逛完 直接退出
+            stats, position = find_screen_text_button_position(self.device_id, "坚持退出", "坚持退出")
+            if stats:
+                tap(self.device_id, position)
+        print("今天逛街奖励已经领取完毕！")
 
     def auto_run(self, light_screen_stats=True, watch_video=True, watch_baokuan=True, search=True, watch_coin_box=True,
                  watch_ad=True, walk=True, shopping=True):
@@ -157,27 +171,29 @@ class UGCLiteOpt:
         self.start_ugc_app()
         time.sleep(1)
         # 看10分钟视频
-        print_help_text(self.device_id, "开始看视频")
         if watch_video:
+            print_help_text(self.device_id, "开始看视频")
             self.watch_video()
         # 看爆款
-        print_help_text(self.device_id, "开始刷爆款")
         if watch_baokuan:
+            print_help_text(self.device_id, "开始刷爆款")
             self.watch_baokuan()
         # 看广告
-        print_help_text(self.device_id, "开始看广告")
         if watch_ad:
+            print_help_text(self.device_id, "开始看广告")
             self.watch_ad()
         # 看宝箱
-        print_help_text(self.device_id, "刷宝箱")
         if watch_coin_box:
+            print_help_text(self.device_id, "刷宝箱")
             self.coin_box()
-        # 看宝箱
-        print_help_text(self.device_id, "逛街")
+        # 逛街
         if shopping:
+            print_help_text(self.device_id, "逛街")
             self.shopping()
         time.sleep(5)
 
+
 if __name__ == "__main__":
-    ugc_lite_obj = UGCLiteOpt("192.168.31.123:5555")
-    ugc_lite_obj.auto_run(watch_video=False, watch_baokuan=False)
+    ugc_lite_obj = UGCLiteOpt("192.168.101.103:5555")
+    ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=False, watch_ad=False,
+                          watch_coin_box=False)
