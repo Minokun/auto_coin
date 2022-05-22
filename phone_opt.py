@@ -40,13 +40,13 @@ device_passwd = {
 }
 
 device_user = {
-    "wxk": ["192.168.31.123:5555", "192.168.101.103:5555"],
+    "wxk": ["192.168.31.123:5555", "192.168.101.102:5555"],
     "fl": ["192.168.101.101:5555", "94P0220C01001100"]
 }
 
-online_id_list = ["192.168.101.103:5555", "192.168.101.101:5555"]
-# offline_id_list = ["192.168.101.103:5555"]
-offline_id_list = []
+online_id_list = ["192.168.101.102:5555", "192.168.101.101:5555"]
+offline_id_list = ["192.168.101.101:5555"]
+# offline_id_list = []
 device_id_list = list(set(online_id_list) - set(offline_id_list))
 
 
@@ -161,9 +161,12 @@ def light_screen(device_id):
 
 # 解锁手机
 def unlock_device(device_id):
+    print_help_text(device_id, "点亮屏幕")
     light_screen(device_id)
+    print_help_text(device_id, "上滑屏幕")
     up_short_swipe(device_id)
     time.sleep(1)
+    print_help_text(device_id, "输入密码")
     input_text(device_id, get_user_passwd(device_id))
 
 

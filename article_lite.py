@@ -32,7 +32,7 @@ class ArticleLiteOpt:
         # 启动后识别屏幕顶部 如果有跳过广告 则点击
         jump_ad = False
         if jump_ad:
-            status, position = find_screen_text_button_position(self.device_id, "跳过广告", "跳过广告")
+            status, position = find_screen_text_button_position(self.device_id, "跳过", "跳过")
             if status:
                 tap(self.device_id, position)
 
@@ -157,7 +157,7 @@ class ArticleLiteOpt:
         press_back(self.device_id)
         tap(self.device_id, self.coin_menu_position)
         # 上滑找“看广告” 最多5次
-        for i in range(5):
+        for i in range(3):
             # 上滑
             up_long_swipe(self.device_id)
             status, position = find_screen_text_button_position(self.device_id, "看广告", "领福利")
@@ -207,7 +207,7 @@ class ArticleLiteOpt:
         press_back(self.device_id)
         tap(self.device_id, self.coin_menu_position)
         # 上滑找“逛商场” 最多5次
-        for i in range(5):
+        for i in range(3):
             # 上滑
             up_long_swipe(self.device_id)
             status, position = find_screen_text_button_position(self.device_id, "逛商品", "去领取")

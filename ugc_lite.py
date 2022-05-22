@@ -24,7 +24,7 @@ class UGCLiteOpt:
         # 启动后识别屏幕顶部 如果有跳过广告 则点击
         jump_ad = False
         if jump_ad:
-            status, position = find_screen_text_button_position(self.device_id, "跳过广告", "跳过广告")
+            status, position = find_screen_text_button_position(self.device_id, "跳过", "跳过")
             if status:
                 tap(self.device_id, position)
 
@@ -66,7 +66,7 @@ class UGCLiteOpt:
         while status:
             print_help_text(self.device_id, "看广告")
             time.sleep(34)
-            for i in range(4):
+            for i in range(3):
                 ad_status, position = find_screen_text_button_position(self.device_id, "X", "X")
                 if ad_status:
                     print_help_text(self.device_id, "关闭广告")
@@ -84,7 +84,7 @@ class UGCLiteOpt:
         # 进入金币页面
         self.back_main_coin()
         self.back_top()
-        for i in range(4):
+        for i in range(3):
             print_help_text(self.device_id, "找看广告的按钮")
             status, position = find_screen_text_button_position(self.device_id, "看广告", "去领取")
             if status:
@@ -113,7 +113,7 @@ class UGCLiteOpt:
         # 进入金币页面
         self.back_main_coin()
         self.back_top()
-        for i in range(4):
+        for i in range(3):
             print_help_text(self.device_id, "找浏览爆款的按钮")
             status, position = find_screen_text_button_position(self.device_id, "浏览爆款", "赚金币")
             if status:
@@ -135,7 +135,7 @@ class UGCLiteOpt:
     def shopping(self):
         self.back_main_coin()
         self.back_top()
-        for i in range(4):
+        for i in range(3):
             print_help_text(self.device_id, "找逛街的按钮")
             status, box, result = find_screen_text_position(self.device_id, "去逛街")
             button_position = find_screen_by_result(result, "去逛街")
