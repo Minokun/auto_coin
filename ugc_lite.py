@@ -30,6 +30,7 @@ class UGCLiteOpt:
 
     # 看视频
     def watch_video(self, time_period=600000):
+        self.back_main_coin()
         per_video_time = 6000
         num = math.ceil(time_period / per_video_time)
         for i in range(num):
@@ -41,7 +42,6 @@ class UGCLiteOpt:
     def back_main_coin(self):
         # 点击底部菜单金币按钮 最多10次
         for i in range(10):
-            press_back(self.device_id)
             print_help_text(self.device_id, "回到首页")
             status, _, _ = find_screen_text_position(self.device_id, "首页")
             # 如果在首页就点击，没有就返回
@@ -142,8 +142,11 @@ class UGCLiteOpt:
             if button_position:
                 break
             up_long_swipe(self.device_id)
+        if not button_position:
+            print_help_text(self.device_id, "没有找到逛街按钮")
+            return True
         # 如果未逛满15次 开始逛街
-        position = find_screen_by_result(result, "15/15")
+        position = find_screen_by_result(result, "10/10")
         if not position:
             tap(self.device_id, button_position)
             print_help_text(self.device_id, "开始逛街2分钟")

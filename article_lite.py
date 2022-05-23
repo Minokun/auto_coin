@@ -54,16 +54,28 @@ class ArticleLiteOpt:
         print_help_text(self.device_id, "开始看广告")
         status = False
         while not status:
-            time.sleep(18)
+            time.sleep(20)
             # 如果有 查看详情 立即下载的按钮 则先点击后在返回
             check_status, box, result = find_screen_text_position(self.device_id, "下载")
-            if check_status:
-                xz_position = find_screen_by_result(result, "下载")
+            check_position = find_screen_by_result(result, '查看详情')
+            xz_position = find_screen_by_result(result, "下载")
+            button_position = check_position if check_position else xz_position
+            tm_position = find_screen_by_result(result, "天猫")
+            tb_position = find_screen_by_result(result, "淘宝")
+            position = () if (tm_position or tb_position or not button_position) else button_position
+            if position:
                 print_help_text(self.device_id, "点击查看详情")
                 tap(self.device_id, xz_position)
                 time.sleep(1)
+                for i in range(3):
+                    up_long_swipe(self.device_id)
+                    time.sleep(1)
                 print_help_text(self.device_id, "返回")
                 press_back(self.device_id)
+                # 有的广告详情页 点击返回后还需要点击X才行
+                stats, position = find_screen_text_button_position(self.device_id, "X", "X")
+                if status:
+                    tap(self.device_id, position)
             # 如果有再看视频 点击再看
             zk_position = find_screen_by_result(result, "再看")
             # 新版 如果有再看就点击再看
@@ -89,6 +101,7 @@ class ArticleLiteOpt:
 
 
     def browser_article(self, first_stats=False):
+        self.back_to_main()
         # 浏览文章
         if first_stats:
             time_period = 900000

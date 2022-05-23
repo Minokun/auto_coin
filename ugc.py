@@ -31,6 +31,7 @@ class UGCOpt:
 
     # 看视频
     def watch_video(self, time_period=60000):
+        self.back_main_coin()
         per_video_time = 6000
         num = math.ceil(time_period / per_video_time)
         for i in range(num):
@@ -42,7 +43,6 @@ class UGCOpt:
     def back_main_coin(self):
         # 点击底部菜单金币按钮 最多10次
         for i in range(10):
-            press_back(self.device_id)
             print_help_text(self.device_id, "回到首页")
             status, _, _ = find_screen_text_position(self.device_id, "首页")
             # 如果在首页就点击，没有就返回
@@ -149,5 +149,5 @@ class UGCOpt:
 
 
 if __name__ == "__main__":
-    ugc_obj = UGCOpt("192.168.101.102:5555")
-    ugc_obj.auto_run(light_screen_stats=True, watch_video=False, watch_ad=True, watch_coin_box=True)
+    ugc_obj = UGCOpt("192.168.31.123:5555")
+    ugc_obj.auto_run(light_screen_stats=False, watch_video=False, watch_ad=True, watch_coin_box=True)

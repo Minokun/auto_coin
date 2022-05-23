@@ -82,7 +82,6 @@ class DragonReadOpt:
                 self.ad()
                 break
             up_long_swipe(self.device_id)
-        print_help_text(self.device_id, "当前无广告可看")
 
     # 刷宝箱
     def coin_box(self):
