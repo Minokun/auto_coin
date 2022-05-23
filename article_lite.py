@@ -48,6 +48,7 @@ class ArticleLiteOpt:
                 break
             else:
                 press_back(self.device_id)
+            time.sleep(1)
 
     # 看广告
     def watch_ad(self):
@@ -65,7 +66,7 @@ class ArticleLiteOpt:
             position = () if (tm_position or tb_position or not button_position) else button_position
             if position:
                 print_help_text(self.device_id, "点击查看详情")
-                tap(self.device_id, xz_position)
+                tap(self.device_id, position)
                 time.sleep(1)
                 for i in range(3):
                     up_long_swipe(self.device_id)
@@ -89,6 +90,15 @@ class ArticleLiteOpt:
                 print_help_text(self.device_id, "继续看下一个")
                 tap(self.device_id, jczk_position)
                 continue
+            # 按理说应该在广告页的 所以应该有广告两个字没有 就直接停止
+            gg_position = find_screen_by_result(result, "广告")
+            if not gg_position:
+                stats, position = find_screen_text_button_position(self.device_id, "X", "X")
+                if stats:
+                    tap(self.device_id, position)
+                else:
+                    press_back(self.device_id)
+                    press_back(self.device_id)
             # 都没有就点击右上角的X
             print_help_text(self.device_id, "关掉当前广告")
             tap(self.device_id, self.ads_shut)
@@ -110,10 +120,6 @@ class ArticleLiteOpt:
         per_time = 8000
         num = math.ceil(time_period / per_time)
         print_help_text(self.device_id, "将循环浏览%s次" % str(num))
-        # 点击首页等2s
-        tap(self.device_id, self.first_page_menu_position)
-        # time.sleep(1)
-        print_help_text(self.device_id, "点击推荐")
         # 点击推荐
         tap(self.device_id, self.tuijian_menu_position)
         for i in range(num):
