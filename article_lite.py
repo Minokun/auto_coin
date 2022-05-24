@@ -60,7 +60,7 @@ class ArticleLiteOpt:
             # 如果有 查看详情 立即下载的按钮 则先点击后在返回
             check_status, box, result = find_screen_text_position(self.device_id, "下载")
             check_position = find_screen_by_result(result, '查看详情')
-            xz_position = find_screen_by_result(result, "下载")
+            xz_position = find_screen_by_result(result, "立即下载")
             button_position = check_position if check_position else xz_position
             tm_position = find_screen_by_result(result, "天猫")
             tb_position = find_screen_by_result(result, "淘宝")
@@ -76,10 +76,12 @@ class ArticleLiteOpt:
                     time.sleep(1)
                 print_help_text(self.device_id, "返回")
                 press_back(self.device_id)
-                # 有的广告详情页 点击返回后还需要点击X才行
-                stats, position = find_screen_text_button_position(self.device_id, "X", "X")
-                if status:
-                    tap(self.device_id, position)
+            # 按理说应该在广告页的 所以应该有广告两个字没有 就跳回
+            gg_stats, gg_position = find_screen_text_button_position(self.device_id, "广告", "广告")
+            if not gg_position:
+                print_help_text(self.device_id, "跳回到今日头条极速版")
+                press_back(self.device_id)
+                press_back(self.device_id)
             # 如果有再看视频 点击再看
             zk_position = find_screen_by_result(result, "再看")
             # 新版 如果有再看就点击再看
@@ -93,15 +95,6 @@ class ArticleLiteOpt:
                 print_help_text(self.device_id, "继续看下一个")
                 tap(self.device_id, jczk_position)
                 continue
-            # 按理说应该在广告页的 所以应该有广告两个字没有 就直接停止
-            gg_position = find_screen_by_result(result, "广告")
-            if not gg_position:
-                stats, position = find_screen_text_button_position(self.device_id, "X", "X")
-                if stats:
-                    tap(self.device_id, position)
-                else:
-                    press_back(self.device_id)
-                    press_back(self.device_id)
             # 都没有就点击右上角的X
             print_help_text(self.device_id, "关掉当前广告")
             tap(self.device_id, self.ads_shut)
@@ -155,7 +148,7 @@ class ArticleLiteOpt:
         self.back_to_main()
         tap(self.device_id, self.coin_menu_position)
         # 返会再点击一次 为了防止布局不一样
-        time.sleep(2)
+        up_long_swipe(self.device_id)
         status, position = find_screen_text_button_position(self.device_id, "开宝箱得金币", "开宝箱得金币")
         if status:
             print_help_text(self.device_id, "开宝箱")
@@ -280,4 +273,6 @@ class ArticleLiteOpt:
 
 
 if __name__ == "__main__":
-    print(paddle_ocr_obj.detect('media/screen_192.168.31.123.png'))
+    article_obj = ArticleLiteOpt("192.168.101.101:5555")
+    article_obj.auto_run(first_status=False, light_screen_stats=False, read_article=False, watch_small_video=False,
+                                  watch_coin_box=True, watch_ad=True, watch_goods=False)
