@@ -44,7 +44,9 @@ class UGCOpt:
         # 点击底部菜单金币按钮 最多10次
         for i in range(10):
             print_help_text(self.device_id, "回到首页")
-            status, _, _ = find_screen_text_position(self.device_id, "首页")
+            main_status, _, result = find_screen_text_position(self.device_id, "首页")
+            position = find_screen_by_result(result, '朋友')
+            status = main_status and position
             # 如果在首页就点击，没有就返回
             if status:
                 print_help_text(self.device_id, "点击右下角的我")
@@ -93,6 +95,7 @@ class UGCOpt:
             if position:
                 print_help_text(self.device_id, "继续看广告")
                 tap(self.device_id, position)
+                continue
 
 
     # 刷广告

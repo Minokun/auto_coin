@@ -151,8 +151,8 @@ class UGCLiteOpt:
             tap(self.device_id, button_position)
             print_help_text(self.device_id, "开始逛街2分钟")
             time.sleep(2)
-            for i in range(15):
-                print_help_text(self.device_id, "第%s/15次" % str(i + 1))
+            for i in range(13):
+                print_help_text(self.device_id, "第%s/13次" % str(i + 1))
                 time.sleep(get_random_time(8, 12))
                 up_short_swipe(self.device_id)
             print_help_text(self.device_id, "返回")

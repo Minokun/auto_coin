@@ -45,6 +45,7 @@ class ArticleLiteOpt:
             status, position = find_screen_text_button_position(self.device_id, "首页", "首页")
             # 如果有就退出
             if status:
+                tap(self.device_id, position)
                 break
             else:
                 press_back(self.device_id)
@@ -63,7 +64,9 @@ class ArticleLiteOpt:
             button_position = check_position if check_position else xz_position
             tm_position = find_screen_by_result(result, "天猫")
             tb_position = find_screen_by_result(result, "淘宝")
-            position = () if (tm_position or tb_position or not button_position) else button_position
+            jd_position = find_screen_by_result(result, "京东")
+            mt_position = find_screen_by_result(result, "美团")
+            position = () if (tm_position or tb_position or jd_position or mt_position or not button_position) else button_position
             if position:
                 print_help_text(self.device_id, "点击查看详情")
                 tap(self.device_id, position)
@@ -108,13 +111,15 @@ class ArticleLiteOpt:
                 # 老版本 还得点一下看广告
                 print_help_text(self.device_id, "继续看下一个")
                 tap(self.device_id, self.ads_position)
+            else:
+                break
 
 
     def browser_article(self, first_stats=False):
         self.back_to_main()
         # 浏览文章
         if first_stats:
-            time_period = 900000
+            time_period = 800000
         else:
             time_period = 80000
         per_time = 8000
@@ -150,9 +155,7 @@ class ArticleLiteOpt:
         self.back_to_main()
         tap(self.device_id, self.coin_menu_position)
         # 返会再点击一次 为了防止布局不一样
-        press_back(self.device_id)
-        tap(self.device_id, self.coin_menu_position)
-        time.sleep(1)
+        time.sleep(2)
         status, position = find_screen_text_button_position(self.device_id, "开宝箱得金币", "开宝箱得金币")
         if status:
             print_help_text(self.device_id, "开宝箱")
@@ -234,9 +237,9 @@ class ArticleLiteOpt:
                 # 点击
                 tap(self.device_id, position)
                 # 开始刷15次
-                for n in range(16):
+                for n in range(13):
                     number = n + 1
-                    print_help_text(self.device_id, "第%s/15次" % number)
+                    print_help_text(self.device_id, "第%s/13次" % number)
                     up_short_swipe(self.device_id)
                     time.sleep(get_random_time())
                 # 返回
