@@ -76,6 +76,12 @@ class ArticleLiteOpt:
                     time.sleep(1)
                 print_help_text(self.device_id, "返回")
                 press_back(self.device_id)
+                # 如果没有广告但有X则点击X
+                g_stats, box, g_result = find_screen_text_position(self.device_id, "广告")
+                g_position = find_screen_by_result(g_result, '广告')
+                x_position = find_screen_by_result(g_result, 'X')
+                if not g_position and x_position:
+                    tap(self.device_id, x_position)
             # 按理说应该在广告页的 所以应该有广告两个字没有 就跳回
             gg_stats, gg_position = find_screen_text_button_position(self.device_id, "广告", "广告")
             if not gg_position:
