@@ -31,6 +31,8 @@ class UGCLiteOpt:
     # 看视频
     def watch_video(self, time_period=600000):
         self.back_main_coin()
+        # 点击返回
+        press_back(self.device_id)
         per_video_time = 6000
         num = math.ceil(time_period / per_video_time)
         for i in range(num):

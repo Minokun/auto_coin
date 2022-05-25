@@ -117,6 +117,7 @@ class UGCOpt:
     def coin_box(self):
         # 刷宝箱
         self.back_main_coin()
+        up_long_swipe(self.device_id)
         status, position = find_screen_text_button_position(self.device_id, "开宝箱领奖", "开宝箱领奖")
         if status:
             tap(self.device_id, position)

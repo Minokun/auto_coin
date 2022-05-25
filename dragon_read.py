@@ -53,7 +53,7 @@ class DragonReadOpt:
         status = True
         while status:
             print_help_text(self.device_id, "看广告")
-            time.sleep(17)
+            time.sleep(30)
             status_continue, box, result = find_screen_text_position(self.device_id, "再看")
             main_position = find_screen_by_result(result, "书架")
             if main_position:
@@ -68,6 +68,7 @@ class DragonReadOpt:
             if jump_position:
                 continue
             tap(self.device_id, self.ad_shut)
+            status = False
 
     # 刷广告
     def watch_ad(self):

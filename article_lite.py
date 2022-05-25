@@ -76,36 +76,41 @@ class ArticleLiteOpt:
                     time.sleep(1)
                 print_help_text(self.device_id, "返回")
                 press_back(self.device_id)
-                # 如果没有广告但有X则点击X
-                g_stats, box, g_result = find_screen_text_position(self.device_id, "广告")
-                g_position = find_screen_by_result(g_result, '广告')
-                x_position = find_screen_by_result(g_result, 'X')
-                if not g_position and x_position:
-                    tap(self.device_id, x_position)
-            # 按理说应该在广告页的 所以应该有广告两个字没有 就跳回
-            gg_stats, gg_position = find_screen_text_button_position(self.device_id, "广告", "广告")
-            if not gg_position:
-                print_help_text(self.device_id, "跳回到今日头条极速版")
-                press_back(self.device_id)
-                press_back(self.device_id)
+                # 有的广告点击返回返回不了 这里判断是否回到广告页
+                stats, box, result = find_screen_text_position(self.device_id, "广告")
+                if not stats:
+                    x_position = find_screen_by_result(result, "X")
+                    if x_position:
+                        tap(self.device_id, x_position)
+                    else:
+                        print_help_text(self.device_id, "跳回到今日头条极速版")
+                        press_back(self.device_id)
+                        press_back(self.device_id)
+
             # 如果有再看视频 点击再看
-            zk_position = find_screen_by_result(result, "再看")
+            zk_stats, box, result = find_screen_text_position(self.device_id, "再看")
             # 新版 如果有再看就点击再看
-            if zk_position:
+            if zk_stats:
+                zk_position = find_screen_by_result(result, "再看")
                 print_help_text(self.device_id, "继续看下一个")
                 tap(self.device_id, zk_position)
                 continue
+
             # 如果有坚持再看
             jczk_position = find_screen_by_result(result, "坚持再看")
             if jczk_position:
                 print_help_text(self.device_id, "继续看下一个")
                 tap(self.device_id, jczk_position)
                 continue
+
             # 都没有就点击右上角的X
-            print_help_text(self.device_id, "关掉当前广告")
-            tap(self.device_id, self.ads_shut)
+            position = find_screen_by_result(result, "关闭")
+            if position:
+                print_help_text(self.device_id, "关掉当前广告")
+                tap(self.device_id, self.ads_shut)
+
             # 看是否广告看完了
-            status, _ = find_screen_text_button_position(self.device_id, "首页", "首页")
+            status = find_screen_text_button_position(self.device_id, "首页", "首页")
             if not status:
                 # 老版本 还得点一下看广告
                 print_help_text(self.device_id, "继续看下一个")
