@@ -40,11 +40,11 @@ device_passwd = {
 }
 
 device_user = {
-    "wxk": ["192.168.31.123:5555", "192.168.101.101:5555"],
+    "wxk": ["192.168.31.123:5555", "192.168.101.103:5555"],
     "fl": ["192.168.101.100:5555", "94P0220C01001100"]
 }
 
-online_id_list = ["192.168.101.100:5555", "192.168.101.101:5555", "192.168.31.123:5555"]
+online_id_list = ["192.168.101.103:5555", "192.168.31.123:5555"]
 # offline_id_list = ["192.168.101.101:5555"]
 offline_id_list = []
 device_id_list = list(set(online_id_list) - set(offline_id_list))
@@ -270,22 +270,22 @@ def swipe(device_id, position_start, position_end, time_period=200):
 
 # 上滑 短程
 def up_short_swipe(device_id):
-    swipe(device_id, (48, 2100), (48, 1600))
+    swipe(device_id, (40, 2000), (40, 1600))
 
 
 # 长上滑
 def up_long_swipe(device_id):
-    swipe(device_id, (48, 2100), (48, 650), 800)
+    swipe(device_id, (40, 2000), (40, 650), 600)
 
 
 # 下滑 短程
 def down_short_swipe(device_id):
-    swipe(device_id, (48, 1600), (48, 2100))
+    swipe(device_id, (40, 1600), (40, 2000))
 
 
 # 长下滑
 def down_long_swipe(device_id):
-    swipe(device_id, (48, 500), (48, 2100), 800)
+    swipe(device_id, (40, 500), (40, 2000), 600)
 
 
 # 启动app
@@ -303,7 +303,7 @@ def shut_app(device_id, app):
     opt_sys_command(command)
 
 
-def get_random_time(min=3, max=9):
+def get_random_time(min=3, max=7):
     # 随机生产事件间隔
     return random.randint(min, max)
 

@@ -50,6 +50,8 @@ class ArticleLiteOpt:
             else:
                 press_back(self.device_id)
             time.sleep(1)
+            if i > 4:
+                self.start_article_app()
 
     # 看广告
     def watch_ad(self):
@@ -147,6 +149,9 @@ class ArticleLiteOpt:
                 else:
                     press_back(self.device_id)
             # 如果是第一次做活跃则慢慢刷 其他直接找阅读惊喜奖励
+            stats, position = find_screen_text_button_position(self.device_id, "首页", "首页")
+            if not stats:
+                press_back(self.device_id)
             if first_stats:
                 time.sleep(get_random_time())
 

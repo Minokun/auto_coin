@@ -36,7 +36,7 @@ def run(device_id, first_status=False):
     else:
         article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=True, watch_small_video=False,
                                   watch_coin_box=True, watch_ad=True, watch_goods=True)
-        ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=True, watch_coin_box=False,
+        ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=False, watch_coin_box=False,
                               watch_ad=False, shopping=False)
         ugc_obj.auto_run(light_screen_stats=False, watch_video=False)
         dragon_read.auto_run(light_screen_stats=False)
