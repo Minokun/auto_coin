@@ -67,7 +67,8 @@ class ArticleLiteOpt:
             tb_position = find_screen_by_result(result, "淘宝")
             jd_position = find_screen_by_result(result, "京东")
             mt_position = find_screen_by_result(result, "美团")
-            position = () if (tb_position or jd_position or mt_position or not button_position) else button_position
+            dt_position = find_screen_by_result(result, "点淘")
+            position = () if (tb_position or jd_position or mt_position or not button_position or dt_position) else button_position
             if position:
                 print_help_text(self.device_id, "点击查看详情")
                 tap(self.device_id, position)
@@ -79,7 +80,7 @@ class ArticleLiteOpt:
                 press_back(self.device_id)
                 time.sleep(1)
                 # 有的广告点击返回返回不了 这里判断是否回到广告页
-                stats, position = find_screen_text_button_position(self.device_id, '广告', '广告')
+                stats, position = find_screen_text_button_position(self.device_id, '广告', '广告', top_normal_bottom='top')
                 if not stats:
                     tap(self.device_id, (180, 170))
                     print_help_text(self.device_id, "跳回到今日头条极速版")
@@ -96,13 +97,17 @@ class ArticleLiteOpt:
 
             # 如果有坚持再看
             jczk_position = find_screen_by_result(result, "坚持再看")
-            if jczk_position:
+            jjgk_position = find_screen_by_result(result, "继续观看")
+            jj_position = jczk_position if jczk_position else jjgk_position
+            if jj_position:
                 print_help_text(self.device_id, "继续看下一个")
                 tap(self.device_id, jczk_position)
                 continue
 
             # 都没有就点击右上角的X
-            position = find_screen_by_result(result, "关闭")
+            gb_position = find_screen_by_result(result, "关闭")
+            x_position = find_screen_by_result(result, "X")
+            position = gb_position if gb_position else x_position
             if position:
                 print_help_text(self.device_id, "关掉当前广告")
                 tap(self.device_id, self.ads_shut)
