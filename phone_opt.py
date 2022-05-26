@@ -44,9 +44,9 @@ device_user = {
     "fl": ["192.168.101.100:5555", "94P0220C01001100"]
 }
 
-online_id_list = ["192.168.101.103:5555", "192.168.31.123:5555"]
+online_id_list = ["192.168.101.100:5555", "192.168.31.123:5555"]
 # offline_id_list = ["192.168.101.101:5555"]
-offline_id_list = []
+offline_id_list = ["192.168.101.103:5555"]
 device_id_list = list(set(online_id_list) - set(offline_id_list))
 
 
@@ -80,7 +80,8 @@ def get_all_device_id():
     for i in p[1:]:
         if i:
             device_id_list.append(i.split('\t')[0])
-    return list(set(device_id_list) - set(offline_id_list))
+    device_list = list(set(device_id_list) - set(offline_id_list))
+    return device_list
 
 
 # 重启adb server
@@ -205,14 +206,21 @@ def screen_pull(device_id, png_name):
     return local_png
 
 # 查找屏幕中某个字的位置
-def find_screen_text_position(device_id, text):
+def find_screen_text_position(device_id, text, top_normal_bottom='normal'):
     # 截屏
     png_name = screen_cap(device_id)
     # 拷贝
     local_png = screen_pull(device_id, png_name)
     # 识别
-    result = paddle_ocr_obj.detect(local_png)
+    if top_normal_bottom == "normal":
+        result = paddle_ocr_obj.detect(local_png)
+    if top_normal_bottom == "top":
+        result = paddle_ocr_obj.detect_top(local_png)
+    if top_normal_bottom == 'bottom':
+        result = paddle_ocr_obj.detect_bottom(local_png)
     status = False
+    if not result:
+        return status, [], []
     box = []
     for i in result:
         if i[1][0].find(text) >= 0:
@@ -223,9 +231,9 @@ def find_screen_text_position(device_id, text):
 
 
 # 查找某个功能文字下的按钮
-def find_screen_text_button_position(device_id, text, button_text):
+def find_screen_text_button_position(device_id, text, button_text, top_normal_bottom='normal'):
     # 先在屏幕上查询该功能的文字
-    status, box, result = find_screen_text_position(device_id, text)
+    status, box, result = find_screen_text_position(device_id, text, top_normal_bottom=top_normal_bottom)
     if status:
         # 如果找到了 则找下面的按钮
         y_ad = box[0][1]
