@@ -81,6 +81,7 @@ class ArticleLiteOpt:
                 # 有的广告点击返回返回不了 这里判断是否回到广告页
                 stats, position = find_screen_text_button_position(self.device_id, '广告', '广告')
                 if not stats:
+                    tap(self.device_id, (180, 170))
                     print_help_text(self.device_id, "跳回到今日头条极速版")
                     start_app(self.device_id, self.app_name)
 
@@ -244,7 +245,7 @@ class ArticleLiteOpt:
                 # 点击
                 tap(self.device_id, position)
                 # 开始刷15次
-                for n in range(13):
+                for n in range(14):
                     number = n + 1
                     print_help_text(self.device_id, "第%s/13次" % number)
                     up_short_swipe(self.device_id)
