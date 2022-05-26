@@ -122,6 +122,7 @@ class UGCLiteOpt:
                 tap(self.device_id, position)
                 break
             up_long_swipe(self.device_id)
+        time.sleep(1)
         print_help_text(self.device_id, "开始刷爆款1分钟")
         status, position = find_screen_text_button_position(self.device_id, "点击领取", "点击领取")
         if status:

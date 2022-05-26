@@ -82,12 +82,10 @@ class UGCOpt:
         while status:
             print_help_text(self.device_id, "看广告")
             time.sleep(34)
-            print_help_text(self.device_id, "点击关闭广告")
-            tap(self.device_id, self.ad_shut)
-            time.sleep(1)
             stats, box, result = find_screen_text_position(self.device_id, "开心收下")
             if stats:
                 # 结束看广告
+                print_help_text(self.device_id, "开心收下")
                 position = find_screen_by_result(result, "开心收下")
                 tap(self.device_id, position)
                 break
@@ -96,6 +94,16 @@ class UGCOpt:
                 print_help_text(self.device_id, "继续看广告")
                 tap(self.device_id, position)
                 continue
+            position = find_screen_by_result(result, "活动时间")
+            if position:
+                status = False
+            print_help_text(self.device_id, "点击关闭广告")
+            tap(self.device_id, self.ad_shut)
+            status = False
+        stats, position = find_screen_text_button_position(self.device_id, "开心收下", "开心收下")
+        if stats:
+            tap(self.device_id, position)
+
 
 
     # 刷广告
@@ -105,7 +113,7 @@ class UGCOpt:
         self.back_top()
         for i in range(3):
             print_help_text(self.device_id, "找看广告的按钮")
-            status, position = find_screen_text_button_position(self.device_id, "看广告", "去看看")
+            status, position = find_screen_text_button_position(self.device_id, "看广告视频", "去看看")
             if status:
                 tap(self.device_id, position)
                 self.ad()
@@ -120,7 +128,8 @@ class UGCOpt:
         up_long_swipe(self.device_id)
         status, position = find_screen_text_button_position(self.device_id, "开宝箱领奖", "开宝箱领奖")
         if status:
-            tap(self.device_id, position)
+            print_help_text(self.device_id, "开宝箱")
+            tap(self.device_id, (930, 2110))
             time.sleep(0.5)
             # 点击看广告
             tap(self.device_id, self.coin_box_ad)
@@ -154,4 +163,4 @@ class UGCOpt:
 
 if __name__ == "__main__":
     ugc_obj = UGCOpt("192.168.31.123:5555")
-    ugc_obj.auto_run(light_screen_stats=False, watch_video=False, watch_ad=True, watch_coin_box=True)
+    ugc_obj.auto_run(light_screen_stats=False, watch_video=False, watch_ad=False, watch_coin_box=True)

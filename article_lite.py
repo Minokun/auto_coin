@@ -62,11 +62,10 @@ class ArticleLiteOpt:
             check_position = find_screen_by_result(result, '查看详情')
             xz_position = find_screen_by_result(result, "立即下载")
             button_position = check_position if check_position else xz_position
-            tm_position = find_screen_by_result(result, "天猫")
             tb_position = find_screen_by_result(result, "淘宝")
             jd_position = find_screen_by_result(result, "京东")
             mt_position = find_screen_by_result(result, "美团")
-            position = () if (tm_position or tb_position or jd_position or mt_position or not button_position) else button_position
+            position = () if (tb_position or jd_position or mt_position or not button_position) else button_position
             if position:
                 print_help_text(self.device_id, "点击查看详情")
                 tap(self.device_id, position)
@@ -76,16 +75,12 @@ class ArticleLiteOpt:
                     time.sleep(1)
                 print_help_text(self.device_id, "返回")
                 press_back(self.device_id)
+                time.sleep(1)
                 # 有的广告点击返回返回不了 这里判断是否回到广告页
-                stats, box, result = find_screen_text_position(self.device_id, "广告")
+                stats, position = find_screen_text_button_position(self.device_id, '广告', '广告')
                 if not stats:
-                    x_position = find_screen_by_result(result, "X")
-                    if x_position:
-                        tap(self.device_id, x_position)
-                    else:
-                        print_help_text(self.device_id, "跳回到今日头条极速版")
-                        press_back(self.device_id)
-                        press_back(self.device_id)
+                    print_help_text(self.device_id, "跳回到今日头条极速版")
+                    start_app(self.device_id, self.app_name)
 
             # 如果有再看视频 点击再看
             zk_stats, box, result = find_screen_text_position(self.device_id, "再看")
@@ -110,7 +105,7 @@ class ArticleLiteOpt:
                 tap(self.device_id, self.ads_shut)
 
             # 看是否广告看完了
-            status = find_screen_text_button_position(self.device_id, "首页", "首页")
+            status, position = find_screen_text_button_position(self.device_id, "首页", "首页")
             if not status:
                 # 老版本 还得点一下看广告
                 print_help_text(self.device_id, "继续看下一个")
@@ -144,10 +139,13 @@ class ArticleLiteOpt:
                 print_help_text(self.device_id, "发现阅读惊喜奖励 开始领金币")
                 tap(self.device_id, position)
                 time.sleep(1)
-                print_help_text(self.device_id, "点击看广告")
-                tap(self.device_id, self.ads_position)
-                print_help_text(self.device_id, "开始看广告")
-                self.watch_ad()
+                stats, position = find_screen_text_button_position(self.device_id, "恭喜您", "恭喜您")
+                if stats:
+                    print_help_text(self.device_id, "点击看广告")
+                    tap(self.device_id, self.ads_position)
+                    self.watch_ad()
+                else:
+                    press_back(self.device_id)
             # 如果是第一次做活跃则慢慢刷 其他直接找阅读惊喜奖励
             if first_stats:
                 time.sleep(get_random_time())
@@ -285,5 +283,6 @@ class ArticleLiteOpt:
 
 if __name__ == "__main__":
     article_obj = ArticleLiteOpt("192.168.101.101:5555")
-    article_obj.auto_run(first_status=False, light_screen_stats=False, read_article=False, watch_small_video=False,
-                                  watch_coin_box=True, watch_ad=True, watch_goods=False)
+
+    # article_obj.auto_run(first_status=False, light_screen_stats=False, read_article=False, watch_small_video=False,
+    #                               watch_coin_box=True, watch_ad=True, watch_goods=False)

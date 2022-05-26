@@ -67,6 +67,7 @@ class DragonReadOpt:
             jump_position = find_screen_by_result(result, "跳过")
             if jump_position:
                 continue
+            time.sleep(1)
             tap(self.device_id, self.ad_shut)
             status = False
 
@@ -124,5 +125,5 @@ class DragonReadOpt:
             self.coin_box()
 
 if __name__ == "__main__":
-    dragon_read_obj = DragonReadOpt("192.168.101.103:5555")
+    dragon_read_obj = DragonReadOpt("192.168.31.123:5555")
     dragon_read_obj.auto_run(light_screen_stats=False)

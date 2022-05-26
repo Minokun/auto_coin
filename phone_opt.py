@@ -323,4 +323,6 @@ def unclock_all_devices():
 
 if __name__ == "__main__":
     # reboot_adb()
-    unlock_device("192.168.101.100:8888")
+    # unlock_device("192.168.101.100:8888")
+    stats, position = find_screen_text_button_position("192.168.31.123:5555", "广告", "广告")
+    print(stats, position)
