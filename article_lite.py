@@ -147,10 +147,10 @@ class ArticleLiteOpt:
                 print_help_text(self.device_id, "发现阅读惊喜奖励 开始领金币")
                 tap(self.device_id, position)
                 time.sleep(1)
-                stats, position = find_screen_text_button_position(self.device_id, "恭喜您", "恭喜您")
+                stats, position = find_screen_text_button_position(self.device_id, "再领", "再领")
                 if stats:
                     print_help_text(self.device_id, "点击看广告")
-                    tap(self.device_id, self.ads_position)
+                    tap(self.device_id, position)
                     self.watch_ad()
                 else:
                     press_back(self.device_id)
