@@ -58,7 +58,11 @@ class ArticleLiteOpt:
         print_help_text(self.device_id, "开始看广告")
         status = False
         while not status:
-            time.sleep(20)
+            time.sleep(1)
+            main_stats, main_position = find_screen_text_button_position(self.device_id, "首页", "首页")
+            if main_stats:
+                break
+            time.sleep(16)
             # 如果有 查看详情 立即下载的按钮 则先点击后在返回
             check_status, box, result = find_screen_text_position(self.device_id, "下载")
             check_position = find_screen_by_result(result, '查看详情')

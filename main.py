@@ -8,7 +8,7 @@ from ugc_lite import UGCLiteOpt
 from ugc import UGCOpt
 from dragon_read import DragonReadOpt
 
-total_num = 1
+total_num = 30
 total_end_num = 0
 
 

@@ -128,8 +128,8 @@ class UGCLiteOpt:
         if status:
             print_help_text(self.device_id, "点击领取金币")
             tap(self.device_id, position)
-        for i in range(70):
-            print_help_text(self.device_id, "第%s/70次" % str(i + 1))
+        for i in range(75):
+            print_help_text(self.device_id, "第%s/75次" % str(i + 1))
             up_short_swipe(self.device_id)
         print_help_text(self.device_id, "返回")
         press_back(self.device_id)
