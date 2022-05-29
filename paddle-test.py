@@ -3,12 +3,21 @@ from paddleocr import PaddleOCR, draw_ocr
 # Paddleocr目前支持的多语言语种可以通过修改lang参数进行切换
 # 例如`ch`, `en`, `fr`, `german`, `korean`, `japan`
 ocr = PaddleOCR(use_angle_cls=True, lang="ch")  # need to run only once to download and load model into memory
-img_path = './media/screen_192.168.31.123.png'
+img_path = './media/screen_192.168.101.101.png'
 result = ocr.ocr(img_path, cls=True)
+box = []
 for line in result:
-    if line[1][0].find('朋友') >= 0:
-        print('yesyesyes ************ ', line)
+    if line[1][0].find('阅读惊喜奖励') >= 0:
+       box = line[0]
     print(line)
+
+# button_text = '领金币'
+# y_ad = box[1][1]
+# for line in result:
+#     # 如果找到了该位置
+#     if line[1][0].find(button_text) >= 0 and line[0][0][1] >= (y_ad - 80) and line[0][0][1] <= (y_ad + 80):
+#         x, y = int((line[0][0][0] + line[0][1][0]) / 2), int((line[0][0][1] + line[0][1][1]) / 2)
+# print(x, y)
 
 # 显示结果
 from PIL import Image

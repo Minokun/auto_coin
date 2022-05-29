@@ -36,9 +36,9 @@ paddle_ocr_obj = DetectPic()
 
 if __name__ == "__main__":
     detect_pic = DetectPic()
-    result = detect_pic.detect_bottom('media/screen_192.168.31.123.png')
+    result = detect_pic.detect_bottom('media/screen_192.168.101.101.png')
     print(result)
 
     for i in detect_pic.bottom_list:
-        if i[1][0].find("广告") >= 0:
+        if i[1][0].find("领金币") >= 0:
             print(i)

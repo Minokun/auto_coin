@@ -4,6 +4,7 @@ import subprocess
 import time
 import os, sys
 from paddle_opt import paddle_ocr_obj
+from datetime import datetime
 
 
 # app名称
@@ -40,18 +41,18 @@ device_passwd = {
 }
 
 device_user = {
-    "wxk": ["192.168.31.123:5555", "192.168.101.103:5555", "QKXUT20329000108"],
+    "wxk": ["192.168.31.123:5555", "192.168.101.101:5555", "QKXUT20329000108"],
     "fl": ["192.168.101.100:5555", "94P0220C01001100"]
 }
 
-online_id_list = ["192.168.101.100:5555", "192.168.31.123:5555", "QKXUT20329000108"]
-# offline_id_list = ["192.168.101.101:5555"]
-offline_id_list = ["192.168.101.103:5555"]
+online_id_list = ["192.168.101.100:5555", "192.168.31.123:5555", "192.168.101.101:5555"]
+offline_id_list = ["192.168.101.100:5555"]
+#offline_id_list = []
 device_id_list = list(set(online_id_list) - set(offline_id_list))
 
 
 def print_help_text(device_id, help_text):
-    text = "*************************** 设备：%s  执行步骤：%s ***************************" % (device_id, help_text)
+    text = "[设备：%s] %s 执行步骤：%s" % (device_id, datetime.now().strftime("%H:%M:%S"), help_text)
     print(text)
 
 
@@ -239,7 +240,7 @@ def find_screen_text_button_position(device_id, text, button_text, top_normal_bo
         y_ad = box[0][1]
         for line in result:
             # 如果找到了该位置
-            if line[1][0].find(button_text) >= 0 and line[0][2][1] >= y_ad:
+            if line[1][0].find(button_text) >= 0 and line[0][0][1] >= (y_ad - 80) and line[0][0][1] <= (y_ad + 80):
                 x, y = int((line[0][0][0] + line[0][1][0]) / 2), int((line[0][0][1] + line[0][1][1]) / 2)
                 return True, (x, y)
     return False, ()
@@ -269,7 +270,7 @@ def tap(device_id, position):
 
 
 # 滑动
-def swipe(device_id, position_start, position_end, time_period=200):
+def swipe(device_id, position_start, position_end, time_period=150):
     x_s, y_s = position_start
     x_e, y_e = position_end
     command = "adb -s %s shell input swipe %s %s %s %s %s" % (device_id, x_s, y_s, x_e, y_e, time_period)
@@ -278,12 +279,12 @@ def swipe(device_id, position_start, position_end, time_period=200):
 
 # 上滑 短程
 def up_short_swipe(device_id):
-    swipe(device_id, (40, 2000), (40, 1600))
+    swipe(device_id, (40, 2000), (40, 1400))
 
 
 # 长上滑
 def up_long_swipe(device_id):
-    swipe(device_id, (40, 2000), (40, 650), 600)
+    swipe(device_id, (40, 2000), (40, 550), 550)
 
 
 # 下滑 短程
@@ -293,7 +294,7 @@ def down_short_swipe(device_id):
 
 # 长下滑
 def down_long_swipe(device_id):
-    swipe(device_id, (40, 500), (40, 2000), 600)
+    swipe(device_id, (40, 550), (40, 2000), 550)
 
 
 # 启动app
@@ -329,8 +330,9 @@ def unclock_all_devices():
         )
     wait(unlock_task_list)
 
+
 if __name__ == "__main__":
     # reboot_adb()
     # unlock_device("192.168.101.100:8888")
-    stats, position = find_screen_text_button_position("192.168.31.123:5555", "广告", "广告")
+    stats, position = find_screen_text_button_position("192.168.101.101:5555", "已成功领取", "已成功领取")
     print(stats, position)

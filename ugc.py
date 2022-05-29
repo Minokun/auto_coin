@@ -13,6 +13,7 @@ class UGCOpt:
         # 首页底部任务按钮
         self.my_position = (970, 2320)
         self.my_task_position = (980, 190)
+        self.main_position = (100, 2330)
         # 关闭广告的按键
         self.ad_shut = (980, 150)
         # 看广告中间的继续按钮
@@ -31,7 +32,15 @@ class UGCOpt:
 
     # 看视频
     def watch_video(self, time_period=60000):
-        self.back_main_coin()
+        for i in range(4):
+            print_help_text(self.device_id, "回到首页")
+            main_status, _, result = find_screen_text_position(self.device_id, "首页")
+            if main_status:
+                break
+            else:
+                press_back(self.device_id)
+        # 点击首页
+        tap(self.device_id, self.main_position)
         per_video_time = 6000
         num = math.ceil(time_period / per_video_time)
         for i in range(num):
@@ -97,7 +106,7 @@ class UGCOpt:
                 status = False
             print_help_text(self.device_id, "点击关闭广告")
             tap(self.device_id, self.ad_shut)
-            status = False
+            break
         stats, position = find_screen_text_button_position(self.device_id, "开心收下", "开心收下")
         if stats:
             tap(self.device_id, position)
@@ -160,5 +169,5 @@ class UGCOpt:
 
 
 if __name__ == "__main__":
-    ugc_obj = UGCOpt("192.168.31.123:5555")
-    ugc_obj.auto_run(light_screen_stats=False, watch_video=False, watch_ad=False, watch_coin_box=True)
+    ugc_obj = UGCOpt("192.168.101.101:5555")
+    ugc_obj.auto_run(light_screen_stats=False, watch_video=False, watch_ad=True, watch_coin_box=True)

@@ -13,7 +13,7 @@ class UGCLiteOpt:
         # 首页底部任务按钮
         self.main_coin_position = (550, 2330)
         # 关闭广告的按键
-        self.ad_shut = (980, 150)
+        self.ad_shut = (990, 150)
         # 看广告中间的继续按钮
         self.ad_continue_menu_position = (530, 1380)
         # 点击宝箱中间得看广告视频
@@ -64,22 +64,37 @@ class UGCLiteOpt:
 
     # 看广告
     def ad(self):
-        status = True
-        while status:
+        while True:
             print_help_text(self.device_id, "看广告")
-            time.sleep(34)
-            for i in range(3):
-                ad_status, position = find_screen_text_button_position(self.device_id, "X", "X")
+            time.sleep(32)
+            ad_status, position = find_screen_text_button_position(self.device_id, "反馈", "反馈")
+            if ad_status:
+                print_help_text(self.device_id, "关闭广告")
+                tap(self.device_id, self.ad_shut)
+            else:
+                print_help_text(self.device_id, "关掉当前广告页再点击关掉广告")
+                tap(self.device_id, (60, 150))
+                time.sleep(1)
+                tap(self.device_id, self.ad_shut)
+            time.sleep(1)
+            status, lq_position = find_screen_text_button_position(self.device_id, "领取奖励", "领取奖励")
+            if lq_position:
+                print_help_text(self.device_id, "领取奖励")
+                tap(self.device_id, lq_position)
+                continue
+            else:
+                ad_status, position = find_screen_text_button_position(self.device_id, "反馈", "反馈")
                 if ad_status:
-                    print_help_text(self.device_id, "关闭广告")
-                    tap(self.device_id, position)
-                    break
-                else:
-                    press_back(self.device_id)
-            time.sleep(2)
-            status, _, _ = find_screen_text_position(self.device_id, "再看")
+                    print_help_text(self.device_id, "再次关闭广告")
+                    tap(self.device_id, self.ad_shut)
+            status, jx_position = find_screen_text_button_position(self.device_id, "继续", "继续")
             if status:
-                tap(self.device_id, self.ad_continue_menu_position)
+                print_help_text(self.device_id, "继续观看")
+                tap(self.device_id, jx_position)
+                time.sleep(10)
+                print_help_text(self.device_id, "关掉广告")
+                tap(self.device_id, self.ad_shut)
+            break
 
     # 刷广告
     def watch_ad(self):
@@ -200,6 +215,6 @@ class UGCLiteOpt:
 
 
 if __name__ == "__main__":
-    ugc_lite_obj = UGCLiteOpt("192.168.101.103:5555")
-    ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=False, watch_ad=False,
-                          watch_coin_box=False)
+    ugc_lite_obj = UGCLiteOpt("192.168.101.101:5555")
+    ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=False, watch_ad=True,
+                          watch_coin_box=True)

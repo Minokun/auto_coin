@@ -125,5 +125,5 @@ class DragonReadOpt:
             self.coin_box()
 
 if __name__ == "__main__":
-    dragon_read_obj = DragonReadOpt("192.168.31.123:5555")
+    dragon_read_obj = DragonReadOpt("192.168.101.101:5555")
     dragon_read_obj.auto_run(light_screen_stats=False)

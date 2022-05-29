@@ -7,7 +7,7 @@ from article_lite import ArticleLiteOpt
 from ugc_lite import UGCLiteOpt
 from ugc import UGCOpt
 from dragon_read import DragonReadOpt
-
+from kuaishou import KuaiShouOpt
 total_num = 30
 total_end_num = 0
 
@@ -24,18 +24,22 @@ def run(device_id, first_status=False):
     ugc_obj = UGCOpt(device_id)
     # 番茄小说
     dragon_read = DragonReadOpt(device_id)
+    # 快手+
+    kuai_shou = KuaiShouOpt(device_id)
     if first_status:
         # 每天第一次运行 需要做活跃和只有一次的任务
-        article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=True, watch_small_video=True,
-                                  watch_coin_box=True, watch_ad=True, watch_goods=True)
         ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_coin_box=False, watch_ad=False)
+        article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=True, watch_small_video=False,
+                                  watch_coin_box=True, watch_ad=True, watch_goods=True)
+        kuai_shou.auto_run(light_screen_stats=False)
         ugc_obj.auto_run(light_screen_stats=False)
         dragon_read.auto_run(light_screen_stats=False)
     else:
+        ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=False, watch_coin_box=True,
+                              watch_ad=True, shopping=True)
         article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=True, watch_small_video=False,
                                   watch_coin_box=True, watch_ad=True, watch_goods=True)
-        ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=True, watch_coin_box=False,
-                              watch_ad=False, shopping=True)
+        kuai_shou.auto_run(light_screen_stats=False, watch_ad=True, watch_coin_box=True)
         ugc_obj.auto_run(light_screen_stats=False, watch_video=False)
         dragon_read.auto_run(light_screen_stats=False)
     total_end_num += 1
