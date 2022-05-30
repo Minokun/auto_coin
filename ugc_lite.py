@@ -72,11 +72,22 @@ class UGCLiteOpt:
                 print_help_text(self.device_id, "关闭广告")
                 tap(self.device_id, self.ad_shut)
             else:
+                stats, _ = find_screen_text_button_position(self.device_id, "X", "X")
+                if not stats:
+                    press_back(self.device_id)
                 print_help_text(self.device_id, "关掉当前广告页再点击关掉广告")
                 tap(self.device_id, (60, 150))
                 time.sleep(1)
                 tap(self.device_id, self.ad_shut)
-            time.sleep(1)
+            time.sleep(2)
+            status, jx_position = find_screen_text_button_position(self.device_id, "继续", "继续")
+            if status:
+                print_help_text(self.device_id, "继续观看")
+                tap(self.device_id, jx_position)
+                time.sleep(10)
+                print_help_text(self.device_id, "关掉广告")
+                tap(self.device_id, self.ad_shut)
+
             status, lq_position = find_screen_text_button_position(self.device_id, "领取奖励", "领取奖励")
             if lq_position:
                 print_help_text(self.device_id, "领取奖励")
@@ -87,13 +98,6 @@ class UGCLiteOpt:
                 if ad_status:
                     print_help_text(self.device_id, "再次关闭广告")
                     tap(self.device_id, self.ad_shut)
-            status, jx_position = find_screen_text_button_position(self.device_id, "继续", "继续")
-            if status:
-                print_help_text(self.device_id, "继续观看")
-                tap(self.device_id, jx_position)
-                time.sleep(10)
-                print_help_text(self.device_id, "关掉广告")
-                tap(self.device_id, self.ad_shut)
             break
 
     # 刷广告

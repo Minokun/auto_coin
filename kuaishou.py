@@ -33,13 +33,13 @@ class KuaiShouOpt:
                 tap(self.device_id, position)
 
     # 看视频
-    def watch_video(self, times=25):
+    def watch_video(self, times=30):
         self.back_main_coin()
         tap(self.device_id, self.main_position)
         for i in range(times):
             print_help_text(self.device_id, "第%s/%s次刷视频" % (str(i + 1), str(times)))
             up_short_swipe(self.device_id)
-            time.sleep(get_random_time(15, 20))
+            time.sleep(get_random_time(10, 15))
 
     # 返回首页再进入任务页面
     def back_main_coin(self):
@@ -124,8 +124,31 @@ class KuaiShouOpt:
         else:
             print_help_text(self.device_id, "当前无宝箱可看")
 
+    def shopping(self):
+        self.back_main_coin()
+        # 点击红包菜单
+        print_help_text(self.device_id, "点击去赚钱")
+        tap(self.device_id, self.task_position)
+        self.rm_ad()
+        for i in range(4):
+            stats, position = find_screen_text_button_position(self.device_id, "逛街领", "去逛街")
+            if not stats:
+                up_long_swipe(self.device_id)
+                continue
+            else:
+                print_help_text(self.device_id, "点击去逛街")
+                tap(self.device_id, position)
+                for i in range(200):
+                    print_help_text(self.device_id, "逛街第%s/200次" % str(i + 1))
+                    up_short_swipe(self.device_id)
+                    time.sleep(5)
+                print_help_text(self.device_id, "返回")
+                press_back(self.device_id)
+                stats, position = find_screen_text_button_position(self.device_id, "放弃奖励", "放弃奖励")
+                if stats:
+                    tap(self.device_id, position)
 
-    def auto_run(self, light_screen_stats=False, watch_video=True, watch_coin_box=True, watch_ad=True):
+    def auto_run(self, light_screen_stats=False, watch_video=True, watch_coin_box=True, watch_ad=True, shopping=False):
         # 解锁手机
         if light_screen_stats:
             print_help_text(self.device_id, "解锁手机")
@@ -145,8 +168,12 @@ class KuaiShouOpt:
         if watch_video:
             print_help_text(self.device_id, "开始看视频")
             self.watch_video()
+        # 逛街
+        if shopping:
+            print_help_text(self.device_id, "去逛街")
+            self.shopping()
 
 
 if __name__ == "__main__":
-    ks_obj = KuaiShouOpt("192.168.101.101:5555")
-    ks_obj.auto_run(light_screen_stats=False, watch_video=True, watch_ad=True, watch_coin_box=True)
+    ks_obj = KuaiShouOpt("192.168.31.123:5555")
+    ks_obj.auto_run(light_screen_stats=False, watch_video=False, watch_ad=False, watch_coin_box=False, shopping=True)
