@@ -61,7 +61,7 @@ class DragonReadOpt:
                 break
             position = find_screen_by_result(result, "再看")
             if status_continue:
-                print_help_text(self.device_id, "继续下一个广告")
+                print_help_text(self.device_id, "继续")
                 tap(self.device_id, position)
                 continue
             jump_position = find_screen_by_result(result, "跳过")
