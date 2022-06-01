@@ -75,6 +75,7 @@ class ArticleLiteOpt:
                     up_long_swipe(self.device_id)
                 # 退出详情
                 print_help_text(self.device_id, "退出详情")
+                tap(self.device_id, ())
                 press_back(self.device_id)
                 time.sleep(1)
                 # 如果没有回到广告页
@@ -240,10 +241,10 @@ class ArticleLiteOpt:
                 # 点击
                 tap(self.device_id, position)
                 # 开始刷15次
-                for n in range(15):
+                for n in range(20):
                     number = n + 1
-                    print_help_text(self.device_id, "第%s/15次" % number)
-                    up_short_swipe(self.device_id)
+                    print_help_text(self.device_id, "第%s/20次" % number)
+                    up_long_swipe(self.device_id)
                     time.sleep(get_random_time())
                 # 返回
                 press_back(self.device_id)

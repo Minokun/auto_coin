@@ -312,7 +312,7 @@ def shut_app(device_id, app):
     opt_sys_command(command)
 
 
-def get_random_time(min=3, max=7):
+def get_random_time(min=1, max=3):
     # 随机生产事件间隔
     return random.randint(min, max)
 
