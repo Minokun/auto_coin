@@ -37,7 +37,7 @@ def run(device_id, first_status=False):
     else:
         ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=True, watch_coin_box=True,
                               watch_ad=True, shopping=True)
-        article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=False, watch_small_video=False,
+        article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=True, watch_small_video=False,
                                   watch_coin_box=True, watch_ad=True, watch_goods=True)
         kuai_shou.auto_run(light_screen_stats=False, watch_ad=True, watch_coin_box=True)
         ugc_obj.auto_run(light_screen_stats=False, watch_video=False)

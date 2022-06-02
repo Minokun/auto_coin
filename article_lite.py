@@ -75,7 +75,7 @@ class ArticleLiteOpt:
                     up_long_swipe(self.device_id)
                 # 退出详情
                 print_help_text(self.device_id, "退出详情")
-                tap(self.device_id, ())
+                tap(self.device_id, (163, 177))
                 press_back(self.device_id)
                 time.sleep(1)
                 # 如果没有回到广告页
