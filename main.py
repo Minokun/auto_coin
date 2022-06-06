@@ -88,7 +88,7 @@ def main():
 
 
 if __name__ == "__main__":
-    # main()
-    ks_obj = UGCOpt("192.168.101.101:5555")
+    main()
+    # ks_obj = UGCOpt("192.168.101.101:5555")
     # ks_obj.auto_run(light_screen_stats=False, watch_video=True, watch_ad=True, watch_coin_box=True, shopping=True)
-    print(ks_obj.get_coin_num())
+    # print(ks_obj.get_coin_num())
