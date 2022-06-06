@@ -6,7 +6,6 @@ import os, sys
 from paddle_opt import paddle_ocr_obj
 from datetime import datetime
 
-
 # app名称
 app_name = {
     "ugc": "抖音",
@@ -43,15 +42,16 @@ device_passwd = {
 }
 
 device_user = {
-    "wxk": ["192.168.31.123:5555", "192.168.101.101:5555", "QKXUT20329000108"],
+    "wxk": ["192.168.101.101:5555", "192.168.31.123:5555", "QKXUT20329000108"],
     "fl": ["192.168.101.100:5555", "94P0220C01001100"],
-    "cpc": ["192.168.101.103:5555"],
-    "cpc2": ["192.168.101.104:5555"]
+    "cpc": ["192.168.101.103:5555", "192.168.31.212:5555"],
+    "cpc2": ["192.168.101.104:5555", "192.168.31.227:5555"]
 }
 
-online_id_list = ["192.168.101.100:5555", "192.168.31.123:5555", "192.168.101.101:5555", "d2b75f1d"]
+online_id_list = ["192.168.101.100:5555", "192.168.101.101:5555", "192.168.31.123:5555", "192.168.31.212:5555",
+                  "192.168.31.227:5555", "d2b75f1d"]
 offline_id_list = ["192.168.101.100:5555"]
-#offline_id_list = []
+# offline_id_list = []
 device_id_list = list(set(online_id_list) - set(offline_id_list))
 
 
@@ -65,7 +65,7 @@ def opt_sys_command(command, sleep_time=1):
     p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     p.wait()
     result = p.communicate()[0].decode()
-    time.sleep(sleep_time)
+    time.sleep(1)
     return result.split('\r\n')
 
 
@@ -122,6 +122,7 @@ def reboot_adb():
 reboot_adb()
 
 CurrentDeviceList = get_all_device_id()
+
 
 def get_user_passwd(device_id):
     # 获取用户锁屏密码
@@ -203,12 +204,14 @@ def screen_cap(device_id):
     opt_sys_command(command)
     return png_name
 
+
 # 拷贝图片
 def screen_pull(device_id, png_name):
     local_png = "media/" + png_name.split('/')[-1]
     command = "adb -s " + device_id + " pull %s %s" % (png_name, local_png)
     opt_sys_command(command)
     return local_png
+
 
 # 查找屏幕中某个字的位置
 def find_screen_text_position(device_id, text, top_normal_bottom='normal'):
@@ -259,6 +262,7 @@ def find_screen_by_result(result, text):
             position = (x, y)
             return position
     return ()
+
 
 # 点击
 def tap(device_id, position):
@@ -315,12 +319,14 @@ def shut_app(device_id, app):
     command = "adb -s " + device_id + " shell am force-stop " + app_package_name[app]
     opt_sys_command(command)
 
+
 def get_phone_wh(device_id):
     command = "adb -s " + device_id + " shell wm size"
     lines = opt_sys_command(command)
     wh = lines[0].split(':')[-1].strip().split("x")
     wh = (wh[0], wh[1])
     return wh
+
 
 def get_random_time(min=1, max=3):
     # 随机生产事件间隔

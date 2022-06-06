@@ -18,6 +18,8 @@ class DetectPic:
     def detect_top(self, img):
         result = self.detect(img)
         self.top_list = []
+        if not result:
+            return ''
         for i in result:
             if i[0][3][1] < self.top_y_position:
                 self.top_list.append(i)
@@ -26,6 +28,8 @@ class DetectPic:
     def detect_bottom(self, img):
         result = self.detect(img)
         self.bottom_list = []
+        if not result:
+            return ''
         for i in result:
             if i[0][3][1] > self.bottom_y_position:
                 self.bottom_list.append(i)

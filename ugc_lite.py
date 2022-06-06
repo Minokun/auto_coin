@@ -143,6 +143,8 @@ class UGCLiteOpt:
                 tap(self.device_id, position)
                 break
             up_long_swipe(self.device_id)
+        if not status:
+            return False
         time.sleep(1)
         print_help_text(self.device_id, "开始刷爆款1分钟")
         status, position = find_screen_text_button_position(self.device_id, "点击领取", "点击领取")
@@ -187,7 +189,7 @@ class UGCLiteOpt:
                 tap(self.device_id, position)
         print("今天逛街奖励已经领取完毕！")
 
-    def auto_run(self, light_screen_stats=True, watch_video=True, watch_baokuan=True, search=True, watch_coin_box=True,
+    def auto_run(self, first_status=False, light_screen_stats=True, watch_video=True, watch_baokuan=True, search=True, watch_coin_box=True,
                  watch_ad=True, walk=True, shopping=True):
         # 解锁手机
         if light_screen_stats:
@@ -202,7 +204,7 @@ class UGCLiteOpt:
             print_help_text(self.device_id, "开始看视频")
             self.watch_video()
         # 看爆款
-        if watch_baokuan:
+        if first_status and watch_baokuan:
             print_help_text(self.device_id, "开始刷爆款")
             self.watch_baokuan()
         # 看广告
@@ -221,6 +223,6 @@ class UGCLiteOpt:
 
 
 if __name__ == "__main__":
-    ugc_lite_obj = UGCLiteOpt("192.168.101.103:5555")
-    ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=True, watch_ad=True,
+    ugc_lite_obj = UGCLiteOpt("192.168.31.227:5555")
+    ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=True, watch_baokuan=True, watch_ad=True,
                           watch_coin_box=True)

@@ -203,6 +203,8 @@ class ArticleLiteOpt:
         tap(self.device_id, (1000, 320))
         # 找小视频
         status, box, _ = find_screen_text_position(self.device_id, "小视频")
+        if not status:
+            return False
         # 点击小视频
         position = (box[0][0] + 10, box[0][1] + 10)
         tap(self.device_id, position)
@@ -284,7 +286,7 @@ class ArticleLiteOpt:
 
 
 if __name__ == "__main__":
-    article_obj = ArticleLiteOpt("192.168.101.103:5555")
+    article_obj = ArticleLiteOpt("192.168.31.227:5555")
 
-    article_obj.auto_run(first_status=False, light_screen_stats=False, read_article=False, watch_small_video=False,
+    article_obj.auto_run(first_status=True, light_screen_stats=True, read_article=False, watch_small_video=False,
                                   watch_coin_box=False, watch_ad=False, watch_goods=True)
