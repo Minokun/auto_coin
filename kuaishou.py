@@ -11,16 +11,18 @@ class KuaiShouOpt:
     def __init__(self, device_id):
         self.device_id = device_id
         self.app_name = "kuaishou"
+        self.wight, self.height = get_phone_wh(self.device_id)
+        self.height_scale = int(self.height) / 2400
         # 首页
-        self.main_position = (100, 2330)
+        self.main_position = (100, int(2330 * self.height_scale))
         # 去赚钱
-        self.task_position = (780, 2300)
+        self.task_position = (780, int(2300 * self.height_scale))
         # 关闭广告的按键
-        self.ad_shut = (980, 150)
+        self.ad_shut = (980, int(150 * self.height_scale))
         # 看广告中间的继续按钮
-        self.ad_continue_menu_position = (530, 1380)
+        self.ad_continue_menu_position = (530, int(1380 * self.height_scale))
         # 点击宝箱中间得看广告视频
-        self.coin_box_ad = (520, 1450)
+        self.coin_box_ad = (520, int(1450 * self.height_scale))
 
     def start_huaishou_app(self):
         start_app(self.device_id, self.app_name)
@@ -180,5 +182,5 @@ class KuaiShouOpt:
 
 
 if __name__ == "__main__":
-    ks_obj = KuaiShouOpt("192.168.31.123:5555")
-    ks_obj.auto_run(light_screen_stats=False, watch_video=False, watch_ad=False, watch_coin_box=False, shopping=True)
+    ks_obj = KuaiShouOpt("192.168.101.103:5555")
+    ks_obj.auto_run(light_screen_stats=False, watch_video=True, watch_ad=True, watch_coin_box=True, shopping=True)

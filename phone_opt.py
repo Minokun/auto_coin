@@ -37,15 +37,19 @@ app_activity_name = {
 
 device_passwd = {
     "wxk": "910729",
-    "fl": "191729"
+    "fl": "191729",
+    "cpc": "2325",
+    "cpc2": "123456"
 }
 
 device_user = {
     "wxk": ["192.168.31.123:5555", "192.168.101.101:5555", "QKXUT20329000108"],
-    "fl": ["192.168.101.100:5555", "94P0220C01001100"]
+    "fl": ["192.168.101.100:5555", "94P0220C01001100"],
+    "cpc": ["192.168.101.103:5555"],
+    "cpc2": ["192.168.101.104:5555"]
 }
 
-online_id_list = ["192.168.101.100:5555", "192.168.31.123:5555", "192.168.101.101:5555"]
+online_id_list = ["192.168.101.100:5555", "192.168.31.123:5555", "192.168.101.101:5555", "d2b75f1d"]
 offline_id_list = ["192.168.101.100:5555"]
 #offline_id_list = []
 device_id_list = list(set(online_id_list) - set(offline_id_list))
@@ -311,6 +315,12 @@ def shut_app(device_id, app):
     command = "adb -s " + device_id + " shell am force-stop " + app_package_name[app]
     opt_sys_command(command)
 
+def get_phone_wh(device_id):
+    command = "adb -s " + device_id + " shell wm size"
+    lines = opt_sys_command(command)
+    wh = lines[0].split(':')[-1].strip().split("x")
+    wh = (wh[0], wh[1])
+    return wh
 
 def get_random_time(min=1, max=3):
     # 随机生产事件间隔
@@ -334,5 +344,6 @@ def unclock_all_devices():
 if __name__ == "__main__":
     # reboot_adb()
     # unlock_device("192.168.101.100:8888")
-    stats, position = find_screen_text_button_position("192.168.101.101:5555", "已成功领取", "已成功领取")
-    print(stats, position)
+    device_id = "192.168.101.103:5555"
+    # stats, position = find_screen_text_button_position("192.168.101.103:5555", "已成功领取", "已成功领取")
+    get_phone_wh(device_id)

@@ -10,16 +10,18 @@ class UGCOpt:
     def __init__(self, device_id):
         self.device_id = device_id
         self.app_name = "ugc"
+        self.wight, self.height = get_phone_wh(self.device_id)
+        self.height_scale = int(self.height) / 2400
         # 首页底部任务按钮
-        self.my_position = (970, 2320)
-        self.my_task_position = (980, 190)
-        self.main_position = (100, 2330)
+        self.my_position = (970, int(2320 * self.height_scale))
+        self.my_task_position = (980, int(190 * self.height_scale))
+        self.main_position = (100, int(2330 * self.height_scale))
         # 关闭广告的按键
-        self.ad_shut = (980, 150)
+        self.ad_shut = (980, int(150 * self.height_scale))
         # 看广告中间的继续按钮
-        self.ad_continue_menu_position = (530, 1380)
+        self.ad_continue_menu_position = (530, int(1380 * self.height_scale))
         # 点击宝箱中间得看广告视频
-        self.coin_box_ad = (520, 1450)
+        self.coin_box_ad = (520, int(1450 * self.height_scale))
 
     def start_ugc_app(self):
         start_app(self.device_id, self.app_name)
@@ -41,7 +43,7 @@ class UGCOpt:
                 press_back(self.device_id)
         # 点击首页
         tap(self.device_id, self.main_position)
-        per_video_time = 6000
+        per_video_time = 60000
         num = math.ceil(time_period / per_video_time)
         for i in range(num):
             print_help_text(self.device_id, "第%s/%s次刷视频" % (str(i + 1), str(num)))

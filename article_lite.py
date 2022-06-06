@@ -10,20 +10,19 @@ class ArticleLiteOpt:
     def __init__(self, device_id):
         self.device_id = device_id
         self.app_name = "article_lite"
+        self.wight, self.height = get_phone_wh(self.device_id)
+        self.height_scale = int(self.height) / 2400
         # 底部菜单的首页按钮坐标
-        self.first_page_menu_position = (110, 2330)
+        self.first_page_menu_position = (110, int(2330 * self.height_scale))
+        self.coin_task_position = (550, int(2330 * self.height_scale))
         # 首页上边菜单栏的推荐按钮坐标
-        self.tuijian_menu_position = (250, 320)
-        # 首页底部菜单栏的开宝箱按钮坐标
-        self.coin_menu_position = (550, 2330)
+        self.tuijian_menu_position = (250, int(320 * self.height_scale))
         # 首页上边菜单栏的全部按钮坐标
-        self.main_task_position = (1000, 320)
-        # 任务界面的宝箱坐标
-        self.coin_box_position = (900, 2130)
+        self.main_task_position = (1000, int(320 * self.height_scale))
         # 点击弹出的中间看广告按钮坐标
-        self.ads_position = (550, 1450)
+        self.ads_position = (550, int(1450 * self.height_scale))
         # 看完广告关闭按钮
-        self.ads_shut = (975, 160)
+        self.ads_shut = (975, int(160 * self.height_scale))
 
     def start_article_app(self):
         print_help_text(self.device_id, "启动今日头条极速版")
@@ -63,8 +62,9 @@ class ArticleLiteOpt:
             stats, box, result = find_screen_text_position(self.device_id, "查看")
             xq_position = find_screen_by_result(result, "查看详情")
             xz_position = find_screen_by_result(result, "立即下载")
+            no_ads = find_screen_by_result(result, "平安")
             position = xq_position if xq_position else xz_position
-            if position:
+            if position and not no_ads:
                 print_help_text(self.device_id, "点击查看详情")
                 tap(self.device_id, position)
                 stats_gg, _ = find_screen_text_button_position(self.device_id, "广告", '广告', top_normal_bottom='top')
@@ -157,7 +157,7 @@ class ArticleLiteOpt:
         print_help_text(self.device_id, "点击任务菜单，开始看宝箱广告")
         # 点击任务菜单
         self.back_to_main()
-        tap(self.device_id, self.coin_menu_position)
+        tap(self.device_id, self.coin_task_position)
         # 返会再点击一次 为了防止布局不一样
         up_long_swipe(self.device_id)
         status, position = find_screen_text_button_position(self.device_id, "开宝箱得金币", "开宝箱得金币")
@@ -178,10 +178,10 @@ class ArticleLiteOpt:
         # 点击任务菜单
         self.back_to_main()
         print_help_text(self.device_id, "点击任务菜单,开始看广告")
-        tap(self.device_id, self.coin_menu_position)
+        tap(self.device_id, self.coin_task_position)
         # 返会再点击一次 为了防止布局不一样
         press_back(self.device_id)
-        tap(self.device_id, self.coin_menu_position)
+        tap(self.device_id, self.coin_task_position)
         # 上滑找“看广告” 最多5次
         for i in range(3):
             # 上滑
@@ -228,10 +228,10 @@ class ArticleLiteOpt:
         # 点击任务菜单
         self.back_to_main()
         print_help_text(self.device_id, "点击任务菜单,开始逛商品")
-        tap(self.device_id, self.coin_menu_position)
+        tap(self.device_id, self.coin_task_position)
         # 返会再点击一次 为了防止布局不一样
         press_back(self.device_id)
-        tap(self.device_id, self.coin_menu_position)
+        tap(self.device_id, self.coin_task_position)
         # 上滑找“逛商场” 最多5次
         for i in range(3):
             # 上滑
@@ -284,7 +284,7 @@ class ArticleLiteOpt:
 
 
 if __name__ == "__main__":
-    article_obj = ArticleLiteOpt("192.168.101.101:5555")
+    article_obj = ArticleLiteOpt("192.168.101.103:5555")
 
     article_obj.auto_run(first_status=False, light_screen_stats=False, read_article=False, watch_small_video=False,
-                                  watch_coin_box=True, watch_ad=True, watch_goods=False)
+                                  watch_coin_box=False, watch_ad=False, watch_goods=True)

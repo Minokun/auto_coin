@@ -11,14 +11,16 @@ class DragonReadOpt:
     def __init__(self, device_id):
         self.device_id = device_id
         self.app_name = "dragon_read"
+        self.wight, self.height = get_phone_wh(self.device_id)
+        self.height_scale = int(self.height) / 2400
         # 首页底部任务按钮
-        self.main_coin_position = (550, 2330)
+        self.main_coin_position = (550, int(2330 * self.height_scale))
         # 关闭广告的按键
-        self.ad_shut = (980, 160)
+        self.ad_shut = (980, int(160 * self.height_scale))
         # 看广告中间的继续按钮
-        self.ad_continue_menu_position = (530, 1380)
+        self.ad_continue_menu_position = (530, int(1380 * self.height_scale))
         # 点击宝箱中间得看广告视频
-        self.coin_box_ad = (520, 1450)
+        self.coin_box_ad = (520, int(1450 * self.height_scale))
 
     def start_dragon_app(self):
         start_app(self.device_id, self.app_name)
@@ -125,5 +127,5 @@ class DragonReadOpt:
             self.coin_box()
 
 if __name__ == "__main__":
-    dragon_read_obj = DragonReadOpt("192.168.101.101:5555")
+    dragon_read_obj = DragonReadOpt("192.168.101.103:5555")
     dragon_read_obj.auto_run(light_screen_stats=False)

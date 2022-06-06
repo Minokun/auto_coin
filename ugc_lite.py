@@ -9,15 +9,17 @@ from phone_opt import *
 class UGCLiteOpt:
     def __init__(self, device_id):
         self.device_id = device_id
+        self.wight, self.height = get_phone_wh(self.device_id)
+        self.height_scale = int(self.height) / 2400
         self.app_name = "ugc_lite"
         # 首页底部任务按钮
-        self.main_coin_position = (550, 2330)
+        self.main_coin_position = (550, int(2330 * self.height_scale))
         # 关闭广告的按键
-        self.ad_shut = (990, 150)
+        self.ad_shut = (990, int(150 * self.height_scale))
         # 看广告中间的继续按钮
-        self.ad_continue_menu_position = (530, 1380)
+        self.ad_continue_menu_position = (530, int(1380 * self.height_scale))
         # 点击宝箱中间得看广告视频
-        self.coin_box_ad = (520, 1450)
+        self.coin_box_ad = (520, int(1450 * self.height_scale))
 
     def start_ugc_app(self):
         start_app(self.device_id, self.app_name)
@@ -33,7 +35,7 @@ class UGCLiteOpt:
         self.back_main_coin()
         # 点击返回
         press_back(self.device_id)
-        per_video_time = 6000
+        per_video_time = 60000
         num = math.ceil(time_period / per_video_time)
         for i in range(num):
             print_help_text(self.device_id, "第%s/%s次刷视频" % (str(i + 1), str(num)))
@@ -136,7 +138,7 @@ class UGCLiteOpt:
         self.back_top()
         for i in range(3):
             print_help_text(self.device_id, "找浏览爆款的按钮")
-            status, position = find_screen_text_button_position(self.device_id, "浏览爆款", "赚金币")
+            status, position = find_screen_text_button_position(self.device_id, "爆款", "赚")
             if status:
                 tap(self.device_id, position)
                 break
@@ -219,6 +221,6 @@ class UGCLiteOpt:
 
 
 if __name__ == "__main__":
-    ugc_lite_obj = UGCLiteOpt("192.168.101.101:5555")
-    ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=False, watch_ad=True,
+    ugc_lite_obj = UGCLiteOpt("192.168.101.103:5555")
+    ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=True, watch_ad=True,
                           watch_coin_box=True)
