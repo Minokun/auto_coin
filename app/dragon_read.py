@@ -1,16 +1,15 @@
 # -*- coding:utf-8 -*-
 
-import math
-import time
-
-from phone_opt import *
-
+from utils.phone_opt import *
+import re
 
 # 抖音极速版
 class DragonReadOpt:
     def __init__(self, device_id):
         self.device_id = device_id
         self.app_name = "dragon_read"
+        self.app_name_chinese = app_name[self.app_name]
+        self.current_step = ''
         self.wight, self.height = get_phone_wh(self.device_id)
         self.height_scale = int(self.height) / 2400
         # 首页底部任务按钮
@@ -21,6 +20,11 @@ class DragonReadOpt:
         self.ad_continue_menu_position = (530, int(1380 * self.height_scale))
         # 点击宝箱中间得看广告视频
         self.coin_box_ad = (520, int(1450 * self.height_scale))
+        # 当前金币和现金收益
+        self.coin_current = 0.0
+        self.cash_current = 0.0
+        self.coin_today = 0.0
+        self.cash_total = 0.0
 
     def start_dragon_app(self):
         start_app(self.device_id, self.app_name)
@@ -31,12 +35,33 @@ class DragonReadOpt:
             if status:
                 tap(self.device_id, position)
 
+    def get_coin_num(self):
+        self.back_main_coin()
+        self.back_top()
+        stats, box, result = find_screen_text_position(self.device_id, "金币收益")
+        y_bottom = box[2][1]
+        n = 0
+        coin = 0.0
+        cash = 0.0
+        for line in result:
+            if line[0][2][1] > y_bottom:
+                n += 1
+                if n == 1:
+                    g = re.match(r'([\d]+).*', line[1][0])
+                    coin = float(g[1])
+                elif n == 2:
+                    g = re.match(r'([\d]+.*[\d]+).*', line[1][0])
+                    cash = float(g[1])
+                else:
+                    break
+        return coin, cash
+
     # 返回首页再进入任务页面
     def back_main_coin(self):
         # 点击底部菜单金币按钮 最多10次
         for i in range(10):
             print_help_text(self.device_id, "回到首页")
-            status, _, _ = find_screen_text_position(self.device_id, "书架")
+            status, _, _ = find_screen_text_position(self.device_id, "书架", top_normal_bottom='bottom')
             # 如果在首页就点击，没有就返回
             if status:
                 print_help_text(self.device_id, "进入金币页面")
@@ -117,6 +142,8 @@ class DragonReadOpt:
         self.start_dragon_app()
         time.sleep(1)
         self.jump_main_ad()
+        # 获取当前收益
+        coin_start, cash_start = self.get_coin_num()
         # 看广告
         if watch_ad:
             print_help_text(self.device_id, "开始看广告")
@@ -125,6 +152,12 @@ class DragonReadOpt:
         if watch_coin_box:
             print_help_text(self.device_id, "刷宝箱")
             self.coin_box()
+        # 获取当前收益
+        coin_end, cash_end = self.get_coin_num()
+        self.coin_current = coin_end - coin_start
+        self.cash_current = round(self.cash_current / 33000, 2)
+        self.coin_today = coin_end
+        self.cash_total = cash_end
 
 if __name__ == "__main__":
     dragon_read_obj = DragonReadOpt("192.168.101.103:5555")

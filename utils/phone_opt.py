@@ -3,7 +3,7 @@ import random
 import subprocess
 import time
 import os, sys
-from paddle_opt import paddle_ocr_obj
+from utils.paddle_opt import paddle_ocr_obj
 from datetime import datetime
 
 # app名称
@@ -11,27 +11,27 @@ app_name = {
     "ugc": "抖音",
     "ugc_lite": "抖音极速版",
     "article_lite": "头条极速版",
-    "wk_browser": "悟空浏览器",
+    "kuaishou": "快手",
     "dragon_read": "番茄小说",
-    "kuaishou": "快手"
+    "wk_browser": "悟空浏览器"
 }
 # app package 名称 用于关闭应用
 app_package_name = {
     "ugc": "com.ss.android.ugc.aweme",
     "ugc_lite": "com.ss.android.ugc.aweme.lite",
     "article_lite": "com.ss.android.article.lite",
-    "wk_browser": "com.cat.readall",
+    "kuaishou": "com.kuaishou.nebula",
     "dragon_read": "com.dragon.read",
-    "kuaishou": "com.kuaishou.nebula"
+    "wk_browser": "com.cat.readall"
 }
 # app activity 名称 用于打开应用
 app_activity_name = {
     "ugc": "com.ss.android.ugc.aweme/com.ss.android.ugc.aweme.main.MainActivity",
     "ugc_lite": "com.ss.android.ugc.aweme.lite/com.ss.android.ugc.aweme.splash.SplashActivity",
     "article_lite": "com.ss.android.article.lite/.activity.SplashActivity",
+    "kuaishou": "com.kuaishou.nebula/com.yxcorp.gifshow.HomeActivity",
     "dragon_read": "com.dragon.read/.pages.splash.SplashActivity",
-    "wk_browser": "com.cat.readall/.activity.BrowserMainActivity",
-    "kuaishou": "com.kuaishou.nebula/com.yxcorp.gifshow.HomeActivity"
+    "wk_browser": "com.cat.readall/.activity.BrowserMainActivity"
 }
 
 device_passwd = {
@@ -55,8 +55,8 @@ offline_id_list = ["192.168.101.100:5555"]
 device_id_list = list(set(online_id_list) - set(offline_id_list))
 
 
-def print_help_text(device_id, help_text):
-    text = "[设备：%s] %s 执行步骤：%s" % (device_id, datetime.now().strftime("%H:%M:%S"), help_text)
+def print_help_text(device_id, help_text, current_step=''):
+    text = "[设备：%s] %s 执行步骤：%s %s" % (device_id, datetime.now().strftime("%H:%M:%S"), current_step, help_text)
     print(text)
 
 
@@ -308,7 +308,8 @@ def down_long_swipe(device_id):
 # 启动app
 def start_app(device_id, app):
     global app_activity_name
-    print("设备%s 开始启动%s ......" % (device_id, app_name[app]))
+    content = "开始启动" + app_name[app]
+    print_help_text(device_id, content)
     command = "adb -s " + device_id + " shell  am start " + app_activity_name[app]
     opt_sys_command(command)
 
@@ -348,8 +349,9 @@ def unclock_all_devices():
 
 
 if __name__ == "__main__":
+    os.environ["PATH"] += os.path.dirname(os.path.dirname(__file__))
     # reboot_adb()
     # unlock_device("192.168.101.100:8888")
-    device_id = "192.168.101.103:5555"
-    # stats, position = find_screen_text_button_position("192.168.101.103:5555", "已成功领取", "已成功领取")
-    get_phone_wh(device_id)
+    # device_id = "192.168.101.103:5555"
+    stats, position = find_screen_text_button_position("192.168.101.104:5555", "已成功领取", "已成功领取")
+    # get_phone_wh(device_id)

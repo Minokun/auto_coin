@@ -1,13 +1,13 @@
 import math
-import time
 from datetime import datetime
-from concurrent.futures import ThreadPoolExecutor, wait, as_completed
-from phone_opt import CurrentDeviceList, unclock_all_devices, print_help_text, unlock_device
-from article_lite import ArticleLiteOpt
-from ugc_lite import UGCLiteOpt
-from ugc import UGCOpt
-from dragon_read import DragonReadOpt
-from kuaishou import KuaiShouOpt
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from utils.phone_opt import CurrentDeviceList, unclock_all_devices, print_help_text, app_name
+from app.article_lite import ArticleLiteOpt
+from app.ugc_lite import UGCLiteOpt
+from app.ugc import UGCOpt
+from app.dragon_read import DragonReadOpt
+from app.kuaishou import KuaiShouOpt
+
 total_num = 30
 total_end_num = 0
 
@@ -28,8 +28,10 @@ def run(device_id, first_status=False):
     kuai_shou = KuaiShouOpt(device_id)
     if first_status:
         # 每天第一次运行 需要做活跃和只有一次的任务
-        ugc_lite_obj.auto_run(first_status=first_status, light_screen_stats=False, watch_video=True, watch_baokuan=True, watch_coin_box=True, watch_ad=True)
-        article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=True, watch_small_video=True,
+        ugc_lite_obj.auto_run(first_status=first_status, light_screen_stats=False, watch_video=True, watch_baokuan=True,
+                              watch_coin_box=True, watch_ad=True)
+        article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=True,
+                                  watch_small_video=True,
                                   watch_coin_box=True, watch_ad=True, watch_goods=True)
         kuai_shou.auto_run(light_screen_stats=False, shopping=True)
         ugc_obj.auto_run(light_screen_stats=False)
@@ -37,18 +39,30 @@ def run(device_id, first_status=False):
     else:
         ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=True, watch_baokuan=False, watch_coin_box=True,
                               watch_ad=True, shopping=True)
-        article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=True, watch_small_video=True,
+        article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=True,
+                                  watch_small_video=True,
                                   watch_coin_box=True, watch_ad=True, watch_goods=True)
         kuai_shou.auto_run(light_screen_stats=False, watch_ad=True, watch_coin_box=True)
         ugc_obj.auto_run(light_screen_stats=False, watch_video=False)
-        # dragon_read.auto_run(light_screen_stats=False)
+        dragon_read.auto_run(light_screen_stats=False)
     total_end_num += 1
+    # 计算运行时间
     end_time = datetime.now()
     run_time = (end_time - start_time).seconds
     run_time_minutes = math.ceil(run_time / 60)
     run_time_rest_seconds = run_time % 60
     runtime_text = str(run_time_minutes) + "分" + str(run_time_rest_seconds) + "秒"
-    return "\r\n设备：%s 第%s/%s次 运行结束 开始时间：%s 结束时间：%s 耗时:%s" % (device_id, total_end_num, total_num, start_time.strftime("%H:%M:%S"), end_time.strftime("%H:%M:%S"), runtime_text)
+    income_current = "[本次收益: " + ', '.join([i + "(金币：%s, 现金：%s)" for i in list(app_name.values())]) + "]" % \
+                     (
+                         str(ugc_obj.coin_current), str(ugc_obj.cash_current),
+                         str(ugc_lite_obj.coin_current), str(ugc_lite_obj.cash_current),
+                         str(article_lite_opt.coin_current), str(article_lite_opt.cash_current),
+                         str(kuai_shou.coin_current), str(kuai_shou.cash_current),
+                         str(dragon_read.coin_current), str(dragon_read.cash_current)
+                     )
+    return "\r\n设备：%s 第%s/%s次 运行结束 开始时间：%s 结束时间：%s 耗时:%s %s" % \
+           (device_id, total_end_num, total_num, start_time.strftime("%H:%M:%S"), end_time.strftime("%H:%M:%S"),
+            runtime_text, income_current)
 
 
 def main():
@@ -74,4 +88,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    ks_obj = UGCOpt("192.168.101.101:5555")
+    # ks_obj.auto_run(light_screen_stats=False, watch_video=True, watch_ad=True, watch_coin_box=True, shopping=True)
+    print(ks_obj.get_coin_num())

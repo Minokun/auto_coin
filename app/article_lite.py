@@ -2,7 +2,7 @@
 import math
 import time
 
-from phone_opt import *
+from utils.phone_opt import *
 
 
 # 今日头条极速版
@@ -10,6 +10,8 @@ class ArticleLiteOpt:
     def __init__(self, device_id):
         self.device_id = device_id
         self.app_name = "article_lite"
+        self.app_name_chinese = app_name[self.app_name]
+        self.current_step = ''
         self.wight, self.height = get_phone_wh(self.device_id)
         self.height_scale = int(self.height) / 2400
         # 底部菜单的首页按钮坐标
@@ -23,6 +25,11 @@ class ArticleLiteOpt:
         self.ads_position = (550, int(1450 * self.height_scale))
         # 看完广告关闭按钮
         self.ads_shut = (975, int(160 * self.height_scale))
+        # 当前金币和现金收益
+        self.coin_current = 0.0
+        self.cash_current = 0.0
+        self.coin_today = 0.0
+        self.cash_total = 0.0
 
     def start_article_app(self):
         print_help_text(self.device_id, "启动今日头条极速版")
@@ -35,13 +42,31 @@ class ArticleLiteOpt:
             if status:
                 tap(self.device_id, position)
 
+    def get_coin_num(self):
+        print_help_text(self.device_id, "获取当前收益")
+        self.back_to_main()
+        # 点击任务
+        tap(self.device_id, self.main_task_position)
+        time.sleep(1)
+        up_long_swipe(self.device_id)
+        stats, box, result = find_screen_text_position(self.device_id, "我的现金")
+        coin = 0.0
+        cash = 0.0
+        for line in result:
+            if line[1][0][:4] == "我的现金":
+                cash = float(line[1][0][5:])
+            if line[1][0][:4] == "我的金币":
+                coin = float(line[1][0][5:])
+                break
+        return coin, cash
+
     def shut_app(self):
         shut_app(self.device_id, self.app_name)
 
     def back_to_main(self):
         for i in range(6):
             print_help_text(self.device_id, "回到首页")
-            status, position = find_screen_text_button_position(self.device_id, "首页", "首页")
+            status, position = find_screen_text_button_position(self.device_id, "首页", "首页", top_normal_bottom='bottom')
             # 如果有就退出
             if status:
                 tap(self.device_id, position)
@@ -54,7 +79,6 @@ class ArticleLiteOpt:
 
     # 看广告
     def watch_ad(self):
-        print_help_text(self.device_id, "开始看广告")
         status = False
         while not status:
             time.sleep(16)
@@ -62,9 +86,10 @@ class ArticleLiteOpt:
             stats, box, result = find_screen_text_position(self.device_id, "查看")
             xq_position = find_screen_by_result(result, "查看详情")
             xz_position = find_screen_by_result(result, "立即下载")
-            no_ads = find_screen_by_result(result, "平安")
+            no_pa = find_screen_by_result(result, "平安")
+            no_tm = find_screen_by_result(result, "天猫")
             position = xq_position if xq_position else xz_position
-            if position and not no_ads:
+            if position and not no_pa and not no_tm:
                 print_help_text(self.device_id, "点击查看详情")
                 tap(self.device_id, position)
                 stats_gg, _ = find_screen_text_button_position(self.device_id, "广告", '广告', top_normal_bottom='top')
@@ -93,7 +118,7 @@ class ArticleLiteOpt:
             # 如果有再看那就点击再看
             stats, box, result = find_screen_text_position(self.device_id, "再看", top_normal_bottom="top")
             if stats:
-                print_help_text(self.device_id, "再看一个视频")
+                print_help_text(self.device_id, "再看一个")
                 position = find_screen_by_result(result, "再看")
                 tap(self.device_id, position)
                 continue
@@ -268,6 +293,8 @@ class ArticleLiteOpt:
         # 启动app
         self.start_article_app()
         time.sleep(1)
+        # 获取当前收益
+        coin_start, cash_start = self.get_coin_num()
         if read_article:
             # 浏览首页阅读文章
             self.browser_article(first_status)
@@ -279,10 +306,17 @@ class ArticleLiteOpt:
             self.auto_coin_box()
         if watch_ad:
             # 看广告
+            print_help_text(self.device_id, "开始看广告")
             self.auto_watch_ad()
         if watch_goods:
             # 逛商品
             self.auto_watch_goods()
+        # 获取当前收益
+        coin_end, cash_end = self.get_coin_num()
+        self.coin_current = coin_end - coin_start
+        self.cash_current = round(self.cash_current / 33000, 2)
+        self.coin_today = coin_end
+        self.cash_total = cash_end
 
 
 if __name__ == "__main__":

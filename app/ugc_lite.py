@@ -2,7 +2,7 @@
 
 import math
 
-from phone_opt import *
+from utils.phone_opt import *
 
 
 # 抖音极速版
@@ -12,6 +12,8 @@ class UGCLiteOpt:
         self.wight, self.height = get_phone_wh(self.device_id)
         self.height_scale = int(self.height) / 2400
         self.app_name = "ugc_lite"
+        self.app_name_chinese = app_name[self.app_name]
+        self.current_step = ''
         # 首页底部任务按钮
         self.main_coin_position = (550, int(2330 * self.height_scale))
         # 关闭广告的按键
@@ -20,6 +22,11 @@ class UGCLiteOpt:
         self.ad_continue_menu_position = (530, int(1380 * self.height_scale))
         # 点击宝箱中间得看广告视频
         self.coin_box_ad = (520, int(1450 * self.height_scale))
+        # 当前金币和现金收益
+        self.coin_current = 0.0
+        self.cash_current = 0.0
+        self.coin_today = 0.0
+        self.cash_total = 0.0
 
     def start_ugc_app(self):
         start_app(self.device_id, self.app_name)
@@ -29,6 +36,29 @@ class UGCLiteOpt:
             status, position = find_screen_text_button_position(self.device_id, "跳过", "跳过")
             if status:
                 tap(self.device_id, position)
+
+    def get_coin_num(self):
+        # 获取当前金币数量
+        self.back_main_coin()
+        self.back_top()
+        stats, box, result = find_screen_text_position(self.device_id, "现金收益")
+        if not stats:
+            coin, cash = self.get_coin_num()
+            return coin, cash
+        y_bottom = box[2][1]
+        n = 0
+        coin = 0.0
+        cash = 0.0
+        for line in result:
+            if line[0][2][1] > y_bottom:
+                n += 1
+                if n == 1:
+                    coin = float(line[1][0])
+                elif n == 2:
+                    cash = float(line[1][0])
+                else:
+                    break
+        return coin, cash
 
     # 看视频
     def watch_video(self, time_period=600000):
@@ -47,7 +77,7 @@ class UGCLiteOpt:
         # 点击底部菜单金币按钮 最多10次
         for i in range(10):
             print_help_text(self.device_id, "回到首页")
-            status, _, _ = find_screen_text_position(self.device_id, "首页")
+            status, _, _ = find_screen_text_position(self.device_id, "首页", top_normal_bottom='bottom')
             # 如果在首页就点击，没有就返回
             if status:
                 print_help_text(self.device_id, "进入金币页面")
@@ -199,30 +229,44 @@ class UGCLiteOpt:
         print_help_text(self.device_id, "打开抖音极速版")
         self.start_ugc_app()
         time.sleep(1)
+        # 获取当前金币和现金收益
+        coin_start, cash_start = self.get_coin_num()
         # 看10分钟视频
         if watch_video:
-            print_help_text(self.device_id, "开始看视频")
+            self.current_step = self.app_name_chinese + '(看10分钟视频)'
+            print_help_text(self.device_id, "开始看视频", self.current_step)
             self.watch_video()
         # 看爆款
         if first_status and watch_baokuan:
-            print_help_text(self.device_id, "开始刷爆款")
+            self.current_step = self.app_name_chinese + '(看爆款)'
+            print_help_text(self.device_id, "开始刷爆款", self.current_step)
             self.watch_baokuan()
         # 看广告
         if watch_ad:
-            print_help_text(self.device_id, "开始看广告")
+            self.current_step = self.app_name_chinese + '(看广告)'
+            print_help_text(self.device_id, "开始看广告", self.current_step)
             self.watch_ad()
         # 看宝箱
         if watch_coin_box:
-            print_help_text(self.device_id, "刷宝箱")
+            self.current_step = self.app_name_chinese + '(开宝箱)'
+            print_help_text(self.device_id, "刷宝箱", self.current_step)
             self.coin_box()
         # 逛街
         if shopping:
-            print_help_text(self.device_id, "逛街")
+            self.current_step = self.app_name_chinese + '(逛街)'
+            print_help_text(self.device_id, "逛街", self.current_step)
             self.shopping()
         time.sleep(5)
+        # 再次获取当前金币和现金收益
+        coin_end, cash_end = self.get_coin_num()
+        self.coin_current = coin_end - coin_start
+        self.cash_current = round(self.coin_current / 10000, 2)
+        self.coin_today = coin_end
+        self.cash_total = cash_end
 
 
 if __name__ == "__main__":
-    ugc_lite_obj = UGCLiteOpt("192.168.31.227:5555")
-    ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=True, watch_baokuan=True, watch_ad=True,
-                          watch_coin_box=True)
+    ugc_lite_obj = UGCLiteOpt("192.168.101.101:5555")
+    # ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=True, watch_baokuan=True, watch_ad=True,
+    #                       watch_coin_box=True)
+    print(ugc_lite_obj.get_coin_num())

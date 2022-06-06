@@ -1,9 +1,7 @@
 # -*- coding:utf-8 -*-
-
-import math
 import time
 
-from phone_opt import *
+from utils.phone_opt import *
 
 
 # 抖音极速版
@@ -11,6 +9,8 @@ class KuaiShouOpt:
     def __init__(self, device_id):
         self.device_id = device_id
         self.app_name = "kuaishou"
+        self.app_name_chinese = app_name[self.app_name]
+        self.current_step = ''
         self.wight, self.height = get_phone_wh(self.device_id)
         self.height_scale = int(self.height) / 2400
         # 首页
@@ -23,9 +23,15 @@ class KuaiShouOpt:
         self.ad_continue_menu_position = (530, int(1380 * self.height_scale))
         # 点击宝箱中间得看广告视频
         self.coin_box_ad = (520, int(1450 * self.height_scale))
+        # 当前金币和现金收益
+        self.coin_current = 0.0
+        self.cash_current = 0.0
+        self.coin_today = 0.0
+        self.cash_total = 0.0
 
     def start_huaishou_app(self):
         start_app(self.device_id, self.app_name)
+        time.sleep(2)
         # 启动后识别屏幕顶部 如果有跳过广告 则点击
         jump_ad = False
         if jump_ad:
@@ -33,6 +39,33 @@ class KuaiShouOpt:
             status, position = find_screen_text_button_position(self.device_id, "跳过", "跳过")
             if status:
                 tap(self.device_id, position)
+        # 青少年模式
+        stats, box, result = find_screen_text_position(self.device_id, "我知道了")
+        if stats:
+            position = find_screen_by_result(result, "我知道了")
+            tap(self.device_id, position)
+        position = find_screen_by_result(result, '点击翻倍')
+        if position:
+            tap(self.device_id, position)
+
+    def get_coin_num(self):
+        self.back_main_coin()
+        # 点击去赚钱
+        tap(self.device_id, self.task_position)
+        self.rm_ad()
+        time.sleep(1)
+        up_long_swipe(self.device_id)
+        up_long_swipe(self.device_id)
+        stats, box, result = find_screen_text_position(self.device_id, "我的抵用金")
+        coin = 0.0
+        cash = 0.0
+        for line in result:
+            if line[1][0][:2] == "金币":
+                coin = float(line[1][0][3:])
+            if line[1][0][:3] == "抵用金":
+                cash = float(line[1][0][4:])
+                break
+        return coin, cash
 
     # 看视频
     def watch_video(self, times=30):
@@ -85,8 +118,8 @@ class KuaiShouOpt:
         self.back_main_coin()
         # 点击去赚钱
         tap(self.device_id, self.task_position)
-        self.back_top()
         self.rm_ad()
+        self.back_top()
         for i in range(3):
             print_help_text(self.device_id, "找看广告按钮")
             stats, position = find_screen_text_button_position(self.device_id, "金币悬赏", "福利")
@@ -164,6 +197,8 @@ class KuaiShouOpt:
         print_help_text(self.device_id, "打开快手")
         self.start_huaishou_app()
         time.sleep(1)
+        # 获取当前收益
+        coin_start, cash_start = self.get_coin_num()
         # 看广告
         if watch_ad:
             self.watch_ad()
@@ -179,8 +214,15 @@ class KuaiShouOpt:
         if shopping:
             print_help_text(self.device_id, "去逛街")
             self.shopping()
+        # 获取当前收益
+        coin_end, cash_end = self.get_coin_num()
+        self.coin_current = coin_end - coin_start
+        self.cash_current = round(self.cash_current / 10000, 2)
+        self.coin_today = coin_end
+        self.cash_total = cash_end
 
 
 if __name__ == "__main__":
-    ks_obj = KuaiShouOpt("192.168.101.103:5555")
-    ks_obj.auto_run(light_screen_stats=False, watch_video=True, watch_ad=True, watch_coin_box=True, shopping=True)
+    ks_obj = KuaiShouOpt("192.168.101.104:5555")
+    # ks_obj.auto_run(light_screen_stats=False, watch_video=True, watch_ad=True, watch_coin_box=True, shopping=True)
+    print(ks_obj.get_coin_num())

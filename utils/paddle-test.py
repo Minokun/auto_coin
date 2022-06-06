@@ -3,11 +3,11 @@ from paddleocr import PaddleOCR, draw_ocr
 # Paddleocr目前支持的多语言语种可以通过修改lang参数进行切换
 # 例如`ch`, `en`, `fr`, `german`, `korean`, `japan`
 ocr = PaddleOCR(use_angle_cls=True, lang="ch")  # need to run only once to download and load model into memory
-img_path = './media/screen_192.168.101.101.png'
+img_path = '../media/screen_192.168.101.104.png'
 result = ocr.ocr(img_path, cls=True)
 box = []
 for line in result:
-    if line[1][0].find('阅读惊喜奖励') >= 0:
+    if line[1][0].find('金币收益') >= 0:
        box = line[0]
     print(line)
 
@@ -29,3 +29,4 @@ scores = [line[1][1] for line in result]
 im_show = draw_ocr(image, boxes, txts, scores, font_path='./simfang.ttf')
 im_show = Image.fromarray(im_show)
 im_show.save('result.jpg')
+
