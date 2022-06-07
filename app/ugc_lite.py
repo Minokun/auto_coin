@@ -45,7 +45,7 @@ class UGCLiteOpt:
         if not stats:
             coin, cash = self.get_coin_num()
             return coin, cash
-        y_bottom = box[2][1]
+        y_bottom = box[2][1] + 5
         n = 0
         coin = 0.0
         cash = 0.0
@@ -266,7 +266,7 @@ class UGCLiteOpt:
 
 
 if __name__ == "__main__":
-    ugc_lite_obj = UGCLiteOpt("192.168.101.101:5555")
+    ugc_lite_obj = UGCLiteOpt("192.168.31.123:5555")
     # ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=True, watch_baokuan=True, watch_ad=True,
     #                       watch_coin_box=True)
     print(ugc_lite_obj.get_coin_num())

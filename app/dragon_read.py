@@ -160,5 +160,6 @@ class DragonReadOpt:
         self.cash_total = cash_end
 
 if __name__ == "__main__":
-    dragon_read_obj = DragonReadOpt("192.168.101.103:5555")
-    dragon_read_obj.auto_run(light_screen_stats=False)
+    dragon_read_obj = DragonReadOpt("192.168.31.212:5555")
+    print(dragon_read_obj.get_coin_num())
+    # dragon_read_obj.auto_run(light_screen_stats=False)

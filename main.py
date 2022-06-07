@@ -7,6 +7,7 @@ from app.ugc_lite import UGCLiteOpt
 from app.ugc import UGCOpt
 from app.dragon_read import DragonReadOpt
 from app.kuaishou import KuaiShouOpt
+import pandas as pd
 
 total_num = 30
 total_end_num = 0
@@ -37,12 +38,12 @@ def run(device_id, first_status=False):
         ugc_obj.auto_run(light_screen_stats=False)
         dragon_read.auto_run(light_screen_stats=False)
     else:
+        kuai_shou.auto_run(light_screen_stats=False, watch_ad=True, watch_coin_box=True)
         ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=True, watch_baokuan=False, watch_coin_box=True,
                               watch_ad=True, shopping=True)
         article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=True,
                                   watch_small_video=True,
                                   watch_coin_box=True, watch_ad=True, watch_goods=True)
-        kuai_shou.auto_run(light_screen_stats=False, watch_ad=True, watch_coin_box=True)
         ugc_obj.auto_run(light_screen_stats=False, watch_video=False)
         dragon_read.auto_run(light_screen_stats=False)
     total_end_num += 1
@@ -52,17 +53,17 @@ def run(device_id, first_status=False):
     run_time_minutes = math.ceil(run_time / 60)
     run_time_rest_seconds = run_time % 60
     runtime_text = str(run_time_minutes) + "分" + str(run_time_rest_seconds) + "秒"
-    income_current = "[本次收益: " + ', '.join([i + "(金币：%s, 现金：%s)" for i in list(app_name.values())]) + "]" % \
-                     (
-                         str(ugc_obj.coin_current), str(ugc_obj.cash_current),
-                         str(ugc_lite_obj.coin_current), str(ugc_lite_obj.cash_current),
-                         str(article_lite_opt.coin_current), str(article_lite_opt.cash_current),
-                         str(kuai_shou.coin_current), str(kuai_shou.cash_current),
-                         str(dragon_read.coin_current), str(dragon_read.cash_current)
-                     )
-    return "\r\n设备：%s 第%s/%s次 运行结束 开始时间：%s 结束时间：%s 耗时:%s %s" % \
+    income_df = pd.DataFrame([(ugc_obj.coin_current, ugc_obj.cash_current),
+                              (ugc_lite_obj.coin_current, ugc_lite_obj.cash_current),
+                              (article_lite_opt.coin_current, article_lite_opt.cash_current),
+                              (kuai_shou.coin_current, kuai_shou.cash_current),
+                              (dragon_read.coin_current, dragon_read.cash_current)], columns=['本轮金币', '本轮现金'],
+                             index=app_name.values())
+    print("\r\n设备: %s 的本次收益为" % device_id)
+    print(income_df)
+    return "\r\n设备：%s 第%s/%s次 运行结束 开始时间：%s 结束时间：%s 耗时:%s" % \
            (device_id, total_end_num, total_num, start_time.strftime("%H:%M:%S"), end_time.strftime("%H:%M:%S"),
-            runtime_text, income_current)
+            runtime_text)
 
 
 def main():

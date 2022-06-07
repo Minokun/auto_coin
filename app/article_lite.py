@@ -22,7 +22,7 @@ class ArticleLiteOpt:
         # 首页上边菜单栏的全部按钮坐标
         self.main_task_position = (1000, int(320 * self.height_scale))
         # 点击弹出的中间看广告按钮坐标
-        self.ads_position = (550, int(1450 * self.height_scale))
+        self.ads_position = (550, int(1500 * self.height_scale))
         # 看完广告关闭按钮
         self.ads_shut = (975, int(160 * self.height_scale))
         # 当前金币和现金收益
@@ -46,7 +46,7 @@ class ArticleLiteOpt:
         print_help_text(self.device_id, "获取当前收益")
         self.back_to_main()
         # 点击任务
-        tap(self.device_id, self.main_task_position)
+        tap(self.device_id, self.coin_task_position)
         time.sleep(1)
         up_long_swipe(self.device_id)
         stats, box, result = find_screen_text_position(self.device_id, "我的现金")
@@ -225,7 +225,7 @@ class ArticleLiteOpt:
         print_help_text(self.device_id, "点击任务菜单，开始看小视频")
         tap(self.device_id, self.first_page_menu_position)
         print_help_text(self.device_id, "点击首页任务栏")
-        tap(self.device_id, (1000, 320))
+        tap(self.device_id, self.main_task_position)
         # 找小视频
         status, box, _ = find_screen_text_position(self.device_id, "小视频")
         if not status:
@@ -320,7 +320,7 @@ class ArticleLiteOpt:
 
 
 if __name__ == "__main__":
-    article_obj = ArticleLiteOpt("192.168.31.227:5555")
+    article_obj = ArticleLiteOpt("192.168.31.123:5555")
 
-    article_obj.auto_run(first_status=True, light_screen_stats=True, read_article=False, watch_small_video=False,
-                                  watch_coin_box=False, watch_ad=False, watch_goods=True)
+    article_obj.auto_run(first_status=False, light_screen_stats=False, read_article=False, watch_small_video=False,
+                                  watch_coin_box=True, watch_ad=False, watch_goods=False)

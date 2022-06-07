@@ -6,14 +6,19 @@ import os, sys
 from utils.paddle_opt import paddle_ocr_obj
 from datetime import datetime
 
+# 将主目录加入环境变量
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+print(BASE_DIR)
+sys.path.insert(0, BASE_DIR)
+
 # app名称
 app_name = {
     "ugc": "抖音",
     "ugc_lite": "抖音极速版",
     "article_lite": "头条极速版",
     "kuaishou": "快手",
-    "dragon_read": "番茄小说",
-    "wk_browser": "悟空浏览器"
+    "dragon_read": "番茄小说"
+    # "wk_browser": "悟空浏览器"
 }
 # app package 名称 用于关闭应用
 app_package_name = {
@@ -50,7 +55,7 @@ device_user = {
 
 online_id_list = ["192.168.101.100:5555", "192.168.101.101:5555", "192.168.31.123:5555", "192.168.31.212:5555",
                   "192.168.31.227:5555", "d2b75f1d"]
-offline_id_list = ["192.168.101.100:5555"]
+offline_id_list = ["192.168.101.100:5555", "192.168.31.123:5555"]
 # offline_id_list = []
 device_id_list = list(set(online_id_list) - set(offline_id_list))
 
@@ -207,7 +212,7 @@ def screen_cap(device_id):
 
 # 拷贝图片
 def screen_pull(device_id, png_name):
-    local_png = "media/" + png_name.split('/')[-1]
+    local_png = os.path.join(BASE_DIR, "media", png_name.split('/')[-1])
     command = "adb -s " + device_id + " pull %s %s" % (png_name, local_png)
     opt_sys_command(command)
     return local_png
@@ -349,9 +354,8 @@ def unclock_all_devices():
 
 
 if __name__ == "__main__":
-    os.environ["PATH"] += os.path.dirname(os.path.dirname(__file__))
     # reboot_adb()
     # unlock_device("192.168.101.100:8888")
     # device_id = "192.168.101.103:5555"
-    stats, position = find_screen_text_button_position("192.168.101.104:5555", "已成功领取", "已成功领取")
+    stats, position = find_screen_text_button_position("192.168.31.212:5555", "已成功领取", "已成功领取")
     # get_phone_wh(device_id)
