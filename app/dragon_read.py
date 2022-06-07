@@ -54,6 +54,7 @@ class DragonReadOpt:
                     cash = float(g[1])
                 else:
                     break
+        print_help_text(self.device_id, "当前金币：%s 当前现金：%s" % (str(coin), str(cash)))
         return coin, cash
 
     # 返回首页再进入任务页面
@@ -155,11 +156,12 @@ class DragonReadOpt:
         # 获取当前收益
         coin_end, cash_end = self.get_coin_num()
         self.coin_current = coin_end - coin_start
-        self.cash_current = round(self.cash_current / 33000, 2)
+        self.cash_current = round(self.cash_current / 33000, 4)
         self.coin_today = coin_end
         self.cash_total = cash_end
+        print(self.coin_current, self.cash_current, self.coin_today, self.cash_total)
 
 if __name__ == "__main__":
-    dragon_read_obj = DragonReadOpt("192.168.31.212:5555")
-    print(dragon_read_obj.get_coin_num())
-    # dragon_read_obj.auto_run(light_screen_stats=False)
+    dragon_read_obj = DragonReadOpt("192.168.101.103:5555")
+    # print(dragon_read_obj.get_coin_num())
+    dragon_read_obj.auto_run(light_screen_stats=False)

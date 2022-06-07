@@ -76,6 +76,7 @@ class KuaiShouOpt:
                     cash = float(line[1][0])
                 else:
                     break
+        print_help_text(self.device_id, "当前金币：%s 当前现金：%s" % (str(coin), str(cash)))
         return coin, cash
 
     # 看视频
@@ -231,12 +232,13 @@ class KuaiShouOpt:
         # 获取当前收益
         coin_end, cash_end = self.get_coin_num()
         self.coin_current = coin_end - coin_start
-        self.cash_current = round(self.cash_current / 10000, 2)
+        self.cash_current = round(self.cash_current / 10000, 4)
         self.coin_today = coin_end
         self.cash_total = cash_end
+        print(self.coin_current, self.cash_current, self.coin_today, self.cash_total)
 
 
 if __name__ == "__main__":
-    ks_obj = KuaiShouOpt("192.168.31.212:5555")
-    # ks_obj.auto_run(light_screen_stats=False, watch_video=True, watch_ad=True, watch_coin_box=True, shopping=True)
-    print(ks_obj.get_coin_num())
+    ks_obj = KuaiShouOpt("192.168.101.104:5555")
+    ks_obj.auto_run(light_screen_stats=False, watch_video=False, watch_ad=False, watch_coin_box=True, shopping=False)
+    # print(ks_obj.get_coin_num())

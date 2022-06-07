@@ -50,14 +50,35 @@ class ArticleLiteOpt:
         time.sleep(1)
         up_long_swipe(self.device_id)
         stats, box, result = find_screen_text_position(self.device_id, "我的现金")
-        coin = 0.0
-        cash = 0.0
+        result = [i[1][0] for i in result]
+        coin_index_id = 0
+        cash_index_id = 0
+        n = 0
         for line in result:
-            if line[1][0][:4] == "我的现金":
-                cash = float(line[1][0][5:])
-            if line[1][0][:4] == "我的金币":
-                coin = float(line[1][0][5:])
-                break
+            if line[:4] == "我的现金":
+                cash_index_id = n
+            if line[:4] == "我的金币":
+                coin_index_id = n
+            n += 1
+        coin_content = result[coin_index_id].split('：')
+        if len(coin_content) == 2 and coin_content[1]:
+            coin = float(coin_content[1])
+        else:
+            coin_content = result[coin_index_id + 1]
+            if ':'.find(coin_content) >= 0:
+                coin = float(coin_content[1:])
+            else:
+                coin = float(coin_content)
+        cash_content = result[cash_index_id].split('：')
+        if len(cash_content) == 2 and cash_content[1]:
+            cash = float(cash_content[1])
+        else:
+            cash_content = result[cash_index_id + 1]
+            if ':'.find(cash_content) >= 0:
+                cash = float(cash_content[1:])
+            else:
+                cash = float(cash_content)
+        print_help_text(self.device_id, "当前金币：%s 当前现金：%s" % (str(coin), str(cash)))
         return coin, cash
 
     def shut_app(self):
@@ -314,13 +335,14 @@ class ArticleLiteOpt:
         # 获取当前收益
         coin_end, cash_end = self.get_coin_num()
         self.coin_current = coin_end - coin_start
-        self.cash_current = round(self.cash_current / 33000, 2)
+        self.cash_current = round(self.cash_current / 33000, 4)
         self.coin_today = coin_end
         self.cash_total = cash_end
+        print(self.coin_current, self.cash_current, self.coin_today, self.cash_total)
 
 
 if __name__ == "__main__":
-    article_obj = ArticleLiteOpt("192.168.31.123:5555")
+    article_obj = ArticleLiteOpt("192.168.101.104:5555")
 
     article_obj.auto_run(first_status=False, light_screen_stats=False, read_article=False, watch_small_video=False,
                                   watch_coin_box=True, watch_ad=False, watch_goods=False)

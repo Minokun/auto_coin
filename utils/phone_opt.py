@@ -356,6 +356,6 @@ def unclock_all_devices():
 if __name__ == "__main__":
     # reboot_adb()
     # unlock_device("192.168.101.100:8888")
-    # device_id = "192.168.101.103:5555"
-    stats, position = find_screen_text_button_position("192.168.31.212:5555", "已成功领取", "已成功领取")
+    device_id = "192.168.101.104:5555"
+    stats, position = find_screen_text_button_position(device_id, "已成功领取", "已成功领取")
     # get_phone_wh(device_id)
