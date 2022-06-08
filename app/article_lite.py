@@ -75,7 +75,8 @@ class ArticleLiteOpt:
             coin = float(g[1])
         cash_content = result[cash_index_id].split('：')
         if len(cash_content) == 2 and cash_content[1]:
-            cash = float(cash_content[1])
+            g = re.match(r'([\d]+\.*[\d]*).*', cash_content[1])
+            cash = float(g[1])
         elif len(cash_content) == 3 and cash_content[1]:
             pass
         else:
