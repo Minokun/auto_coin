@@ -99,7 +99,7 @@ class KuaiShouOpt:
             else:
                 press_back(self.device_id)
             if i > 5:
-                self.start_huaishou_app()
+                self.start_kuaishou_app()
 
     # 上滑到最顶部
     def back_top(self):
@@ -235,7 +235,6 @@ class KuaiShouOpt:
         self.cash_current = round(self.cash_current / 10000, 4)
         self.coin_today = coin_end
         self.cash_total = cash_end
-        print(self.coin_current, self.cash_current, self.coin_today, self.cash_total)
 
 
 if __name__ == "__main__":

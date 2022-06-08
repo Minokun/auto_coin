@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import math
+import math, re
 import time
 
 from utils.phone_opt import *
@@ -55,23 +55,29 @@ class ArticleLiteOpt:
         cash_index_id = 0
         n = 0
         for line in result:
-            if line[:4] == "我的现金":
+            if line.find("我的现金") >= 0:
                 cash_index_id = n
-            if line[:4] == "我的金币":
+            if line.find("我的金币") >= 0:
                 coin_index_id = n
             n += 1
         coin_content = result[coin_index_id].split('：')
         if len(coin_content) == 2 and coin_content[1]:
             coin = float(coin_content[1])
+        elif len(coin_content) == 3 and coin_content[1]:
+            g = re.match(r'我的现金：([\d]+\.*[\d]*).*我的金币：([\d]+)', result[coin_index_id])
+            coin = float(g[2])
+            cash = float(g[1])
+            print_help_text(self.device_id, "当前金币：%s 当前现金：%s" % (str(coin), str(cash)))
+            return coin, cash
         else:
             coin_content = result[coin_index_id + 1]
-            if ':'.find(coin_content) >= 0:
-                coin = float(coin_content[1:])
-            else:
-                coin = float(coin_content)
+            g = re.match(r'.*?([\d]+).*?', coin_content)
+            coin = float(g[1])
         cash_content = result[cash_index_id].split('：')
         if len(cash_content) == 2 and cash_content[1]:
             cash = float(cash_content[1])
+        elif len(cash_content) == 3 and cash_content[1]:
+            pass
         else:
             cash_content = result[cash_index_id + 1]
             if ':'.find(cash_content) >= 0:
@@ -338,11 +344,10 @@ class ArticleLiteOpt:
         self.cash_current = round(self.cash_current / 33000, 4)
         self.coin_today = coin_end
         self.cash_total = cash_end
-        print(self.coin_current, self.cash_current, self.coin_today, self.cash_total)
 
 
 if __name__ == "__main__":
-    article_obj = ArticleLiteOpt("192.168.101.104:5555")
+    article_obj = ArticleLiteOpt("192.168.31.212:5555")
 
     article_obj.auto_run(first_status=False, light_screen_stats=False, read_article=False, watch_small_video=False,
                                   watch_coin_box=True, watch_ad=False, watch_goods=False)

@@ -55,7 +55,7 @@ device_user = {
 
 online_id_list = ["192.168.101.100:5555", "192.168.101.101:5555", "192.168.31.123:5555", "192.168.31.212:5555",
                   "192.168.31.227:5555", "d2b75f1d"]
-offline_id_list = ["192.168.101.100:5555", "192.168.31.123:5555"]
+offline_id_list = ["192.168.101.100:5555", "192.168.31.124:5555"]
 # offline_id_list = []
 device_id_list = list(set(online_id_list) - set(offline_id_list))
 
@@ -207,6 +207,7 @@ def screen_cap(device_id):
     png_name = "/sdcard/DCIM/screen_" + device_id.split(":")[0] + ".png"
     command = "adb -s %s shell screencap %s" % (device_id, png_name)
     opt_sys_command(command)
+    time.sleep(0.5)
     return png_name
 
 

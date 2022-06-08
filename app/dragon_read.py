@@ -159,7 +159,6 @@ class DragonReadOpt:
         self.cash_current = round(self.cash_current / 33000, 4)
         self.coin_today = coin_end
         self.cash_total = cash_end
-        print(self.coin_current, self.cash_current, self.coin_today, self.cash_total)
 
 if __name__ == "__main__":
     dragon_read_obj = DragonReadOpt("192.168.101.103:5555")

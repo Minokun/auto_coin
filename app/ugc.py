@@ -49,10 +49,8 @@ class UGCOpt:
         coin = 0.0
         for line in result:
             if line[0][2][1] > y_bottom:
-                if '.'.find(line[1][0]) >= 0:
-                    coin = float(line[1][0]) * 1000
-                else:
-                    coin = float(line[1][0])
+                coin = float(line[1][0].replace(',', '.'))
+                coin = coin if coin - round(coin, 0) == 0 else coin * 1000
                 break
         cash = round(coin / 10000, 2)
         print_help_text(self.device_id, "当前金币：%s 当前现金：%s" % (str(coin), str(cash)))
@@ -202,9 +200,8 @@ class UGCOpt:
         self.cash_current = round(self.cash_current / 10000, 4)
         self.coin_today = coin_end
         self.cash_total = cash_end
-        print(self.coin_current, self.cash_current, self.coin_today, self.cash_total)
 
 
 if __name__ == "__main__":
-    ugc_obj = UGCOpt("192.168.101.104:5555")
+    ugc_obj = UGCOpt("192.168.31.212:5555")
     ugc_obj.auto_run(light_screen_stats=False, watch_video=False, watch_ad=True, watch_coin_box=True)

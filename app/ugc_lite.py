@@ -219,7 +219,7 @@ class UGCLiteOpt:
             stats, position = find_screen_text_button_position(self.device_id, "坚持退出", "坚持退出")
             if stats:
                 tap(self.device_id, position)
-        print("今天逛街奖励已经领取完毕！")
+        print_help_text(self.device_id, "今天逛街奖励已经领取完毕！")
 
     def auto_run(self, first_status=False, light_screen_stats=True, watch_video=True, watch_baokuan=True, search=True, watch_coin_box=True,
                  watch_ad=True, walk=True, shopping=True):
@@ -265,7 +265,6 @@ class UGCLiteOpt:
         self.cash_current = round(self.coin_current / 10000, 4)
         self.coin_today = coin_end
         self.cash_total = cash_end
-        print(self.coin_current, self.cash_current, self.coin_today, self.cash_total)
 
 
 if __name__ == "__main__":
