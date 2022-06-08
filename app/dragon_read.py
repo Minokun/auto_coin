@@ -39,6 +39,9 @@ class DragonReadOpt:
         self.back_main_coin()
         self.back_top()
         stats, box, result = find_screen_text_position(self.device_id, "金币收益")
+        if not stats:
+            self.back_main_coin()
+            self.back_top()
         y_bottom = box[2][1]
         n = 0
         coin = 0.0

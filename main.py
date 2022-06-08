@@ -57,7 +57,7 @@ def run(device_id, first_status=False):
                               (ugc_lite_obj.coin_current, ugc_lite_obj.cash_current, ugc_lite_obj.coin_today, round(ugc_lite_obj.coin_today / 10000, 2), ugc_lite_obj.cash_total),
                               (article_lite_opt.coin_current, article_lite_opt.cash_current, article_lite_opt.coin_today, round(article_lite_opt.coin_today / 33000, 2), article_lite_opt.cash_total),
                               (kuai_shou.coin_current, kuai_shou.cash_current, kuai_shou.coin_today, round(kuai_shou.coin_today / 10000, 2), kuai_shou.cash_total),
-                              (dragon_read.coin_current, dragon_read.cash_current, dragon_read.coin_today, round(dragon_read.cash_total / 33000, 2), dragon_read.cash_total)],
+                              (dragon_read.coin_current, dragon_read.cash_current, dragon_read.coin_today, round(dragon_read.coin_total / 33000, 2), dragon_read.cash_total)],
                              columns=['本轮金币', '本轮现金', '今日金币总计', '今日现金总计', '历史总现金收益'],
                              index=app_name.values())
     print("\r\n设备: %s 的本次收益为" % device_id)
