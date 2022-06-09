@@ -5,6 +5,7 @@ import time
 import os, sys
 from utils.paddle_opt import paddle_ocr_obj
 from datetime import datetime
+import cv2
 
 # 将主目录加入环境变量
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -54,8 +55,8 @@ device_user = {
 }
 
 online_id_list = ["192.168.101.100:5555", "192.168.101.101:5555", "192.168.31.123:5555", "192.168.31.212:5555",
-                  "192.168.31.227:5555", "d2b75f1d"]
-offline_id_list = ["192.168.101.100:5555", "192.168.31.124:5555"]
+                  "192.168.31.227:5555"]
+offline_id_list = ["192.168.101.100:5555", "192.168.31.228:5555", "192.168.31.123:5555"]
 # offline_id_list = []
 device_id_list = list(set(online_id_list) - set(offline_id_list))
 
@@ -68,9 +69,9 @@ def print_help_text(device_id, help_text, current_step=''):
 # 执行系统命令
 def opt_sys_command(command, sleep_time=1):
     p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # time.sleep(sleep_time)
     p.wait()
     result = p.communicate()[0].decode()
-    time.sleep(1)
     return result.split('\r\n')
 
 
@@ -204,10 +205,9 @@ def mute(device_id):
 
 # 截屏
 def screen_cap(device_id):
-    png_name = "/sdcard/DCIM/screen_" + device_id.split(":")[0] + ".png"
+    png_name = "/sdcard/DCIM/" + device_id.split(":")[0].split(".")[-1] + ".png"
     command = "adb -s %s shell screencap %s" % (device_id, png_name)
     opt_sys_command(command)
-    time.sleep(0.5)
     return png_name
 
 
@@ -221,10 +221,18 @@ def screen_pull(device_id, png_name):
 
 # 查找屏幕中某个字的位置
 def find_screen_text_position(device_id, text, top_normal_bottom='normal'):
-    # 截屏
-    png_name = screen_cap(device_id)
-    # 拷贝
-    local_png = screen_pull(device_id, png_name)
+    def get_img():
+        # 截屏
+        png_name = screen_cap(device_id)
+        # 拷贝
+        local_png = screen_pull(device_id, png_name)
+        return png_name, local_png
+    png_name, local_png = get_img()
+    try:
+        cv2.imread(local_png)
+    except Exception as e:
+        print(e)
+        png_name, local_png = get_img()
     # 识别
     if top_normal_bottom == "normal":
         result = paddle_ocr_obj.detect(local_png)
@@ -331,7 +339,10 @@ def get_phone_wh(device_id):
     command = "adb -s " + device_id + " shell wm size"
     lines = opt_sys_command(command)
     wh = lines[0].split(':')[-1].strip().split("x")
-    wh = (wh[0], wh[1])
+    try:
+        wh = (wh[0], wh[1])
+    except Exception as E:
+        print(E, lines, wh)
     return wh
 
 
@@ -357,6 +368,9 @@ def unclock_all_devices():
 if __name__ == "__main__":
     # reboot_adb()
     # unlock_device("192.168.101.100:8888")
-    device_id = "192.168.101.104:5555"
-    stats, position = find_screen_text_button_position(device_id, "已成功领取", "已成功领取")
+    device_id = "192.168.31.212:5555"
+    # stats, position = find_screen_text_button_position(device_id, "已成功领取", "已成功领取")
+    for i in range(10):
+        # print(get_phone_wh(device_id))
+        print(find_screen_text_position(device_id, "抖音"))
     # get_phone_wh(device_id)

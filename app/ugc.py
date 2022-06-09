@@ -162,7 +162,7 @@ class UGCOpt:
         status, position = find_screen_text_button_position(self.device_id, "开宝箱领奖", "开宝箱领奖")
         if status:
             print_help_text(self.device_id, "开宝箱")
-            tap(self.device_id, (930, 2110))
+            tap(self.device_id, position)
             time.sleep(0.5)
             # 点击看广告
             tap(self.device_id, self.coin_box_ad)

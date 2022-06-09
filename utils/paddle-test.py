@@ -1,12 +1,16 @@
 from paddleocr import PaddleOCR, draw_ocr
+import math
 
 # Paddleocr目前支持的多语言语种可以通过修改lang参数进行切换
 # 例如`ch`, `en`, `fr`, `german`, `korean`, `japan`
 ocr = PaddleOCR(use_angle_cls=True, lang="ch")  # need to run only once to download and load model into memory
-img_path = '../media/screen_192.168.101.104.png'
+img_path = '../media/screen_192.168.31.123.png'
 result = ocr.ocr(img_path, cls=True)
 box = []
-for line in result:
+print(result)
+result_list = [(int(math.sqrt(math.pow(int(i[0][0][0]), 2) + math.pow(int(i[0][0][1]), 3))), i[1][0]) for i in result]
+result_list = sorted(result_list, key=lambda x: x[0])
+for line in result_list:
     if line[1][0].find('金币收益') >= 0:
        box = line[0]
     print(line)

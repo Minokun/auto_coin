@@ -50,7 +50,10 @@ class ArticleLiteOpt:
         time.sleep(1)
         up_long_swipe(self.device_id)
         stats, box, result = find_screen_text_position(self.device_id, "我的现金")
-        result = [i[1][0] for i in result]
+        result_list = [(int(math.sqrt(math.pow(int(i[0][0][0]), 2) + math.pow(int(i[0][0][1]), 3))), i[1][0]) for i in
+                       result]
+        result_list = sorted(result_list, key=lambda x: x[0])
+        result = [i[1] for i in result_list]
         coin_index_id = 0
         cash_index_id = 0
         n = 0
@@ -254,6 +257,7 @@ class ArticleLiteOpt:
         tap(self.device_id, self.first_page_menu_position)
         print_help_text(self.device_id, "点击首页任务栏")
         tap(self.device_id, self.main_task_position)
+        time.sleep(1.5)
         # 找小视频
         status, box, _ = find_screen_text_position(self.device_id, "小视频")
         if not status:
@@ -322,7 +326,11 @@ class ArticleLiteOpt:
         self.start_article_app()
         time.sleep(1)
         # 获取当前收益
-        coin_start, cash_start = self.get_coin_num()
+        try:
+            coin_start, cash_start = self.get_coin_num()
+        except Exception as e:
+            print(e)
+            coin_start, cash_start = self.get_coin_num()
         if read_article:
             # 浏览首页阅读文章
             self.browser_article(first_status)
@@ -340,7 +348,11 @@ class ArticleLiteOpt:
             # 逛商品
             self.auto_watch_goods()
         # 获取当前收益
-        coin_end, cash_end = self.get_coin_num()
+        try:
+            coin_end, cash_end = self.get_coin_num()
+        except Exception as e:
+            print(e)
+            coin_end, cash_end = self.get_coin_num()
         self.coin_current = coin_end - coin_start
         self.cash_current = round(self.cash_current / 33000, 4)
         self.coin_today = coin_end
@@ -348,7 +360,7 @@ class ArticleLiteOpt:
 
 
 if __name__ == "__main__":
-    article_obj = ArticleLiteOpt("192.168.31.212:5555")
+    article_obj = ArticleLiteOpt("192.168.31.123:5555")
 
     article_obj.auto_run(first_status=False, light_screen_stats=False, read_article=False, watch_small_video=False,
                                   watch_coin_box=True, watch_ad=False, watch_goods=False)
