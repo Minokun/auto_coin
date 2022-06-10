@@ -67,7 +67,7 @@ class UGCOpt:
                 press_back(self.device_id)
         # 点击首页
         tap(self.device_id, self.main_position)
-        per_video_time = 60000
+        per_video_time = 6000
         num = math.ceil(time_period / per_video_time)
         for i in range(num):
             print_help_text(self.device_id, "第%s/%s次刷视频" % (str(i + 1), str(num)))

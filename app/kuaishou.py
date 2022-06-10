@@ -194,7 +194,7 @@ class KuaiShouOpt:
             else:
                 print_help_text(self.device_id, "点击去逛街")
                 tap(self.device_id, position)
-                for i in range(200):
+                for i in range(150):
                     print_help_text(self.device_id, "逛街第%s/200次" % str(i + 1))
                     up_short_swipe(self.device_id)
                     time.sleep(5)
@@ -203,6 +203,7 @@ class KuaiShouOpt:
                 stats, position = find_screen_text_button_position(self.device_id, "放弃奖励", "放弃奖励")
                 if stats:
                     tap(self.device_id, position)
+                break
 
     def auto_run(self, light_screen_stats=False, watch_video=True, watch_coin_box=True, watch_ad=True, shopping=False):
         # 解锁手机

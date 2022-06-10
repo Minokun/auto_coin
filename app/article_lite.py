@@ -151,7 +151,7 @@ class ArticleLiteOpt:
         self.back_to_main()
         # 浏览文章
         if first_stats:
-            time_period = 80000
+            time_period = 800000
         else:
             time_period = 80000
         per_time = 8000
