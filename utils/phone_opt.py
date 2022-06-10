@@ -56,7 +56,7 @@ device_user = {
 
 online_id_list = ["192.168.101.100:5555", "192.168.101.101:5555", "192.168.31.123:5555", "192.168.31.212:5555",
                   "192.168.31.227:5555"]
-offline_id_list = ["192.168.101.100:5555", "192.168.31.228:5555", "192.168.31.123:5555"]
+offline_id_list = ["192.168.101.100:5555", "192.168.31.228:5555", "192.168.31.124:5555"]
 # offline_id_list = []
 device_id_list = list(set(online_id_list) - set(offline_id_list))
 
@@ -69,8 +69,8 @@ def print_help_text(device_id, help_text, current_step=''):
 # 执行系统命令
 def opt_sys_command(command, sleep_time=1):
     p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    # time.sleep(sleep_time)
     p.wait()
+    time.sleep(0.5)
     result = p.communicate()[0].decode()
     return result.split('\r\n')
 
@@ -337,12 +337,12 @@ def shut_app(device_id, app):
 
 def get_phone_wh(device_id):
     command = "adb -s " + device_id + " shell wm size"
-    lines = opt_sys_command(command)
-    wh = lines[0].split(':')[-1].strip().split("x")
     try:
+        lines = opt_sys_command(command)
+        wh = lines[0].split(':')[-1].strip().split("x")
         wh = (wh[0], wh[1])
-    except Exception as E:
-        print(E, lines, wh)
+    except Exception as e:
+        return get_phone_wh(device_id)
     return wh
 
 
@@ -368,9 +368,15 @@ def unclock_all_devices():
 if __name__ == "__main__":
     # reboot_adb()
     # unlock_device("192.168.101.100:8888")
+    import re
     device_id = "192.168.31.212:5555"
-    # stats, position = find_screen_text_button_position(device_id, "已成功领取", "已成功领取")
-    for i in range(10):
-        # print(get_phone_wh(device_id))
-        print(find_screen_text_position(device_id, "抖音"))
+    stats, box, result = find_screen_text_position(device_id, "金币")
+    for line in result:
+        if line[1][0].find('.') >= 0:
+            cash = float(re.findall(r'[^\d]*([\d]+\.[\d]+)元*', line[1][0])[0])
+        g = re.findall(r'[^\d]*([\d]+)[^\d]*金币', line[1][0])
+        if len(g) > 0:
+            coin = float(g[0])
+            break
+    print(coin, cash)
     # get_phone_wh(device_id)

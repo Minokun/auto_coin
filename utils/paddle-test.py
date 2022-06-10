@@ -4,20 +4,13 @@ import math
 # Paddleocr目前支持的多语言语种可以通过修改lang参数进行切换
 # 例如`ch`, `en`, `fr`, `german`, `korean`, `japan`
 ocr = PaddleOCR(use_angle_cls=True, lang="ch")  # need to run only once to download and load model into memory
-img_path = '../media/screen_192.168.31.123.png'
+img_path = '../media/227.png'
 result = ocr.ocr(img_path, cls=True)
-box = []
-print(result)
-result_list = [(int(math.sqrt(math.pow(int(i[0][0][0]), 2) + math.pow(int(i[0][0][1]), 3))), i[1][0]) for i in result]
-result_list = sorted(result_list, key=lambda x: x[0])
-for line in result_list:
-    if line[1][0].find('金币收益') >= 0:
-       box = line[0]
-    print(line)
 
-# button_text = '领金币'
-# y_ad = box[1][1]
-# for line in result:
+button_text = '我的现金'
+
+for line in result:
+    pass
 #     # 如果找到了该位置
 #     if line[1][0].find(button_text) >= 0 and line[0][0][1] >= (y_ad - 80) and line[0][0][1] <= (y_ad + 80):
 #         x, y = int((line[0][0][0] + line[0][1][0]) / 2), int((line[0][0][1] + line[0][1][1]) / 2)

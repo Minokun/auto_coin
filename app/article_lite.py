@@ -42,52 +42,30 @@ class ArticleLiteOpt:
             if status:
                 tap(self.device_id, position)
 
+    # 上滑到最顶部
+    def back_top(self):
+        for i in range(4):
+            down_long_swipe(self.device_id)
+
     def get_coin_num(self):
         print_help_text(self.device_id, "获取当前收益")
         self.back_to_main()
         # 点击任务
         tap(self.device_id, self.coin_task_position)
         time.sleep(1)
-        up_long_swipe(self.device_id)
-        stats, box, result = find_screen_text_position(self.device_id, "我的现金")
-        result_list = [(int(math.sqrt(math.pow(int(i[0][0][0]), 2) + math.pow(int(i[0][0][1]), 3))), i[1][0]) for i in
-                       result]
-        result_list = sorted(result_list, key=lambda x: x[0])
-        result = [i[1] for i in result_list]
-        coin_index_id = 0
-        cash_index_id = 0
-        n = 0
+        self.back_top()
+        coin = self.coin_current
+        cash = self.cash_current
+        stats, box, result = find_screen_text_position(self.device_id, "金币")
         for line in result:
-            if line.find("我的现金") >= 0:
-                cash_index_id = n
-            if line.find("我的金币") >= 0:
-                coin_index_id = n
-            n += 1
-        coin_content = result[coin_index_id].split('：')
-        if len(coin_content) == 2 and coin_content[1]:
-            coin = float(coin_content[1])
-        elif len(coin_content) == 3 and coin_content[1]:
-            g = re.match(r'我的现金：([\d]+\.*[\d]*).*我的金币：([\d]+)', result[coin_index_id])
-            coin = float(g[2])
-            cash = float(g[1])
-            print_help_text(self.device_id, "当前金币：%s 当前现金：%s" % (str(coin), str(cash)))
-            return coin, cash
-        else:
-            coin_content = result[coin_index_id + 1]
-            g = re.match(r'.*?([\d]+).*?', coin_content)
-            coin = float(g[1])
-        cash_content = result[cash_index_id].split('：')
-        if len(cash_content) == 2 and cash_content[1]:
-            g = re.match(r'([\d]+\.*[\d]*).*', cash_content[1])
-            cash = float(g[1])
-        elif len(cash_content) == 3 and cash_content[1]:
-            pass
-        else:
-            cash_content = result[cash_index_id + 1]
-            if ':'.find(cash_content) >= 0:
-                cash = float(cash_content[1:])
-            else:
-                cash = float(cash_content)
+            if line[1][0].find('.') >= 0:
+                g = re.findall(r'[^\d]*([\d]+\.[\d]+)元*', line[1][0])
+                if len(g) > 0:
+                    cash = float(g[0])
+            g = re.findall(r'[^\d]*([\d]+)[^\d]*金币', line[1][0])
+            if len(g) > 0:
+                coin = float(g[0])
+                break
         print_help_text(self.device_id, "当前金币：%s 当前现金：%s" % (str(coin), str(cash)))
         return coin, cash
 
@@ -112,7 +90,11 @@ class ArticleLiteOpt:
     def watch_ad(self):
         status = False
         while not status:
-            time.sleep(16)
+            time.sleep(18)
+            stats, position = find_screen_text_button_position(self.device_id, "继续观看", "继续观看")
+            if stats:
+                tap(self.device_id, position)
+                time.sleep(6)
             # 如果有查看详情
             stats, box, result = find_screen_text_position(self.device_id, "查看")
             xq_position = find_screen_by_result(result, "查看详情")
@@ -150,7 +132,7 @@ class ArticleLiteOpt:
             stats, box, result = find_screen_text_position(self.device_id, "再看", top_normal_bottom="top")
             if stats:
                 print_help_text(self.device_id, "再看一个")
-                position = find_screen_by_result(result, "再看")
+                position = find_screen_by_result(result, "再看一个")
                 tap(self.device_id, position)
                 continue
             else:
@@ -169,7 +151,7 @@ class ArticleLiteOpt:
         self.back_to_main()
         # 浏览文章
         if first_stats:
-            time_period = 800000
+            time_period = 80000
         else:
             time_period = 80000
         per_time = 8000
@@ -179,7 +161,7 @@ class ArticleLiteOpt:
         tap(self.device_id, self.tuijian_menu_position)
         for i in range(num):
             time.sleep(1)
-            stats, position = find_screen_text_button_position(self.device_id, "首页", "首页", top_normal_bottom="bottom")
+            stats, position = find_screen_text_button_position(self.device_id, "放映厅", "放映厅", top_normal_bottom="bottom")
             if not stats:
                 print_help_text(self.device_id, '不在首页，回到首页')
                 press_back(self.device_id)

@@ -45,7 +45,7 @@ def run(device_id, first_status=False):
                               watch_ad=True, shopping=True)
         kuai_shou.auto_run(light_screen_stats=False, watch_ad=True, watch_coin_box=True)
         ugc_obj.auto_run(light_screen_stats=False, watch_video=False)
-        # dragon_read.auto_run(light_screen_stats=False)
+        dragon_read.auto_run(light_screen_stats=False)
     total_end_num += 1
     # 计算运行时间
     end_time = datetime.now()
@@ -73,7 +73,7 @@ def main():
     max_workers = len(CurrentDeviceList)
     executor = ThreadPoolExecutor(max_workers=max_workers)
     all_task = []
-    first_status = False
+    first_status = True
     for n in range(1, total_num + 1):
         for i in CurrentDeviceList:
             if first_status and n == 1:
