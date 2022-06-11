@@ -42,20 +42,18 @@ class DragonReadOpt:
         if not stats:
             self.back_main_coin()
             self.back_top()
-        y_bottom = box[2][1]
-        n = 0
-        coin = 0.0
-        cash = 0.0
+            stats, box, result = find_screen_text_position(self.device_id, "金币收益")
+        coin = self.coin_current
+        cash = self.cash_current
         for line in result:
-            if line[0][2][1] > y_bottom:
-                n += 1
-                if n == 1:
-                    g = re.match(r'([\d]+).*', line[1][0])
-                    coin = float(g[1])
-                elif n == 2:
-                    g = re.match(r'([\d]+.*[\d]+).*', line[1][0])
-                    cash = float(g[1])
-                else:
+            if line[0][0][1] > box[0][1]:
+                if line[1][0].find('.') >= 0:
+                    g = re.findall(r'[^\d]*([\d]+\.[\d]+)元*', line[1][0])
+                    if len(g) > 0:
+                        cash = float(g[0])
+                g = re.findall(r'^([\d]+)[币]*$', line[1][0])
+                if len(g) > 0:
+                    coin = float(g[0])
                     break
         print_help_text(self.device_id, "当前金币：%s 当前现金：%s" % (str(coin), str(cash)))
         return coin, cash
@@ -107,7 +105,7 @@ class DragonReadOpt:
         # 进入金币页面
         self.back_main_coin()
         self.back_top()
-        for i in range(3):
+        for i in range(4):
             print_help_text(self.device_id, "找看广告的按钮")
             status, position = find_screen_text_button_position(self.device_id, "立即观看", "立即观看")
             if status:
@@ -164,6 +162,6 @@ class DragonReadOpt:
         self.cash_total = cash_end
 
 if __name__ == "__main__":
-    dragon_read_obj = DragonReadOpt("192.168.101.103:5555")
+    dragon_read_obj = DragonReadOpt("192.168.101.101:5555")
     # print(dragon_read_obj.get_coin_num())
     dragon_read_obj.auto_run(light_screen_stats=False)

@@ -306,7 +306,7 @@ def up_short_swipe(device_id):
 
 # 长上滑
 def up_long_swipe(device_id):
-    swipe(device_id, (40, 2000), (40, 550), 550)
+    swipe(device_id, (40, 2000), (40, 650), 550)
 
 
 # 下滑 短程
@@ -316,7 +316,7 @@ def down_short_swipe(device_id):
 
 # 长下滑
 def down_long_swipe(device_id):
-    swipe(device_id, (40, 550), (40, 2000), 550)
+    swipe(device_id, (40, 650), (40, 2000), 550)
 
 
 # 启动app
@@ -342,6 +342,7 @@ def get_phone_wh(device_id):
         wh = lines[0].split(':')[-1].strip().split("x")
         wh = (wh[0], wh[1])
     except Exception as e:
+        print(e)
         return get_phone_wh(device_id)
     return wh
 
@@ -369,8 +370,8 @@ if __name__ == "__main__":
     # reboot_adb()
     # unlock_device("192.168.101.100:8888")
     import re
-    device_id = "192.168.31.212:5555"
-    stats, box, result = find_screen_text_position(device_id, "金币")
+    device_id = "192.168.101.103:5555"
+    stats, box, result = find_screen_text_position(device_id, "再看一个")
     for line in result:
         if line[1][0].find('.') >= 0:
             cash = float(re.findall(r'[^\d]*([\d]+\.[\d]+)元*', line[1][0])[0])

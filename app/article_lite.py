@@ -41,6 +41,9 @@ class ArticleLiteOpt:
             status, position = find_screen_text_button_position(self.device_id, "跳过", "跳过")
             if status:
                 tap(self.device_id, position)
+            status, position = find_screen_text_button_position(self.device_id, "我知道", "我知道")
+            if status:
+                tap(self.device_id, position)
 
     # 上滑到最顶部
     def back_top(self):
@@ -81,7 +84,13 @@ class ArticleLiteOpt:
                 tap(self.device_id, position)
                 break
             else:
-                press_back(self.device_id)
+                stats, position = find_screen_text_button_position(self.device_id, "再看一", "再看一")
+                if stats:
+                    print_help_text(self.device_id, "再看一")
+                    tap(self.device_id, position)
+                    self.watch_ad()
+                else:
+                    press_back(self.device_id)
             time.sleep(1)
             if i > 4:
                 start_app(self.device_id, self.app_name)
@@ -91,10 +100,15 @@ class ArticleLiteOpt:
         status = False
         while not status:
             time.sleep(18)
-            stats, position = find_screen_text_button_position(self.device_id, "继续观看", "继续观看")
+            stats, box, result = find_screen_text_position(self.device_id, "继续观看")
             if stats:
+                position = find_screen_by_result(result, '继续观看')
                 tap(self.device_id, position)
                 time.sleep(6)
+            position = find_screen_by_result(result, "再看一")
+            if position:
+                tap(self.device_id, position)
+                continue
             # 如果有查看详情
             stats, box, result = find_screen_text_position(self.device_id, "查看")
             xq_position = find_screen_by_result(result, "查看详情")
@@ -129,19 +143,19 @@ class ArticleLiteOpt:
                     print_help_text(self.device_id, "跳回到今日头条")
                     start_app(self.device_id, self.app_name)
             # 如果有再看那就点击再看
-            stats, box, result = find_screen_text_position(self.device_id, "再看", top_normal_bottom="top")
+            stats, box, result = find_screen_text_position(self.device_id, "再看一", top_normal_bottom="top")
             if stats:
-                print_help_text(self.device_id, "再看一个")
-                position = find_screen_by_result(result, "再看一个")
+                print_help_text(self.device_id, "再看一")
+                position = find_screen_by_result(result, "再看一")
                 tap(self.device_id, position)
                 continue
             else:
                 # 关闭广告
                 tap(self.device_id, self.ads_shut)
                 # 如果有再看 那就点击再看
-                stats, position = find_screen_text_button_position(self.device_id, "再看", "再看")
+                stats, position = find_screen_text_button_position(self.device_id, "再看一", "再看一")
                 if stats:
-                    print_help_text(self.device_id, "点击看下一个")
+                    print_help_text(self.device_id, "点击看下一")
                     tap(self.device_id, position)
                     continue
             self.back_to_main()
@@ -160,8 +174,8 @@ class ArticleLiteOpt:
         # 点击推荐
         tap(self.device_id, self.tuijian_menu_position)
         for i in range(num):
-            time.sleep(1)
-            stats, position = find_screen_text_button_position(self.device_id, "放映厅", "放映厅", top_normal_bottom="bottom")
+            time.sleep(2)
+            stats, position = find_screen_text_button_position(self.device_id, "首页", "首页", top_normal_bottom="bottom")
             if not stats:
                 print_help_text(self.device_id, '不在首页，回到首页')
                 press_back(self.device_id)
