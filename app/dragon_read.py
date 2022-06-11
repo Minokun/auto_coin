@@ -40,9 +40,7 @@ class DragonReadOpt:
         self.back_top()
         stats, box, result = find_screen_text_position(self.device_id, "金币收益")
         if not stats:
-            self.back_main_coin()
-            self.back_top()
-            stats, box, result = find_screen_text_position(self.device_id, "金币收益")
+            return self.get_coin_num()
         coin = self.coin_current
         cash = self.cash_current
         for line in result:

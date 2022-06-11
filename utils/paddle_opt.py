@@ -1,8 +1,10 @@
 # -*- coding:utf-8 -*-
+import time
 
 from paddleocr import PaddleOCR, draw_ocr
 import cv2
 import numpy as np
+import os
 
 class DetectPic:
     def __init__(self):
@@ -13,6 +15,8 @@ class DetectPic:
         self.bottom_list = []
 
     def detect(self, img):
+        if not os.path.exists(img):
+            time.sleep(1)
         return self.ocr.ocr(img)
 
     def detect_top(self, img):
