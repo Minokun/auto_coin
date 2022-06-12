@@ -93,7 +93,10 @@ class ArticleLiteOpt:
                     press_back(self.device_id)
             time.sleep(1)
             if i > 4:
-                start_app(self.device_id, self.app_name)
+                self.shut_app()
+                time.sleep(1)
+                self.start_article_app()
+                break
 
     # 看广告
     def watch_ad(self):
@@ -265,8 +268,8 @@ class ArticleLiteOpt:
         # 点击一个视频
         tap(self.device_id, (300, 720))
         print_help_text(self.device_id, "开始看小视频")
-        for i in range(12):
-            print_help_text(self.device_id, "第%s/12次" % str(i + 1))
+        for i in range(30):
+            print_help_text(self.device_id, "第%s/30次" % str(i + 1))
             up_short_swipe(self.device_id)
             time.sleep(get_random_time())
         # 返回

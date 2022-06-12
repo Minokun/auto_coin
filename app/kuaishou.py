@@ -50,6 +50,9 @@ class KuaiShouOpt:
         if position:
             tap(self.device_id, position)
 
+    def shut_app(self):
+        shut_app(self.device_id, self.app_name)
+
     def get_coin_num(self):
         print_help_text(self.device_id, "获取当前收益")
         self.back_main_coin()
@@ -98,8 +101,11 @@ class KuaiShouOpt:
                 break
             else:
                 press_back(self.device_id)
-            if i > 5:
+            if i > 4:
+                self.shut_app()
+                time.sleep(1)
                 self.start_kuaishou_app()
+                break
 
     # 上滑到最顶部
     def back_top(self):
@@ -159,7 +165,7 @@ class KuaiShouOpt:
             tap(self.device_id, position)
             self.ad()
             return True
-        position = find_screen_by_result(result, "X")
+        position = find_screen_by_result(result, "在看一")
         if position:
             tap(self.device_id, position)
 

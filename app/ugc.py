@@ -39,6 +39,9 @@ class UGCOpt:
             if status:
                 tap(self.device_id, position)
 
+    def shut_app(self):
+        shut_app(self.device_id, self.app_name)
+
     def get_coin_num(self):
         self.back_main_coin()
         self.back_top()
@@ -103,6 +106,11 @@ class UGCOpt:
                 stats, position = find_screen_text_button_position(self.device_id, "坚持退出", "坚持退出")
                 if stats:
                     tap(self.device_id, position)
+            if i > 4:
+                self.shut_app()
+                time.sleep(1)
+                self.start_ugc_app()
+                break
 
     # 上滑到最顶部
     def back_top(self):

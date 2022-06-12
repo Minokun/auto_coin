@@ -17,7 +17,13 @@ class DetectPic:
     def detect(self, img):
         if not os.path.exists(img):
             time.sleep(1)
-        return self.ocr.ocr(img)
+        try:
+            image_cvmat = np.asarray(cv2.imread(img))
+            result = self.ocr.ocr(image_cvmat)
+        except Exception as e:
+            print(e)
+            result =''
+        return result
 
     def detect_top(self, img):
         result = self.detect(img)
@@ -44,7 +50,7 @@ paddle_ocr_obj = DetectPic()
 
 if __name__ == "__main__":
     detect_pic = DetectPic()
-    result = detect_pic.detect_bottom('media/screen_192.168.101.101.png')
+    result = detect_pic.detect_bottom('../media/101.png')
     print(result)
 
     for i in detect_pic.bottom_list:

@@ -35,6 +35,9 @@ class DragonReadOpt:
             if status:
                 tap(self.device_id, position)
 
+    def shut_app(self):
+        shut_app(self.device_id, self.app_name)
+
     def get_coin_num(self):
         self.back_main_coin()
         self.back_top()
@@ -69,6 +72,11 @@ class DragonReadOpt:
                 break
             else:
                 press_back(self.device_id)
+            if i > 4:
+                self.shut_app()
+                time.sleep(1)
+                self.start_dragon_app()
+                break
 
     # 上滑到最顶部
     def back_top(self):
@@ -160,6 +168,6 @@ class DragonReadOpt:
         self.cash_total = cash_end
 
 if __name__ == "__main__":
-    dragon_read_obj = DragonReadOpt("192.168.101.101:5555")
+    dragon_read_obj = DragonReadOpt("192.168.101.104:5555")
     # print(dragon_read_obj.get_coin_num())
     dragon_read_obj.auto_run(light_screen_stats=False)
