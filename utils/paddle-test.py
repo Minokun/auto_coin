@@ -5,23 +5,26 @@ import math
 # Paddleocr目前支持的多语言语种可以通过修改lang参数进行切换
 # 例如`ch`, `en`, `fr`, `german`, `korean`, `japan`
 ocr = PaddleOCR(use_angle_cls=True, lang="ch")  # need to run only once to download and load model into memory
-img_path = '../media/1.png'
+img_path = '../media/212.png'
 result = ocr.ocr(img_path, cls=True)
-
-button_text = '我的现金'
-coin = 1111
-cash = 1111
+y_limit = 0
+y_limit = 0
 for line in result:
-    if line[0][0][1] > 230:
-        if line[1][0].find('.') >= 0:
-            g = re.findall(r'[^\d]*([\d]+\.[\d]+)元*', line[1][0])
-            if len(g) > 0:
-                cash = float(g[0])
-        g = re.findall(r'^([\d]+)[币]*$', line[1][0])
+    if line[1][0].find('金币收益') >= 0:
+        y_limit = line[0][2][1]
+    if line[1][0].find('自动兑换现金') >= 0:
+        y_limit_2 = line[0][0][1]
+        break
+
+for line in result:
+    if line[0][0][1] > y_limit and line[0][0][1] < y_limit_2:
+        if '.'.find(line[1][0]) >= 0:
+            cash = float(line[1][0])
+            print(cash)
+        g = re.findall(r'^([\d]+)$', line[1][0])
         if len(g) > 0:
-            coin = float(g[0])
-            break
-print(cash, coin)
+            print(g[0])
+
 # 显示结果
 from PIL import Image
 

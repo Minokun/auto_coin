@@ -58,9 +58,17 @@ class UGCLiteOpt:
             if line[0][2][1] > y_bottom:
                 n += 1
                 if n == 1:
-                    coin = float(line[1][0])
+                    try:
+                        coin = float(line[1][0])
+                    except Exception as e:
+                        print(self.device_id, e)
+                        coin = 0.0
                 elif n == 2:
-                    cash = float(line[1][0])
+                    try:
+                        cash = float(line[1][0])
+                    except Exception as e:
+                        print(self.device_id, e)
+                        cash = 0.0
                 else:
                     break
         print_help_text(self.device_id, "当前金币：%s 当前现金：%s" % (str(coin), str(cash)))

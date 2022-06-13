@@ -278,6 +278,11 @@ class ArticleLiteOpt:
         tap(self.device_id, self.main_task_position)
         # 找推荐
         status, box, _ = find_screen_text_position(self.device_id, "推荐")
+        if not status:
+            self.shut_app()
+            time.sleep(1)
+            self.start_article_app()
+            return True
         position = (box[0][0] + 10, box[0][1] + 10)
         tap(self.device_id, position)
 
@@ -325,11 +330,7 @@ class ArticleLiteOpt:
         self.start_article_app()
         time.sleep(1)
         # 获取当前收益
-        try:
-            coin_start, cash_start = self.get_coin_num()
-        except Exception as e:
-            print(e)
-            coin_start, cash_start = self.get_coin_num()
+        coin_start, cash_start = self.get_coin_num()
         if read_article:
             # 浏览首页阅读文章
             self.browser_article(first_status)
@@ -347,11 +348,7 @@ class ArticleLiteOpt:
             # 逛商品
             self.auto_watch_goods()
         # 获取当前收益
-        try:
-            coin_end, cash_end = self.get_coin_num()
-        except Exception as e:
-            print(e)
-            coin_end, cash_end = self.get_coin_num()
+        coin_end, cash_end = self.get_coin_num()
         self.coin_current = coin_end - coin_start
         self.cash_current = round(self.cash_current / 33000, 4)
         self.coin_today = coin_end
