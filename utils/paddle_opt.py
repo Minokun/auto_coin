@@ -15,14 +15,8 @@ class DetectPic:
         self.bottom_list = []
 
     def detect(self, img):
-        if not os.path.exists(img):
-            time.sleep(1)
-        try:
-            image_cvmat = np.asarray(cv2.imread(img))
-            result = self.ocr.ocr(image_cvmat)
-        except Exception as e:
-            print(e)
-            result =''
+        image_cvmat = np.asarray(cv2.imread(img))
+        result = self.ocr.ocr(image_cvmat)
         return result
 
     def detect_top(self, img):

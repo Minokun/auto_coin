@@ -56,7 +56,7 @@ device_user = {
 
 online_id_list = ["192.168.101.100:5555", "192.168.101.101:5555", "192.168.31.123:5555", "192.168.31.212:5555",
                   "192.168.31.227:5555"]
-offline_id_list = ["192.168.101.105:5555", "192.168.101.106:5555", "192.168.31.124:5555"]
+offline_id_list = ["192.168.101.100:5555", "192.168.101.105:5555", "192.168.31.124:5555"]
 # offline_id_list = []
 device_id_list = list(set(online_id_list) - set(offline_id_list))
 
@@ -228,11 +228,6 @@ def find_screen_text_position(device_id, text, top_normal_bottom='normal'):
         local_png = screen_pull(device_id, png_name)
         return png_name, local_png
     png_name, local_png = get_img()
-    try:
-        cv2.imread(local_png)
-    except Exception as e:
-        print(e)
-        png_name, local_png = get_img()
     # 识别
     if top_normal_bottom == "normal":
         result = paddle_ocr_obj.detect(local_png)
@@ -306,7 +301,7 @@ def up_short_swipe(device_id):
 
 # 长上滑
 def up_long_swipe(device_id):
-    swipe(device_id, (60, 2000), (60, 650), 550)
+    swipe(device_id, (60, 2000), (60, 650), 650)
 
 
 # 下滑 短程
@@ -342,7 +337,7 @@ def get_phone_wh(device_id):
         wh = lines[0].split(':')[-1].strip().split("x")
         wh = (wh[0], wh[1])
     except Exception as e:
-        print(e)
+        print(device_id, "获取分辨率", e)
         return get_phone_wh(device_id)
     return wh
 

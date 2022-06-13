@@ -156,9 +156,9 @@ class KuaiShouOpt:
     # 关掉广告
     def rm_ad(self):
         time.sleep(2)
-        print_help_text(self.device_id, "在赚钱页面去掉广告！")
         stats, box, result = find_screen_text_position(self.device_id, "看视频最高得")
         if stats:
+            print_help_text(self.device_id, "在赚钱页面去掉广告！")
             # 点击查看视频
             print_help_text(self.device_id, "直接点击看广告")
             position = find_screen_by_result(result, "看视频最高")
