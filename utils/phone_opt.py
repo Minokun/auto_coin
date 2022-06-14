@@ -228,13 +228,17 @@ def find_screen_text_position(device_id, text, top_normal_bottom='normal'):
         local_png = screen_pull(device_id, png_name)
         return png_name, local_png
     png_name, local_png = get_img()
-    # 识别
-    if top_normal_bottom == "normal":
-        result = paddle_ocr_obj.detect(local_png)
-    if top_normal_bottom == "top":
-        result = paddle_ocr_obj.detect_top(local_png)
-    if top_normal_bottom == 'bottom':
-        result = paddle_ocr_obj.detect_bottom(local_png)
+    try:
+        # 识别
+        if top_normal_bottom == "normal":
+            result = paddle_ocr_obj.detect(local_png)
+        if top_normal_bottom == "top":
+            result = paddle_ocr_obj.detect_top(local_png)
+        if top_normal_bottom == 'bottom':
+            result = paddle_ocr_obj.detect_bottom(local_png)
+    except Exception as E:
+        print(device_id, local_png, E)
+        return find_screen_text_position(device_id, text, top_normal_bottom=top_normal_bottom)
     status = False
     if not result:
         return status, [], []
