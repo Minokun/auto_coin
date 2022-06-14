@@ -216,6 +216,7 @@ def screen_pull(device_id, png_name):
     local_png = os.path.join(BASE_DIR, "media", png_name.split('/')[-1])
     command = "adb -s " + device_id + " pull %s %s" % (png_name, local_png)
     opt_sys_command(command)
+    time.sleep(0.5)
     return local_png
 
 
