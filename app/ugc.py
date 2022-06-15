@@ -205,7 +205,7 @@ class UGCOpt:
         # 获取当前收益
         coin_end, cash_end = self.get_coin_num()
         self.coin_current = coin_end - coin_start
-        self.cash_current = round(self.cash_current / 10000, 4)
+        self.cash_current = round(self.coin_current / 10000, 4)
         self.coin_today = coin_end
         self.cash_total = cash_end
 
