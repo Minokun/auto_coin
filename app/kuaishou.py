@@ -124,13 +124,19 @@ class KuaiShouOpt:
                 tap(self.device_id, position)
                 time.sleep(1)
                 tap(self.device_id, self.ad_end)
-            stats, position = find_screen_text_button_position(self.device_id, "再看一个", "再看一个")
+            stats, box, result = find_screen_text_position(self.device_id, "再看一")
             if stats:
+                position =find_screen_by_result(result, "再看一")
                 print_help_text(self.device_id, "再看一个")
                 tap(self.device_id, position)
                 continue
-            stats, position = find_screen_text_button_position(self.device_id, "放弃", "放弃")
-            if stats:
+            position = find_screen_by_result(result, "继续观看")
+            if position:
+                print_help_text(self.device_id, "继续观看")
+                tap(self.device_id, position)
+                continue
+            position = find_screen_by_result(result, "放弃")
+            if position:
                 print_help_text(self.device_id, "放弃任务")
                 tap(self.device_id, position)
             break
@@ -168,10 +174,22 @@ class KuaiShouOpt:
             return True
         position = find_screen_by_result(result, "再看一")
         if position:
+            print_help_text(self.device_id, "再看一个")
             tap(self.device_id, position)
+            self.ad()
+            return True
         position = find_screen_by_result(result, "看广告视频")
         if position:
+            print_help_text(self.device_id, "点击看广告")
             tap(self.device_id, position)
+            self.ad()
+            return True
+        position = find_screen_by_result(result, "继续观看")
+        if position:
+            print_help_text(self.device_id, "点击继续观看")
+            tap(self.device_id, position)
+            self.ad()
+            return True
 
     # 刷宝箱
     def coin_box(self):
@@ -228,7 +246,8 @@ class KuaiShouOpt:
         coin_start, cash_start = self.get_coin_num()
         # 看广告
         if watch_ad:
-            self.watch_ad()
+            for i in range(5):
+                self.watch_ad()
         # 看宝箱
         if watch_coin_box:
             print_help_text(self.device_id, "刷宝箱")
@@ -250,6 +269,7 @@ class KuaiShouOpt:
 
 
 if __name__ == "__main__":
-    ks_obj = KuaiShouOpt("192.168.101.104:5555")
-    ks_obj.auto_run(light_screen_stats=False, watch_video=False, watch_ad=False, watch_coin_box=True, shopping=False)
+    ks_obj = KuaiShouOpt("192.168.31.227:5555")
+    # ks_obj.auto_run(light_screen_stats=False, watch_video=False, watch_ad=False, watch_coin_box=True, shopping=True)
     # print(ks_obj.get_coin_num())
+    ks_obj.shopping()
