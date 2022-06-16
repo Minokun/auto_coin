@@ -95,6 +95,7 @@ class KuaiShouOpt:
     def back_main_coin(self):
         # 点击底部菜单金币按钮 最多10次
         for i in range(10):
+            self.rm_ad()
             print_help_text(self.device_id, "回到首页")
             stats, positon = find_screen_text_button_position(self.device_id, "首页", "首页", top_normal_bottom="bottom")
             if stats:
@@ -165,7 +166,10 @@ class KuaiShouOpt:
             tap(self.device_id, position)
             self.ad()
             return True
-        position = find_screen_by_result(result, "在看一")
+        position = find_screen_by_result(result, "再看一")
+        if position:
+            tap(self.device_id, position)
+        position = find_screen_by_result(result, "看广告视频")
         if position:
             tap(self.device_id, position)
 
