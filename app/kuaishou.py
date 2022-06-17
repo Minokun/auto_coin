@@ -156,9 +156,10 @@ class KuaiShouOpt:
                 print_help_text(self.device_id, "点击看广告")
                 tap(self.device_id, position)
                 self.ad()
-                break
+                return True
             else:
                 up_long_swipe(self.device_id)
+        return False
 
     # 关掉广告
     def rm_ad(self):
@@ -246,8 +247,9 @@ class KuaiShouOpt:
         coin_start, cash_start = self.get_coin_num()
         # 看广告
         if watch_ad:
-            for i in range(5):
-                self.watch_ad()
+            stats = True
+            while stats:
+                stats = self.watch_ad()
         # 看宝箱
         if watch_coin_box:
             print_help_text(self.device_id, "刷宝箱")
