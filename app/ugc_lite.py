@@ -22,7 +22,7 @@ class UGCLiteOpt:
         # 看广告中间的继续按钮
         self.ad_continue_menu_position = (530, int(1380 * self.height_scale))
         # 点击宝箱中间得看广告视频
-        self.coin_box_ad = (520, int(1450 * self.height_scale))
+        self.coin_box_ad = (520, int(1370 * self.height_scale))
         # 当前金币和现金收益
         self.coin_current = 0.0
         self.cash_current = 0.0
