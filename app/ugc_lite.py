@@ -96,6 +96,10 @@ class UGCLiteOpt:
             if status:
                 print_help_text(self.device_id, "进入金币页面")
                 tap(self.device_id, self.main_coin_position)
+                stats, position = find_screen_text_button_position(self.device_id, "看广告视频再赚", "看广告视频再赚")
+                if stats:
+                    tap(self.device_id, position)
+                    self.ad()
                 break
             else:
                 press_back(self.device_id)
@@ -117,7 +121,12 @@ class UGCLiteOpt:
     def ad(self):
         while True:
             print_help_text(self.device_id, "看广告")
-            time.sleep(32)
+            # 点击看广告
+            stats, position = find_screen_text_button_position(self.device_id, "看广告视频再赚", "看广告视频再赚")
+            if stats:
+                tap(self.device_id, position)
+                self.ad()
+            time.sleep(30)
             ad_status, position = find_screen_text_button_position(self.device_id, "反馈", "反馈")
             if ad_status:
                 print_help_text(self.device_id, "关闭广告")
@@ -173,10 +182,12 @@ class UGCLiteOpt:
         status, position = find_screen_text_button_position(self.device_id, "开宝箱得金币", "开宝箱得金币")
         if status:
             tap(self.device_id, position)
-            time.sleep(0.5)
+            time.sleep(1)
             # 点击看广告
-            tap(self.device_id, self.coin_box_ad)
-            self.ad()
+            stats, position = find_screen_text_button_position(self.device_id, "看广告视频再赚", "看广告视频再赚")
+            if stats:
+                tap(self.device_id, position)
+                self.ad()
         else:
             print_help_text(self.device_id, "当前无宝箱可看")
 

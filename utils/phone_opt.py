@@ -18,8 +18,8 @@ app_name = {
     "ugc_lite": "抖音极速版",
     "article_lite": "头条极速版",
     "kuaishou": "快手",
-    "dragon_read": "番茄小说"
-    # "wk_browser": "悟空浏览器"
+    "dragon_read": "番茄小说",
+    "wk_browser": "悟空浏览器"
 }
 # app package 名称 用于关闭应用
 app_package_name = {
@@ -56,7 +56,7 @@ device_user = {
 
 online_id_list = ["192.168.101.100:5555", "192.168.101.101:5555", "192.168.31.123:5555", "192.168.31.213:5555",
                   "192.168.31.227:5555"]
-offline_id_list = ["192.168.101.102:5555", "192.168.101.105:5555", "192.168.31.124:5555"]
+offline_id_list = ["192.168.101.102:5555", "192.168.101.102:5555", "192.168.31.124:5555"]
 # offline_id_list = []
 device_id_list = list(set(online_id_list) - set(offline_id_list))
 
@@ -306,7 +306,7 @@ def up_short_swipe(device_id):
 
 # 长上滑
 def up_long_swipe(device_id):
-    swipe(device_id, (60, 2000), (60, 650), 650)
+    swipe(device_id, (60, 2000), (60, 620), 650)
 
 
 # 下滑 短程
@@ -316,7 +316,7 @@ def down_short_swipe(device_id):
 
 # 长下滑
 def down_long_swipe(device_id):
-    swipe(device_id, (60, 650), (60, 2000), 550)
+    swipe(device_id, (60, 620), (60, 2000), 550)
 
 
 # 启动app
@@ -370,14 +370,8 @@ if __name__ == "__main__":
     # reboot_adb()
     # unlock_device("192.168.101.100:8888")
     import re
-    device_id = "192.168.101.103:5555"
-    stats, box, result = find_screen_text_position(device_id, "再看一个")
+    device_id = "192.168.101.101:5555"
+    stats, box, result = find_screen_text_position(device_id, "看视频")
     for line in result:
-        if line[1][0].find('.') >= 0:
-            cash = float(re.findall(r'[^\d]*([\d]+\.[\d]+)元*', line[1][0])[0])
-        g = re.findall(r'[^\d]*([\d]+)[^\d]*金币', line[1][0])
-        if len(g) > 0:
-            coin = float(g[0])
-            break
-    print(coin, cash)
+        print(line)
     # get_phone_wh(device_id)

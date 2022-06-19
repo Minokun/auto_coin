@@ -190,6 +190,12 @@ class KuaiShouOpt:
             print_help_text(self.device_id, "点击继续观看")
             tap(self.device_id, position)
             self.ad()
+            return
+        position = find_screen_by_result(result, "点击重试")
+        if position:
+            print_help_text(self.device_id, "点击重试")
+            tap(self.device_id, position)
+            time.sleep(2)
             return True
 
     # 刷宝箱
