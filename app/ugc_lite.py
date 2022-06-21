@@ -139,6 +139,10 @@ class UGCLiteOpt:
                 tap(self.device_id, (60, 150))
                 time.sleep(1)
                 tap(self.device_id, self.ad_shut)
+                stats, position = find_screen_text_button_position(self.device_id, "广告", '广告', top_normal_bottom='top')
+                if stats:
+                    press_back(self.device_id)
+                    break
             time.sleep(2)
             status, jx_position = find_screen_text_button_position(self.device_id, "继续", "继续")
             if status:
