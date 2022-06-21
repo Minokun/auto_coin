@@ -18,8 +18,8 @@ app_name = {
     "ugc_lite": "抖音极速版",
     "article_lite": "头条极速版",
     "kuaishou": "快手",
-    "dragon_read": "番茄小说",
-    "wk_browser": "悟空浏览器"
+    "dragon_read": "番茄小说"
+    # "wk_browser": "悟空浏览器"
 }
 # app package 名称 用于关闭应用
 app_package_name = {
