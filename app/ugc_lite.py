@@ -2,7 +2,7 @@
 
 import math
 import time
-
+from config import TIMES
 from utils.phone_opt import *
 
 
@@ -75,12 +75,14 @@ class UGCLiteOpt:
         return coin, cash
 
     # 看视频
-    def watch_video(self, time_period=600000):
+    def watch_video(self):
         self.back_main_coin()
         # 点击返回
         press_back(self.device_id)
-        per_video_time = 60000
-        num = math.ceil(time_period / per_video_time)
+        if self.device_id in TIMES[self.app_name]['watch_video_numbers'].keys():
+            num = TIMES[self.app_name]['watch_video_numbers'][self.device_id]
+        else:
+            num = TIMES[self.app_name]['watch_video_numbers']['default']
         for i in range(num):
             print_help_text(self.device_id, "第%s/%s次刷视频" % (str(i + 1), str(num)))
             up_short_swipe(self.device_id)
@@ -122,10 +124,10 @@ class UGCLiteOpt:
         while True:
             print_help_text(self.device_id, "看广告")
             # 点击看广告
-            stats, position = find_screen_text_button_position(self.device_id, "看广告视频再赚", "看广告视频再赚")
+            stats, box, result = find_screen_text_position(self.device_id, "看广告视频再赚")
             if stats:
+                position = find_screen_by_result(result, '看广告视频再赚')
                 tap(self.device_id, position)
-                self.ad()
             time.sleep(30)
             ad_status, position = find_screen_text_button_position(self.device_id, "反馈", "反馈")
             if ad_status:

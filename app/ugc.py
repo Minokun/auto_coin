@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 
 import math
+from config import TIMES
 
 from utils.phone_opt import *
 
@@ -60,7 +61,7 @@ class UGCOpt:
         return coin, cash
 
     # 看视频
-    def watch_video(self, time_period=60000):
+    def watch_video(self):
         for i in range(4):
             print_help_text(self.device_id, "回到首页")
             main_status, _, result = find_screen_text_position(self.device_id, "首页", top_normal_bottom='bottom')
@@ -70,8 +71,10 @@ class UGCOpt:
                 press_back(self.device_id)
         # 点击首页
         tap(self.device_id, self.main_position)
-        per_video_time = 6000
-        num = math.ceil(time_period / per_video_time)
+        if self.device_id in TIMES[self.app_name]['watch_video_numbers'].keys():
+            num = TIMES[self.app_name]['watch_video_numbers'][self.device_id]
+        else:
+            num = TIMES[self.app_name]['watch_video_numbers']['default']
         for i in range(num):
             print_help_text(self.device_id, "第%s/%s次刷视频" % (str(i + 1), str(num)))
             up_short_swipe(self.device_id)
