@@ -21,6 +21,7 @@ def run_scrcpy():
         executor.submit(scrcpy_command, i)
     for future in as_completed(all_task):
         data = future.result()
+        print(data)
 
 if __name__ == "__main__":
     run_scrcpy()
