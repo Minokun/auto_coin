@@ -48,15 +48,15 @@ device_passwd = {
 }
 
 device_user = {
-    "wxk": ["192.168.101.101:5555", "192.168.31.123:5555", "QKXUT20329000108"],
+    "wxk": ["192.168.101.101:5555", "192.168.31.124:5555", "QKXUT20329000108"],
     "fl": ["192.168.101.100:5555", "94P0220C01001100"],
     "cpc": ["192.168.101.103:5555", "192.168.31.213:5555"],
-    "cpc2": ["192.168.101.104:5555", "192.168.31.228:5555"]
+    "cpc2": ["192.168.101.104:5555", "192.168.31.228:5555", "P7CDU18C07001773"]
 }
 
 online_id_list = ["192.168.101.100:5555", "192.168.101.101:5555", "192.168.31.123:5555", "192.168.31.213:5555",
                   "192.168.31.227:5555"]
-offline_id_list = ["192.168.101.101:5555", "192.168.101.102:5555", "192.168.31.124:5555"]
+offline_id_list = ["192.168.101.101:5555", "192.168.101.102:5555", "192.168.31.123:5555"]
 # offline_id_list = []
 device_id_list = list(set(online_id_list) - set(offline_id_list))
 
@@ -301,22 +301,22 @@ def swipe(device_id, position_start, position_end, time_period=150):
 
 # 上滑 短程
 def up_short_swipe(device_id):
-    swipe(device_id, (60, 2000), (60, 1400))
+    swipe(device_id, (80, 1800), (80, 1400))
 
 
 # 长上滑
 def up_long_swipe(device_id):
-    swipe(device_id, (60, 2000), (60, 620), 650)
+    swipe(device_id, (80, 1800), (80, 620), 650)
 
 
 # 下滑 短程
 def down_short_swipe(device_id):
-    swipe(device_id, (60, 1600), (60, 2000))
+    swipe(device_id, (80, 1600), (80, 1800))
 
 
 # 长下滑
 def down_long_swipe(device_id):
-    swipe(device_id, (60, 620), (60, 2000), 550)
+    swipe(device_id, (80, 620), (80, 1800), 550)
 
 
 # 启动app

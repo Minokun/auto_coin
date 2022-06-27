@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 import time
-
+from config import TIMES
 from utils.phone_opt import *
 
 
@@ -83,11 +83,15 @@ class KuaiShouOpt:
         return coin, cash
 
     # 看视频
-    def watch_video(self, times=30):
+    def watch_video(self):
         self.back_main_coin()
         tap(self.device_id, self.main_position)
-        for i in range(times):
-            print_help_text(self.device_id, "第%s/%s次刷视频" % (str(i + 1), str(times)))
+        if self.device_id in TIMES[self.app_name]['watch_video_numbers'].keys():
+            num = TIMES[self.app_name]['watch_video_numbers'][self.device_id]
+        else:
+            num = TIMES[self.app_name]['watch_video_numbers']['default']
+        for i in range(num):
+            print_help_text(self.device_id, "第%s/%s次刷视频" % (str(i + 1), str(num)))
             up_short_swipe(self.device_id)
             time.sleep(get_random_time(10, 15))
 
