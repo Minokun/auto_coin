@@ -3,11 +3,12 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from utils.phone_opt import CurrentDeviceList
 
 os.environ["PATH"] = 'C:/Program Files (x86)/scrcpy-win64-v1.24/' + os.pathsep + os.getenv("PATH")
-
-def scrcpy_command(device):
+os.environ["PATH"] = 'C:/scrcpy-win64-v1.24' + os.pathsep + os.getenv("PATH")
+def scrcpy_command(device, time_period):
     window_title = device.split(':')[0]
-    command = 'scrcpy.exe -s %s -b 2M -m 1024 --window-title %s' % (device, window_title)
+    command = 'scrcpy.exe -s %s -b 2M -m 720 --window-title %s' % (device, window_title)
     print(command)
+    time.sleep(time_period)
     p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     p.wait()
     result = p.communicate()[0].decode()
@@ -17,8 +18,10 @@ def run_scrcpy():
     max_workers = len(CurrentDeviceList)
     executor = ThreadPoolExecutor(max_workers=max_workers)
     all_task = []
+    n = 1
     for i in CurrentDeviceList:
-        executor.submit(scrcpy_command, i)
+        n += 1
+        executor.submit(scrcpy_command, *(i, n))
     for future in as_completed(all_task):
         data = future.result()
         print(data)
