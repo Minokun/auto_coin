@@ -6,13 +6,14 @@ os.environ["PATH"] = 'C:/Program Files (x86)/scrcpy-win64-v1.24/' + os.pathsep +
 os.environ["PATH"] = 'C:/scrcpy-win64-v1.24' + os.pathsep + os.getenv("PATH")
 def scrcpy_command(device, time_period):
     window_title = device.split(':')[0]
-    command = 'scrcpy.exe -s %s -b 2M -m 360 --window-title %s' % (device, window_title)
+    command = 'scrcpy.exe -s %s -b 2M -m 720 --window-title %s' % (device, window_title)
     print(command)
-    # time.sleep(time_period)
-    p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    p.wait()
-    result = p.communicate()[0].decode()
-    return result.split('\r\n')
+    time.sleep(time_period)
+    # p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # p.wait()
+    # result = p.communicate()[0].decode()
+    # return result.split('\r\n')
+    os.system(command)
 
 def run_scrcpy():
     max_workers = len(CurrentDeviceList)
