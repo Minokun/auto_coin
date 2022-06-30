@@ -18,6 +18,8 @@ class WuKongOpt:
         self.coin_button = (540, int(2340 * self.height_scale))
         # 猴子金币按钮
         self.monkey_button = ()
+        # 点击弹出的中间看广告按钮坐标
+        self.ads_position = (550, int(1500 * self.height_scale))
         # 当前金币和现金收益
         self.coin_current = 0.0
         self.cash_current = 0.0
@@ -34,42 +36,11 @@ class WuKongOpt:
             status, position = find_screen_text_button_position(self.device_id, "跳过", "跳过")
             if status:
                 tap(self.device_id, position)
-        status, position = find_screen_text_button_position(self.device_id, "我知道", "我知道")
-        if status:
-            tap(self.device_id, position)
-        status, position = find_screen_text_button_position(self.device_id, "看广告", "看广告")
-        if status:
-            print_help_text(self.device_id, "看广告")
-            tap(self.device_id, position)
-            self.watch_ad()
-
 
     # 上滑到最顶部
     def back_top(self):
         for i in range(4):
             down_long_swipe(self.device_id)
-
-    def get_coin_num(self):
-        print_help_text(self.device_id, "获取当前收益")
-        self.back_to_main()
-        # 点击任务
-        tap(self.device_id, self.coin_button)
-        time.sleep(1)
-        self.back_top()
-        coin = self.coin_current
-        cash = self.cash_current
-        stats, box, result = find_screen_text_position(self.device_id, "金币")
-        for line in result:
-            if line[1][0].find('.') >= 0:
-                g = re.findall(r'[^\d]*([\d]+\.[\d]+)元*', line[1][0])
-                if len(g) > 0:
-                    cash = float(g[0])
-            g = re.findall(r'[^\d]*([\d]+)[^\d]*金币', line[1][0])
-            if len(g) > 0:
-                coin = float(g[0])
-                break
-        print_help_text(self.device_id, "当前金币：%s 当前现金：%s" % (str(coin), str(cash)))
-        return coin, cash
 
     def shut_app(self):
         shut_app(self.device_id, self.app_name)
@@ -91,35 +62,78 @@ class WuKongOpt:
                 self.start_wk_app()
                 break
 
-    def watch_video(self):
-        pass
+    def rm_ad(self):
+        print_help_text(self.device_id, "去掉蒙层")
+        stats, position = find_screen_text_button_position(self.device_id, "立即领取", "立即领取")
+        if stats:
+            tap(self.device_id, position)
+            time.sleep(1)
+        stats, position = find_screen_text_button_position(self.device_id, "看广告", "看广告")
+        if stats:
+            tap(self.device_id, position)
+            self.ad()
+        stats, position = find_screen_text_button_position(self.device_id, "领取金币", "领取金币")
+        if stats:
+            print_help_text(self.device_id, "领取金币")
+            tap(self.device_id, position)
+            time.sleep(1)
+            tap(self.device_id, self.ads_position)
+            self.ad()
+        while True:
+            stats, position = find_screen_text_button_position(self.device_id, "看视频", "看视频")
+            if stats:
+                tap(self.device_id, position)
+                self.ad()
+            else:
+                break
 
-    def watch_xiaoshuo(self):
-        pass
+    def get_coin_num(self):
+        print_help_text(self.device_id, "获取当前收益")
+        self.back_to_main()
+        # 点击任务
+        tap(self.device_id, self.coin_button)
+        time.sleep(1)
+        self.rm_ad()
+        self.back_top()
+        coin = self.coin_current
+        cash = self.cash_current
+        # TODO
+        # stats, box, result = find_screen_text_position(self.device_id, "金币")
+        # for line in result:
+        #     if line[1][0].find('.') >= 0:
+        #         g = re.findall(r'[^\d]*([\d]+\.[\d]+)元*', line[1][0])
+        #         if len(g) > 0:
+        #             cash = float(g[0])
+        #     g = re.findall(r'[^\d]*([\d]+)[^\d]*金币', line[1][0])
+        #     if len(g) > 0:
+        #         coin = float(g[0])
+        #         break
+        print_help_text(self.device_id, "当前金币：%s 当前现金：%s" % (str(coin), str(cash)))
+        return coin, cash
 
     # 看广告
-    def watch_ad(self):
-        status = False
-        while not status:
-            stats, position = find_screen_text_button_position(self.device_id, "首页", "首页", top_normal_bottom="bottom")
-            if stats:
-                print_help_text("回到了首页")
-                return True
-            stats, box, result = find_screen_text_position(self.device_id, "看视频再领")
-            if stats:
-                print_help_text(self.device_id, "看视频广告领金币")
-                position = find_screen_by_result(result, "看视频再领")
-                tap(self.device_id, position)
-            position = find_screen_by_result(result, "再看一")
-            if position:
-                print_help_text(self.device_id, "再看一个视频")
-                tap(self.device_id, position)
-            position = find_screen_by_result(result, "继续观看")
-            if position:
-                print_help_text(self.device_id, "继续观看")
-                tap(self.device_id, position)
-            time.sleep(15)
-            press_back(self.device_id)
+    def ad(self):
+        print_help_text(self.device_id, "看广告中")
+        stats, box, result = find_screen_text_position(self.device_id, "看视频再领")
+        if stats:
+            position = find_screen_by_result(result, "看视频再领")
+            tap(self.device_id, position)
+        position = find_screen_by_result(result, "看视频领取")
+        if position:
+            tap(self.device_id, position)
+        time.sleep(25)
+        stats, position = find_screen_text_button_position(self.device_id, "广告", "关闭")
+        if stats:
+            tap(self.device_id, position)
+            time.sleep(1)
+        stats, position = find_screen_text_button_position(self.device_id, "广告", "X")
+        if stats:
+            tap(self.device_id, position)
+            time.sleep(1)
+        stats, position = find_screen_text_button_position(self.device_id, "继续观看", "继续观看")
+        if stats:
+            tap(self.device_id, position)
+            time.sleep(10)
 
     def auto_coin_box(self):
         # 看宝箱的广告
@@ -127,8 +141,7 @@ class WuKongOpt:
         # 点击任务菜单
         self.back_to_main()
         tap(self.device_id, self.coin_button)
-        # 返会再点击一次 为了防止布局不一样
-        up_long_swipe(self.device_id)
+        self.rm_ad()
         status, position = find_screen_text_button_position(self.device_id, "开宝箱得金币", "开宝箱得金币")
         if status:
             print_help_text(self.device_id, "开宝箱")
@@ -138,7 +151,7 @@ class WuKongOpt:
             # 点击”看视频再领“ 开始看广告
             tap(self.device_id, self.ads_position)
             # 循环查看
-            self.watch_ad()
+            self.ad()
         else:
             print_help_text(self.device_id, "目前不能点击宝箱！")
 
@@ -146,43 +159,38 @@ class WuKongOpt:
     def auto_watch_ad(self):
         # 点击任务菜单
         self.back_to_main()
+        tap(self.device_id, self.coin_button)
+        self.rm_ad()
+        self.back_top()
         print_help_text(self.device_id, "点击任务菜单,开始看广告")
         tap(self.device_id, self.coin_button)
         # 上滑找“看广告” 最多5次
         for i in range(3):
-            # 上滑
-            up_long_swipe(self.device_id)
             status, position = find_screen_text_button_position(self.device_id, "看广告视频", "去完成")
             if status:
                 print_help_text(self.device_id, "看广告")
                 tap(self.device_id, position)
-                self.watch_ad()
+                self.ad()
                 return True
+            # 上滑
+            up_long_swipe(self.device_id)
         print_help_text(self.device_id, "未找到看广告领福利的位置！")
 
-    # TODO 自动领取所有奖励
-    def auto_take_award(self):
+    def watch_small_video(self):
+        # 看小视频
         self.back_to_main()
-        # 点击我的金币页面
-        tap(self.device_id, self.coin_button)
-        # 点击猴子领金币
-        stats, position = find_screen_text_button_position(self.device_id, "领取金币", "领取金币")
+        # 点击视频
+        stats, position = find_screen_text_button_position(self.device_id, "视频", "视频", top_normal_bottom="bottom")
         if stats:
-            print_help_text(self.device_id, "点击领取金币")
+            print_help_text(self.device_id, "开始刷视频")
             tap(self.device_id, position)
-            self.watch_ad()
-        while True:
-            stats, position = find_screen_text_button_position(self.device_id, "看视频", "看视频")
-            if stats:
-                print_help_text(self.device_id, "看广告")
-                tap(self.device_id, position)
-                self.watch_ad()
-            else:
-                break
-
+            for i in range(3):
+                print_help_text(self.device_id, "刷小视频第%s\%s次" % (str(i), 30))
+                time.sleep(get_random_time(4, 6))
+                up_long_swipe(self.device_id)
 
     # 开始自动刷app
-    def auto_run(self, light_screen_stats=True):
+    def auto_run(self, light_screen_stats=True, watch_small_video=True, watch_ad=True, coin_box=True):
         # 解锁屏幕
         if light_screen_stats:
             print_help_text(self.device_id, "解锁设备")
@@ -192,7 +200,15 @@ class WuKongOpt:
         time.sleep(1)
         # 获取当前收益
         coin_start, cash_start = self.get_coin_num()
-        #
+        # 看小视频
+        if watch_small_video:
+            self.watch_small_video()
+        # 看广告
+        if watch_ad:
+            self.auto_watch_ad()
+        # 开宝箱
+        if coin_box:
+            self.auto_coin_box()
         # 获取当前收益
         coin_end, cash_end = self.get_coin_num()
         self.coin_current = coin_end - coin_start
@@ -202,6 +218,5 @@ class WuKongOpt:
 
 
 if __name__ == "__main__":
-    article_obj = WuKongOpt("192.168.101.101:5555")
-
-    article_obj.auto_run(light_screen_stats=False)
+    wukong_obj = WuKongOpt("192.168.101.101:5555")
+    wukong_obj.auto_run(light_screen_stats=False)
