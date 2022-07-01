@@ -7,6 +7,7 @@ from app.ugc_lite import UGCLiteOpt
 from app.ugc import UGCOpt
 from app.dragon_read import DragonReadOpt
 from app.kuaishou import KuaiShouOpt
+from app.wukong import WuKongOpt
 import pandas as pd
 
 total_num = 30
@@ -28,6 +29,8 @@ def run(device_id, first_status=False):
         dragon_read = DragonReadOpt(device_id)
         # 快手+
         kuai_shou = KuaiShouOpt(device_id)
+        # 悟空浏览器
+        wk_browser = WuKongOpt(device_id)
         if first_status and i == 0:
             # 每天第一次运行 需要做活跃和只有一次的任务
             ugc_lite_obj.auto_run(first_status=first_status, light_screen_stats=False, watch_video=True, watch_baokuan=True,
@@ -38,6 +41,7 @@ def run(device_id, first_status=False):
                                       watch_small_video=True,
                                       watch_coin_box=True, watch_ad=True, watch_goods=True)
             dragon_read.auto_run(light_screen_stats=False)
+            wk_browser.auto_run()
         else:
             ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=True, watch_baokuan=False, watch_coin_box=True,
                                   watch_ad=True, shopping=True)
@@ -47,6 +51,7 @@ def run(device_id, first_status=False):
                                       watch_small_video=True,
                                       watch_coin_box=True, watch_ad=True, watch_goods=True)
             dragon_read.auto_run(light_screen_stats=False)
+            wk_browser.auto_run()
         total_end_num += 1
         # 计算运行时间
         end_time = datetime.now()
@@ -58,7 +63,8 @@ def run(device_id, first_status=False):
                                   (ugc_lite_obj.coin_current, ugc_lite_obj.cash_current, ugc_lite_obj.coin_today, round(ugc_lite_obj.coin_today / 10000, 2), ugc_lite_obj.cash_total),
                                   (article_lite_opt.coin_current, article_lite_opt.cash_current, article_lite_opt.coin_today, round(article_lite_opt.coin_today / 33000, 2), article_lite_opt.cash_total),
                                   (kuai_shou.coin_current, kuai_shou.cash_current, kuai_shou.coin_today, round(kuai_shou.coin_today / 10000, 2), kuai_shou.cash_total),
-                                  (dragon_read.coin_current, dragon_read.cash_current, dragon_read.coin_today, round(dragon_read.coin_today / 33000, 2), dragon_read.cash_total)],
+                                  (dragon_read.coin_current, dragon_read.cash_current, dragon_read.coin_today, round(dragon_read.coin_today / 33000, 2), dragon_read.cash_total),
+                                  (wk_browser.coin_current, wk_browser.cash_current, wk_browser.coin_today, round(wk_browser.coin_today / 33000, 2), wk_browser.cash_total)],
                                  columns=['本轮金币', '本轮现金', '今日金币总计', '今日现金总计', '历史总现金收益'],
                                  index=app_name.values())
         print_help_text(device_id, "本次收益为：")
@@ -75,7 +81,7 @@ def main():
     max_workers = len(CurrentDeviceList)
     executor = ThreadPoolExecutor(max_workers=max_workers)
     all_task = []
-    first_status = True
+    first_status = False
     for i in CurrentDeviceList:
         all_task.append(
             executor.submit(run, *(i, first_status))

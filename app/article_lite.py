@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 import math, re
 import time
+from config import TIMES
 
 from utils.phone_opt import *
 
@@ -268,10 +269,14 @@ class ArticleLiteOpt:
         # 点击一个视频
         tap(self.device_id, (300, 720))
         print_help_text(self.device_id, "开始看小视频")
-        for i in range(30):
+        if self.device_id in TIMES[self.app_name]['watch_small_Video'].keys():
+            num = TIMES[self.app_name]['watch_small_Video'][self.device_id]
+        else:
+            num = TIMES[self.app_name]['watch_small_Video']['default']
+        for i in range(num):
             print_help_text(self.device_id, "第%s/30次" % str(i + 1))
             up_short_swipe(self.device_id)
-            time.sleep(get_random_time())
+            time.sleep(get_random_time(6, 10))
         # 返回
         press_back(self.device_id)
         # 点击任务栏
