@@ -124,9 +124,9 @@ class UGCLiteOpt:
         while True:
             print_help_text(self.device_id, "看广告")
             # 点击看广告
-            stats, box, result = find_screen_text_position(self.device_id, "看广告视频再赚")
+            stats, box, result = find_screen_text_position(self.device_id, "再赚")
             if stats:
-                position = find_screen_by_result(result, '看广告视频再赚')
+                position = find_screen_by_result(result, '再赚')
                 tap(self.device_id, position)
             time.sleep(30)
             ad_status, position = find_screen_text_button_position(self.device_id, "反馈", "反馈")
