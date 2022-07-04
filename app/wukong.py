@@ -98,6 +98,7 @@ class WuKongOpt:
         coin = self.coin_current
         cash = self.cash_current
         y_top_limit = 0
+        stats, box, result = find_screen_text_position(self.device_id, "我的金币")
         for line in result:
             if line[1][0].find('我的金币') >= 0:
                 y_top_limit = line[0][2][1]

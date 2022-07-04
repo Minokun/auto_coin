@@ -42,9 +42,12 @@ class ArticleLiteOpt:
             status, position = find_screen_text_button_position(self.device_id, "跳过", "跳过")
             if status:
                 tap(self.device_id, position)
-            status, position = find_screen_text_button_position(self.device_id, "我知道", "我知道")
-            if status:
-                tap(self.device_id, position)
+        status, position = find_screen_text_button_position(self.device_id, "我知道", "我知道")
+        if status:
+            tap(self.device_id, position)
+        status, position = find_screen_text_button_position(self.device_id, "翻倍领取", "翻倍领取")
+        if status:
+            tap(self.device_id, position)
 
     # 上滑到最顶部
     def back_top(self):
@@ -57,6 +60,10 @@ class ArticleLiteOpt:
         # 点击任务
         tap(self.device_id, self.coin_task_position)
         time.sleep(1)
+        status, position = find_screen_text_button_position(self.device_id, "翻倍领取", "翻倍领取")
+        if status:
+            tap(self.device_id, position)
+            self.watch_ad()
         self.back_top()
         coin = self.coin_current
         cash = self.cash_current
@@ -361,7 +368,7 @@ class ArticleLiteOpt:
 
 
 if __name__ == "__main__":
-    article_obj = ArticleLiteOpt("192.168.31.123:5555")
+    article_obj = ArticleLiteOpt("192.168.101.103:5555")
 
     article_obj.auto_run(first_status=False, light_screen_stats=False, read_article=False, watch_small_video=False,
                                   watch_coin_box=True, watch_ad=False, watch_goods=False)
