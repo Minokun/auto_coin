@@ -97,17 +97,27 @@ class WuKongOpt:
         self.back_top()
         coin = self.coin_current
         cash = self.cash_current
-        # TODO
-        # stats, box, result = find_screen_text_position(self.device_id, "金币")
-        # for line in result:
-        #     if line[1][0].find('.') >= 0:
-        #         g = re.findall(r'[^\d]*([\d]+\.[\d]+)元*', line[1][0])
-        #         if len(g) > 0:
-        #             cash = float(g[0])
-        #     g = re.findall(r'[^\d]*([\d]+)[^\d]*金币', line[1][0])
-        #     if len(g) > 0:
-        #         coin = float(g[0])
-        #         break
+        y_top_limit = 0
+        for line in result:
+            if line[1][0].find('我的金币') >= 0:
+                y_top_limit = line[0][2][1]
+                break
+        crash_stats = False
+        coin_stats = False
+        for line in result:
+            if line[0][0][1] > y_top_limit:
+                if line[1][0].find('.') >= 0:
+                    g = re.findall(r'^.*?([\d]+\.[\d]+)元$', line[1][0])
+                    if len(g) > 0:
+                        crash = g[0]
+                        crash_stats = True
+
+                g = re.findall(r'^([\d]+)$', line[1][0])
+                if len(g) > 0:
+                    coin = g[0]
+                    coin_stats = True
+            if crash_stats and coin_stats:
+                break
         print_help_text(self.device_id, "当前金币：%s 当前现金：%s" % (str(coin), str(cash)))
         return coin, cash
 

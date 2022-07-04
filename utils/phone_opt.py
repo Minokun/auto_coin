@@ -372,8 +372,8 @@ if __name__ == "__main__":
     # reboot_adb()
     # unlock_device("192.168.101.100:8888")
     import re
-    device_id = "192.168.31.124:5555"
-    stats, box, result = find_screen_text_position(device_id, "看视频")
+    device_id = "192.168.101.101:5555"
+    stats, box, result = find_screen_text_position(device_id, "今日金币")
     for line in result:
         print(line)
     # get_phone_wh(device_id)
