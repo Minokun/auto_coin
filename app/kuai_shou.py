@@ -1,22 +1,22 @@
 # -*- coding:utf-8 -*-
-import time
+import time, re
 from config import TIMES
 from utils.phone_opt import *
 
 
 # 抖音极速版
-class KuaiShouOpt:
+class KSOpt:
     def __init__(self, device_id):
         self.device_id = device_id
-        self.app_name = "kuaishou"
+        self.app_name = "kuai_shou"
         self.app_name_chinese = app_name[self.app_name]
         self.current_step = ''
         self.wight, self.height = get_phone_wh(self.device_id)
         self.height_scale = int(self.height) / 2400
         # 首页
         self.main_position = (100, int(2330 * self.height_scale))
-        # 去赚钱
-        self.task_position = (780, int(2300 * self.height_scale))
+        # 红包图标
+        self.task_position = (130, int(490 * self.height_scale))
         # 关闭广告的按键
         self.ad_shut = (980, int(150 * self.height_scale))
         # 看广告中间的继续按钮
@@ -59,25 +59,29 @@ class KuaiShouOpt:
         self.rm_ad()
         time.sleep(1)
         self.back_top()
-        stats, box, result = find_screen_text_position(self.device_id, "我的抵用金")
+        stats, box, result = find_screen_text_position(self.device_id, "金币收益")
         if not stats:
             coin, cash = self.get_coin_num()
             return coin, cash
-        y_bottom = box[2][1] + 5
-        n = 0
         coin = 0.0
         cash = 0.0
+        y_bottom_limit = 0
+        y_top_limit = 0
         for line in result:
-            if line[0][2][1] > y_bottom:
-                n += 1
-                if n == 1:
-                    coin = float(line[1][0])
-                elif n == 2:
+            if line[1][0].find('金币收益') >= 0:
+                y_bottom_limit = line[0][2][1]
+            if line[1][0].find('规则') >= 0:
+                y_top_limit = line[0][2][1]
+
+        for line in result:
+            if line[0][0][1] < y_bottom_limit and line[0][0][1] > y_top_limit:
+                if line[1][0].find('.') >= 0:
                     cash = float(line[1][0])
-                else:
-                    break
+                g = re.findall(r'^([\d]+)$', line[1][0])
+                if len(g) > 0:
+                    coin = g[0]
         print_help_text(self.device_id, "当前金币：%s 当前现金：%s" % (str(coin), str(cash)))
-        return coin, cash
+        return float(coin), float(cash)
 
     # 看视频
     def watch_video(self):
@@ -108,6 +112,11 @@ class KuaiShouOpt:
                 time.sleep(1)
                 self.start_kuaishou_app()
                 break
+        stats, position = find_screen_text_button_position(self.device_id, "精选", "精选", top_normal_bottom="bottom")
+        if stats:
+            tap(self.device_id, position)
+        else:
+            print_help_text(self.device_id, "快手app有问题")
 
     # 上滑到最顶部
     def back_top(self):
@@ -152,7 +161,7 @@ class KuaiShouOpt:
         self.back_top()
         for i in range(3):
             print_help_text(self.device_id, "找看广告按钮")
-            stats, position = find_screen_text_button_position(self.device_id, "金币悬赏", "福利")
+            stats, position = find_screen_text_button_position(self.device_id, "金币悬赏", "领福利")
             if stats:
                 print_help_text(self.device_id, "点击看广告")
                 tap(self.device_id, position)
@@ -203,9 +212,10 @@ class KuaiShouOpt:
     def coin_box(self):
         # 刷宝箱
         self.back_main_coin()
+        time.sleep(1)
         tap(self.device_id, self.task_position)
         self.rm_ad()
-        status, position = find_screen_text_button_position(self.device_id, "开宝箱得金币", "开宝箱得金币")
+        status, position = find_screen_text_button_position(self.device_id, "立刻领", "立刻领")
         if status:
             print_help_text(self.device_id, "开宝箱")
             tap(self.device_id, position)
@@ -219,7 +229,7 @@ class KuaiShouOpt:
     def shopping(self):
         self.back_main_coin()
         # 点击红包菜单
-        print_help_text(self.device_id, "点击去赚钱")
+        print_help_text(self.device_id, "点击红包")
         tap(self.device_id, self.task_position)
         self.rm_ad()
         for i in range(4):
@@ -230,8 +240,8 @@ class KuaiShouOpt:
             else:
                 print_help_text(self.device_id, "点击去逛街")
                 tap(self.device_id, position)
-                for i in range(150):
-                    print_help_text(self.device_id, "逛街第%s/200次" % str(i + 1))
+                for i in range(20):
+                    print_help_text(self.device_id, "逛街第%s/20次" % str(i + 1))
                     up_short_swipe(self.device_id)
                     time.sleep(5)
                 print_help_text(self.device_id, "返回")
@@ -278,7 +288,6 @@ class KuaiShouOpt:
 
 
 if __name__ == "__main__":
-    ks_obj = KuaiShouOpt("192.168.31.227:5555")
-    # ks_obj.auto_run(light_screen_stats=False, watch_video=False, watch_ad=False, watch_coin_box=True, shopping=True)
+    ks_obj = KSOpt("192.168.31.124:5555")
+    ks_obj.auto_run(light_screen_stats=False, watch_video=True, watch_ad=True, watch_coin_box=True, shopping=True)
     # print(ks_obj.get_coin_num())
-    ks_obj.shopping()

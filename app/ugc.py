@@ -39,6 +39,9 @@ class UGCOpt:
             status, position = find_screen_text_button_position(self.device_id, "跳过", "跳过")
             if status:
                 tap(self.device_id, position)
+        status, position = find_screen_text_button_position(self.device_id, "拒绝", "拒绝")
+        if status:
+            tap(self.device_id, position)
 
     def shut_app(self):
         shut_app(self.device_id, self.app_name)

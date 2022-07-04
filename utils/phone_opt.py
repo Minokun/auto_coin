@@ -17,9 +17,10 @@ app_name = {
     "ugc": "抖音",
     "ugc_lite": "抖音极速版",
     "article_lite": "头条极速版",
-    "kuaishou": "快手",
+    "kuaishou": "快手极速版",
     "dragon_read": "番茄小说",
-    "wk_browser": "悟空浏览器"
+    "wk_browser": "悟空浏览器",
+    "kuai_shou": "快手"
 }
 # app package 名称 用于关闭应用
 app_package_name = {
@@ -28,7 +29,8 @@ app_package_name = {
     "article_lite": "com.ss.android.article.lite",
     "kuaishou": "com.kuaishou.nebula",
     "dragon_read": "com.dragon.read",
-    "wk_browser": "com.cat.readall"
+    "wk_browser": "com.cat.readall",
+    "kuai_shou": "com.smile.gifmaker"
 }
 # app activity 名称 用于打开应用
 app_activity_name = {
@@ -37,7 +39,8 @@ app_activity_name = {
     "article_lite": "com.ss.android.article.lite/.activity.SplashActivity",
     "kuaishou": "com.kuaishou.nebula/com.yxcorp.gifshow.HomeActivity",
     "dragon_read": "com.dragon.read/.pages.splash.SplashActivity",
-    "wk_browser": "com.cat.readall/.activity.BrowserMainActivity"
+    "wk_browser": "com.cat.readall/.activity.BrowserMainActivity",
+    "kuai_shou": "com.smile.gifmaker/com.yxcorp.gifshow.HomeActivity"
 }
 
 device_passwd = {
@@ -369,7 +372,7 @@ if __name__ == "__main__":
     # reboot_adb()
     # unlock_device("192.168.101.100:8888")
     import re
-    device_id = "192.168.101.101:5555"
+    device_id = "192.168.31.124:5555"
     stats, box, result = find_screen_text_position(device_id, "看视频")
     for line in result:
         print(line)
