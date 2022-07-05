@@ -48,6 +48,12 @@ class UGCOpt:
 
     def get_coin_num(self):
         self.back_main_coin()
+        status, position = find_screen_text_button_position(self.device_id, "去领取", "去领取")
+        if status:
+            tap(self.device_id, position)
+            time.sleep(1)
+            tap(self.device_id, position)
+            self.watch_ad()
         self.back_top()
         stats, box, result = find_screen_text_position(self.device_id, "金币收益")
         if not stats:

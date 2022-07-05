@@ -56,6 +56,10 @@ class KuaiShouOpt:
         # 点击去赚钱
         tap(self.device_id, self.task_position)
         time.sleep(1)
+        status, position = find_screen_text_button_position(self.device_id, "立即签到", "立即签到")
+        if status:
+            tap(self.device_id, position)
+            # 再点击去赚钱
         self.rm_ad()
         time.sleep(1)
         self.back_top()

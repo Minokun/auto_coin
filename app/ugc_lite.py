@@ -45,6 +45,12 @@ class UGCLiteOpt:
         print_help_text(self.device_id, "获取收益")
         # 获取当前金币数量
         self.back_main_coin()
+        status, position = find_screen_text_button_position(self.device_id, "立即签到", "立即签到")
+        if status:
+            tap(self.device_id, position)
+            time.sleep(1)
+            tap(self.device_id, position)
+            self.watch_ad()
         self.back_top()
         stats, box, result = find_screen_text_position(self.device_id, "现金收益")
         if not stats:
@@ -190,7 +196,7 @@ class UGCLiteOpt:
             tap(self.device_id, position)
             time.sleep(1)
             # 点击看广告
-            stats, position = find_screen_text_button_position(self.device_id, "看广告视频再赚", "看广告视频再赚")
+            stats, position = find_screen_text_button_position(self.device_id, "频再赚", "频再赚")
             if stats:
                 tap(self.device_id, position)
                 self.ad()
@@ -302,7 +308,7 @@ class UGCLiteOpt:
 
 
 if __name__ == "__main__":
-    ugc_lite_obj = UGCLiteOpt("192.168.101.104:5555")
+    ugc_lite_obj = UGCLiteOpt("QKXUT20329000108")
     ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=False, watch_ad=True,
                           watch_coin_box=True)
     # print(ugc_lite_obj.get_coin_num())

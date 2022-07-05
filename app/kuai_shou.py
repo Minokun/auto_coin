@@ -86,7 +86,6 @@ class KSOpt:
     # 看视频
     def watch_video(self):
         self.back_main_coin()
-        tap(self.device_id, self.main_position)
         if self.device_id in TIMES[self.app_name]['watch_video_numbers'].keys():
             num = TIMES[self.app_name]['watch_video_numbers'][self.device_id]
         else:
