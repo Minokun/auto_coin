@@ -185,7 +185,10 @@ class WuKongOpt:
                     tap(self.device_id, position)
                 else:
                     position = find_screen_by_result(result, "X")
-                    tap(self.device_id, position)
+                    if position:
+                        tap(self.device_id, position)
+                    else:
+                        press_back(self.device_id)
                 # 如果有再看 那就点击再看
                 stats, position = find_screen_text_button_position(self.device_id, "再看一", "再看一")
                 if stats:

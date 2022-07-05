@@ -200,6 +200,7 @@ class KuaiShouOpt:
         if position:
             print_help_text(self.device_id, "点击重试")
             tap(self.device_id, position)
+            tap(self.device_id, position)
             time.sleep(2)
             return True
 
