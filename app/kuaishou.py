@@ -11,7 +11,7 @@ class KuaiShouOpt:
         self.app_name = "kuaishou"
         self.app_name_chinese = app_name[self.app_name]
         self.current_step = ''
-        self.wight, self.height = get_phone_wh(self.device_id)
+        self.weight, self.height = get_phone_wh(self.device_id)
         self.height_scale = int(self.height) / 2400
         # 首页
         self.main_position = (100, int(2330 * self.height_scale))
@@ -25,6 +25,8 @@ class KuaiShouOpt:
         self.coin_box_ad = (520, int(1450 * self.height_scale))
         # 左上角已完成广告按钮
         self.ad_end = (280, int(170 * self.height_scale))
+        # 关掉签到提醒的
+        self.qd_x = (int(int(self.weight) / 2), int(1660 * self.height_scale))
         # 当前金币和现金收益
         self.coin_current = 0.0
         self.cash_current = 0.0
@@ -168,16 +170,19 @@ class KuaiShouOpt:
 
     # 关掉广告
     def rm_ad(self):
-        time.sleep(2)
+        time.sleep(1.5)
         stats, box, result = find_screen_text_position(self.device_id, "看视频最高得")
         if stats:
-            print_help_text(self.device_id, "在赚钱页面去掉广告！")
             # 点击查看视频
             print_help_text(self.device_id, "直接点击看广告")
             position = find_screen_by_result(result, "看视频最高")
             tap(self.device_id, position)
             self.ad()
             return True
+        position = find_screen_by_result(result, "打开签到提醒")
+        if position:
+            print_help_text(self.device_id, "关掉签到提醒")
+            tap(self.device_id, self.qd_x)
         position = find_screen_by_result(result, "再看一")
         if position:
             print_help_text(self.device_id, "再看一个")
@@ -283,7 +288,7 @@ class KuaiShouOpt:
 
 
 if __name__ == "__main__":
-    ks_obj = KuaiShouOpt("192.168.31.227:5555")
+    ks_obj = KuaiShouOpt("192.168.31.213:5555")
     # ks_obj.auto_run(light_screen_stats=False, watch_video=False, watch_ad=False, watch_coin_box=True, shopping=True)
     # print(ks_obj.get_coin_num())
     ks_obj.shopping()

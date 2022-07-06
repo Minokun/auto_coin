@@ -45,8 +45,12 @@ class ArticleLiteOpt:
         status, position = find_screen_text_button_position(self.device_id, "我知道", "我知道")
         if status:
             tap(self.device_id, position)
-        status, position = find_screen_text_button_position(self.device_id, "翻倍领取", "翻倍领取")
+        status, box, result = find_screen_text_position(self.device_id, "翻倍领取")
         if status:
+            position = find_screen_by_result(result, "翻倍领取")
+            tap(self.device_id, position)
+        position = find_screen_by_result(result, "额外领取")
+        if position:
             tap(self.device_id, position)
 
     # 上滑到最顶部

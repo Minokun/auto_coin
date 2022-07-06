@@ -42,7 +42,7 @@ def run_scrcpy():
     for i in CurrentDeviceList:
         n += 1
         executor.submit(scrcpy_command, *(i, n))
-        time.sleep(1)
+        time.sleep(1.5)
         window_controller(i)
     for future in as_completed(all_task):
         data = future.result()
