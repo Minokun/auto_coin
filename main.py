@@ -46,12 +46,12 @@ def run(device_id, first_status=False):
             dragon_read.auto_run(light_screen_stats=False)
             wk_browser.auto_run()
         else:
+            ugc_obj.auto_run(light_screen_stats=False, watch_video=True)
             article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=False,
                                       watch_small_video=False,
                                       watch_coin_box=True, watch_ad=True, watch_goods=False)
             kuai_shou.auto_run(light_screen_stats=False, watch_ad=True, watch_coin_box=True)
             ks.auto_run()
-            ugc_obj.auto_run(light_screen_stats=False, watch_video=True)
             ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=True, watch_baokuan=False, watch_coin_box=True,
                                   watch_ad=True, shopping=True)
             dragon_read.auto_run(light_screen_stats=False)

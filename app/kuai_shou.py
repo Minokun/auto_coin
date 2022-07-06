@@ -160,7 +160,7 @@ class KSOpt:
         self.back_top()
         for i in range(3):
             print_help_text(self.device_id, "找看广告按钮")
-            stats, position = find_screen_text_button_position(self.device_id, "金币悬赏", "领福利")
+            stats, position = find_screen_text_button_position(self.device_id, "悬赏任务", "领福利")
             if stats:
                 print_help_text(self.device_id, "点击看广告")
                 tap(self.device_id, position)

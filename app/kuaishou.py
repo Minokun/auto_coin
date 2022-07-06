@@ -33,6 +33,17 @@ class KuaiShouOpt:
         self.coin_today = 0.0
         self.cash_total = 0.0
 
+    def rm_front_window(self):
+        # 青少年模式
+        stats, box, result = find_screen_text_position(self.device_id, "我知道了")
+        if stats:
+            position = find_screen_by_result(result, "我知道了")
+            tap(self.device_id, position)
+        position = find_screen_by_result(result, "拒绝")
+        if position: tap(self.device_id, position)
+        position = find_screen_by_result(result, "以后再说")
+        if position: tap(self.device_id, position)
+
     def start_kuaishou_app(self):
         start_app(self.device_id, self.app_name)
         time.sleep(2)
@@ -43,11 +54,7 @@ class KuaiShouOpt:
             status, position = find_screen_text_button_position(self.device_id, "跳过", "跳过")
             if status:
                 tap(self.device_id, position)
-        # 青少年模式
-        stats, box, result = find_screen_text_position(self.device_id, "我知道了")
-        if stats:
-            position = find_screen_by_result(result, "我知道了")
-            tap(self.device_id, position)
+        self.rm_front_window()
 
     def shut_app(self):
         shut_app(self.device_id, self.app_name)
