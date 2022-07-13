@@ -18,7 +18,7 @@ app_name = {
     "ugc_lite": "抖音极速版",
     "article_lite": "头条极速版",
     "kuaishou": "快手极速版",
-    "dragon_read": "番茄小说",
+    # "dragon_read": "番茄小说",
     "wk_browser": "悟空浏览器",
     "kuai_shou": "快手"
 }
@@ -28,7 +28,7 @@ app_package_name = {
     "ugc_lite": "com.ss.android.ugc.aweme.lite",
     "article_lite": "com.ss.android.article.lite",
     "kuaishou": "com.kuaishou.nebula",
-    "dragon_read": "com.dragon.read",
+    # "dragon_read": "com.dragon.read",
     "wk_browser": "com.cat.readall",
     "kuai_shou": "com.smile.gifmaker"
 }
@@ -51,14 +51,14 @@ device_passwd = {
 }
 
 device_user = {
-    "wxk": ["192.168.101.101:5555", "192.168.31.124:5555", "QKXUT20329000108"],
+    "wxk": ["192.168.101.101:5555", "192.168.31.124:5555", "QKXUT20329000108", "10.147.20.14:5555"],
     "fl": ["192.168.101.100:5555", "94P0220C01001100"],
-    "cpc": ["192.168.101.103:5555", "192.168.31.213:5555"],
-    "cpc2": ["192.168.101.104:5555", "192.168.31.228:5555", "P7CDU18C07001773"]
+    "cpc": ["192.168.101.103:5555", "192.168.31.213:5555", "10.147.20.251:5555"],
+    "cpc2": ["192.168.101.104:5555", "192.168.31.228:5555", "P7CDU18C07001773", "10.147.20.113:5555"]
 }
 
-online_id_list = ["192.168.101.100:5555", "192.168.101.101:5555", "192.168.101.103:5555", "192.168.101.104"]
-offline_id_list = ["192.168.101.100:5555", "192.168.31.123:5555", "192.168.101.10:5555"]
+online_id_list = ["192.168.101.100:5555", "192.168.101.101:5555", "192.168.101.103:5555", "192.168.101.104:5555"]
+offline_id_list = ["192.168.101.10:5555", "192.168.101.10:5555"]
 # offline_id_list = []
 device_id_list = list(set(online_id_list) - set(offline_id_list))
 
@@ -367,13 +367,14 @@ def unclock_all_devices():
         )
     wait(unlock_task_list)
 
+def check_install_package(devices_id, package_name):
+    command = 'adb -s %s shell pm list package' % (devices_id)
+    lines = opt_sys_command(command)
+    print(lines)
 
 if __name__ == "__main__":
-    # reboot_adb()
-    # unlock_device("192.168.101.100:8888")
-    import re
     device_id = "192.168.101.101:5555"
-    stats, box, result = find_screen_text_position(device_id, "今日金币")
+    stats, box, result = find_screen_text_position(device_id, "购买建筑")
     for line in result:
         print(line)
-    # get_phone_wh(device_id)
+    # check_install_package('10.147.20.14:5555', '')

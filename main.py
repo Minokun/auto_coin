@@ -27,7 +27,7 @@ def run(device_id, first_status=False):
         # 抖音
         ugc_obj = UGCOpt(device_id)
         # 番茄小说
-        dragon_read = DragonReadOpt(device_id)
+        # dragon_read = DragonReadOpt(device_id)
         # 快手+
         kuai_shou = KuaiShouOpt(device_id)
         ks = KSOpt(device_id)
@@ -43,18 +43,18 @@ def run(device_id, first_status=False):
             ugc_obj.auto_run(light_screen_stats=False)
             ugc_lite_obj.auto_run(first_status=first_status, light_screen_stats=False, watch_video=True, watch_baokuan=True,
                                   watch_coin_box=True, watch_ad=True)
-            dragon_read.auto_run(light_screen_stats=False)
+            # dragon_read.auto_run(light_screen_stats=False)
             wk_browser.auto_run()
         else:
+            ks.auto_run()
+            ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=True, watch_baokuan=False, watch_coin_box=True,
+                                  watch_ad=True, shopping=True)
             ugc_obj.auto_run(light_screen_stats=False, watch_video=True)
             article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=True,
                                       watch_small_video=True,
                                       watch_coin_box=True, watch_ad=True, watch_goods=False)
             kuai_shou.auto_run(light_screen_stats=False, watch_ad=True, watch_coin_box=True)
-            ks.auto_run()
-            ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=True, watch_baokuan=False, watch_coin_box=True,
-                                  watch_ad=True, shopping=True)
-            dragon_read.auto_run(light_screen_stats=False)
+            # dragon_read.auto_run(light_screen_stats=False)
             wk_browser.auto_run()
         total_end_num += 1
         # 计算运行时间
@@ -67,7 +67,7 @@ def run(device_id, first_status=False):
                                   (ugc_lite_obj.coin_current, ugc_lite_obj.cash_current, ugc_lite_obj.coin_today, round(ugc_lite_obj.coin_today / 10000, 2), ugc_lite_obj.cash_total),
                                   (article_lite_opt.coin_current, article_lite_opt.cash_current, article_lite_opt.coin_today, round(article_lite_opt.coin_today / 33000, 2), article_lite_opt.cash_total),
                                   (kuai_shou.coin_current, kuai_shou.cash_current, kuai_shou.coin_today, round(kuai_shou.coin_today / 10000, 2), kuai_shou.cash_total),
-                                  (dragon_read.coin_current, dragon_read.cash_current, dragon_read.coin_today, round(dragon_read.coin_today / 33000, 2), dragon_read.cash_total),
+                                  # (dragon_read.coin_current, dragon_read.cash_current, dragon_read.coin_today, round(dragon_read.coin_today / 33000, 2), dragon_read.cash_total),
                                   (wk_browser.coin_current, wk_browser.cash_current, wk_browser.coin_today, round(wk_browser.coin_today / 33000, 2), wk_browser.cash_total),
                                   (ks.coin_current, ks.cash_current, ks.coin_today, round(ks.coin_today / 33000, 2), ks.cash_total)],
                                  columns=['本轮金币', '本轮现金', '今日金币总计', '今日现金总计', '历史总现金收益'],

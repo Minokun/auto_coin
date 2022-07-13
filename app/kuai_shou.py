@@ -239,7 +239,7 @@ class KSOpt:
             else:
                 print_help_text(self.device_id, "点击去逛街")
                 tap(self.device_id, position)
-                for i in range(20):
+                for i in range(25):
                     print_help_text(self.device_id, "逛街第%s/20次" % str(i + 1))
                     up_short_swipe(self.device_id)
                     time.sleep(5)
@@ -277,7 +277,8 @@ class KSOpt:
         # 逛街
         if shopping:
             print_help_text(self.device_id, "去逛街")
-            self.shopping()
+            for i in range(3):
+                self.shopping()
         # 获取当前收益
         coin_end, cash_end = self.get_coin_num()
         self.coin_current = coin_end - coin_start
@@ -287,6 +288,6 @@ class KSOpt:
 
 
 if __name__ == "__main__":
-    ks_obj = KSOpt("192.168.31.124:5555")
-    ks_obj.auto_run(light_screen_stats=False, watch_video=True, watch_ad=True, watch_coin_box=True, shopping=True)
+    ks_obj = KSOpt("10.147.20.251:5555")
+    ks_obj.auto_run(light_screen_stats=False, watch_video=False, watch_ad=False, watch_coin_box=False, shopping=True)
     # print(ks_obj.get_coin_num())
