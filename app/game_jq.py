@@ -51,7 +51,7 @@ class JQ():
             position = find_screen_by_result(result, "购买建筑")
             if position:
                 self.buy_button = position
-            for i in range(8):
+            for i in range(10):
                 tap(self.device_id, self.buy_button)
 
 def main():
