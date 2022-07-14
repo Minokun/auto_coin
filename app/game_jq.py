@@ -18,6 +18,8 @@ class JQ():
         print_help_text(self.device_id, "关闭广告")
         self.ad_shut = find_ad_shut(self.device_id)
         tap(self.device_id, self.ad_shut)
+        self.ad_shut = find_ad_shut(self.device_id)
+        tap(self.device_id, self.ad_shut)
         stats, position = find_screen_text_button_position(self.device_id, "开心收下", "开心收下")
         if stats:
             tap(self.device_id, position)
@@ -50,7 +52,7 @@ class JQ():
             if position:
                 print_help_text(self.device_id, "当前金币领取完毕")
                 break
-            for i in range(10):
+            for i in range(15):
                 tap(self.device_id, self.buy_button)
 
 def main():
@@ -84,7 +86,7 @@ def find_ad_shut(device_id):
 
 def test():
     import numpy as np
-    img_path = '../media/test_ad.png'
+    img_path = '../media/101.png'
     temple_path = '../media/template.png'
     img = cv2.imread(img_path)
     temple = cv2.imread(temple_path)
