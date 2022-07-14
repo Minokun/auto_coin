@@ -23,7 +23,7 @@ TIMES = {
     },
     'kuai_shou': {
         'watch_video_numbers': {
-            'default': 60,
+            'default': 20,
             # '192.168.101.103:5555': 100,
             # '192.168.31.213:5555': 100,
         }

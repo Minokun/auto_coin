@@ -58,7 +58,7 @@ device_user = {
 }
 
 online_id_list = ["192.168.101.100:5555", "192.168.101.101:5555", "192.168.101.103:5555", "192.168.101.104:5555"]
-offline_id_list = ["192.168.101.100:5555", "192.168.101.10:5555"]
+offline_id_list = ["192.168.31.21:5555", "192.168.101.10:5555"]
 # offline_id_list = []
 device_id_list = list(set(online_id_list) - set(offline_id_list))
 
@@ -69,10 +69,10 @@ def print_help_text(device_id, help_text, current_step=''):
 
 
 # 执行系统命令
-def opt_sys_command(command, sleep_time=1):
+def opt_sys_command(command, sleep_time=0.5):
     p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     p.wait()
-    time.sleep(0.5)
+    time.sleep(sleep_time)
     result = p.communicate()[0].decode()
     return result.split('\r\n')
 
@@ -221,16 +221,16 @@ def screen_pull(device_id, png_name):
     time.sleep(0.5)
     return local_png
 
+def get_img(device_id):
+    # 截屏
+    png_name = screen_cap(device_id)
+    # 拷贝
+    local_png = screen_pull(device_id, png_name)
+    return png_name, local_png
 
 # 查找屏幕中某个字的位置
 def find_screen_text_position(device_id, text, top_normal_bottom='normal'):
-    def get_img():
-        # 截屏
-        png_name = screen_cap(device_id)
-        # 拷贝
-        local_png = screen_pull(device_id, png_name)
-        return png_name, local_png
-    png_name, local_png = get_img()
+    png_name, local_png = get_img(device_id)
     try:
         # 识别
         if top_normal_bottom == "normal":
@@ -281,7 +281,7 @@ def find_screen_by_result(result, text):
 
 
 # 点击
-def tap(device_id, position):
+def tap(device_id, position, sleep_time=0.5):
     '''
     屏幕点击
     :param device_id: 设备id
@@ -290,7 +290,7 @@ def tap(device_id, position):
     '''
     x, y = position
     command = "adb -s " + device_id + " shell input tap " + str(x) + " " + str(y)
-    opt_sys_command(command)
+    opt_sys_command(command, sleep_time)
 
 
 # 滑动

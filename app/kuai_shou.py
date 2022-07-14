@@ -261,6 +261,10 @@ class KSOpt:
         time.sleep(1)
         # 获取当前收益
         coin_start, cash_start = self.get_coin_num()
+        # 看10分钟视频
+        if watch_video:
+            print_help_text(self.device_id, "开始看视频")
+            self.watch_video()
         # 看广告
         if watch_ad:
             stats = True
@@ -270,10 +274,6 @@ class KSOpt:
         if watch_coin_box:
             print_help_text(self.device_id, "刷宝箱")
             self.coin_box()
-        # 看10分钟视频
-        if watch_video:
-            print_help_text(self.device_id, "开始看视频")
-            self.watch_video()
         # 逛街
         if shopping:
             print_help_text(self.device_id, "去逛街")
