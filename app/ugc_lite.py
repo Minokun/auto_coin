@@ -130,10 +130,6 @@ class UGCLiteOpt:
         while True:
             print_help_text(self.device_id, "看广告")
             # 点击看广告
-            stats, box, result = find_screen_text_position(self.device_id, "再赚")
-            if stats:
-                position = find_screen_by_result(result, '再赚')
-                tap(self.device_id, position)
             time.sleep(30)
             ad_status, position = find_screen_text_button_position(self.device_id, "反馈", "反馈")
             if ad_status:
@@ -198,7 +194,7 @@ class UGCLiteOpt:
             # 点击看广告
             stats, position = find_screen_text_button_position(self.device_id, "频再赚", "频再赚")
             if stats:
-                tap(self.device_id, position)
+                tap(self.device_id, (position[0] - 10, position[1] + 10))
                 self.ad()
         else:
             print_help_text(self.device_id, "当前无宝箱可看")
@@ -239,8 +235,14 @@ class UGCLiteOpt:
             button_position = find_screen_by_result(result, "去逛街")
             if button_position:
                 break
+            else:
+                stats, position = find_screen_text_button_position(self.device_id, "逛", "赚金币")
+                if position:
+                    button_position = position
+                    break
             up_long_swipe(self.device_id)
         if not button_position:
+
             print_help_text(self.device_id, "没有找到逛街按钮")
             return True
         # 如果未逛满15次 开始逛街
@@ -308,7 +310,11 @@ class UGCLiteOpt:
 
 
 if __name__ == "__main__":
-    ugc_lite_obj = UGCLiteOpt("QKXUT20329000108")
-    ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=False, watch_ad=True,
-                          watch_coin_box=True)
+    # ugc_lite_obj = UGCLiteOpt("192.168.31.228:5555")
+    # ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=False, watch_ad=True,
+    #                       watch_coin_box=True)
     # print(ugc_lite_obj.get_coin_num())
+    device_id = '192.168.31.228:5555'
+    position = (520, 1318)
+    for i in range(4):
+        tap(device_id, position)

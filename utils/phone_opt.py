@@ -18,7 +18,7 @@ app_name = {
     "ugc_lite": "抖音极速版",
     "article_lite": "头条极速版",
     "kuaishou": "快手极速版",
-    # "dragon_read": "番茄小说",
+    "dragon_read": "番茄小说",
     "wk_browser": "悟空浏览器",
     "kuai_shou": "快手"
 }
@@ -58,7 +58,7 @@ device_user = {
 }
 
 online_id_list = ["192.168.101.100:5555", "192.168.101.101:5555", "192.168.101.103:5555", "192.168.101.104:5555"]
-offline_id_list = ["192.168.31.21:5555", "192.168.101.100:5555", "192.168.101.10:5555"]
+offline_id_list = ["192.168.31.12:5555", "192.168.31.236:5555", "192.168.101.10:5555"]
 # offline_id_list = []
 device_id_list = list(set(online_id_list) - set(offline_id_list))
 

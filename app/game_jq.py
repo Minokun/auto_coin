@@ -1,6 +1,7 @@
 import time
 import re
 import cv2
+import numpy as np
 from utils.phone_opt import *
 from concurrent.futures import ThreadPoolExecutor
 
@@ -10,7 +11,7 @@ class JQ():
         self.app_name = "JQ"
         self.wight, self.height = get_phone_wh(self.device_id)
         self.height_scale = int(self.height) / 2400
-        self.buy_button = (550, int(2300 * self.height_scale))
+        self.buy_button = (550, int(2180 * self.height_scale))
         self.ad_shut = (1000, int(230 * self.height_scale))
 
     def ad(self):
@@ -52,7 +53,7 @@ class JQ():
             if position:
                 print_help_text(self.device_id, "当前金币领取完毕")
                 break
-            for i in range(15):
+            for i in range(10):
                 tap(self.device_id, self.buy_button)
 
 def main():
@@ -75,6 +76,7 @@ def find_ad_shut(device_id):
     img_path = local_png
     temple_path = '../media/template.png'
     img = cv2.imread(img_path)
+    img[np.where((img == [255, 255, 255]).all(axis=2))] = [0, 0, 0]
     temple = cv2.imread(temple_path)
     result = cv2.matchTemplate(img, temple, cv2.TM_SQDIFF_NORMED)
     # 返回匹配的最小坐标

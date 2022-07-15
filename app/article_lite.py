@@ -96,13 +96,18 @@ class ArticleLiteOpt:
                 tap(self.device_id, position)
                 break
             else:
-                stats, position = find_screen_text_button_position(self.device_id, "再看一", "再看一")
+                stats, box, result = find_screen_text_position(self.device_id, "再看一")
                 if stats:
+                    position = find_screen_by_result(result, "再看一")
                     print_help_text(self.device_id, "再看一")
                     tap(self.device_id, position)
                     self.watch_ad()
                 else:
-                    press_back(self.device_id)
+                    position = find_screen_by_result(result, "继续")
+                    if position:
+                        tap(self.device_id, position)
+                    else:
+                        press_back(self.device_id)
             time.sleep(1)
             if i > 4:
                 self.shut_app()
@@ -114,7 +119,7 @@ class ArticleLiteOpt:
     def watch_ad(self):
         status = False
         while not status:
-            time.sleep(18)
+            time.sleep(20)
             stats, box, result = find_screen_text_position(self.device_id, "继续观看")
             if stats:
                 position = find_screen_by_result(result, '继续观看')

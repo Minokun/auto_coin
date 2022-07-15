@@ -206,6 +206,18 @@ class KSOpt:
             tap(self.device_id, position)
             time.sleep(2)
             return True
+        position = find_screen_by_result(result, "立即领取")
+        if position:
+            print_help_text(self.device_id, "立即领取")
+            tap(self.device_id, position)
+            time.sleep(2)
+            return True
+        position = find_screen_by_result(result, "立即签到")
+        if position:
+            print_help_text(self.device_id, "立即签到")
+            tap(self.device_id, position)
+            time.sleep(2)
+            return True
 
     # 刷宝箱
     def coin_box(self):
