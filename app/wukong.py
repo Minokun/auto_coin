@@ -77,7 +77,11 @@ class WuKongOpt:
             print_help_text(self.device_id, "领取金币")
             tap(self.device_id, position)
             time.sleep(1)
-            tap(self.device_id, self.ads_position)
+            stats, position = find_screen_text_button_position(self.device_id, "看视频再领", "看视频再领")
+            if stats:
+                tap(self.device_id, position)
+            else:
+                tap(self.device_id, self.ads_position)
             self.ad()
         while True:
             stats, position = find_screen_text_button_position(self.device_id, "看视频", "看视频")

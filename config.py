@@ -39,3 +39,13 @@ TIMES = {
         }
     }
 }
+
+APP_DATASIS = {
+    "ugc": "com.ss.android.ugc.aweme/com.ss.android.ugc.aweme.main.MainActivity",
+    "ugc_lite": "com.ss.android.ugc.aweme.lite/com.ss.android.ugc.aweme.splash.SplashActivity",
+    "article_lite": "com.ss.android.article.lite/.activity.SplashActivity",
+    "kuaishou": "com.kuaishou.nebula/com.yxcorp.gifshow.HomeActivity",
+    "dragon_read": "com.dragon.read/.pages.splash.SplashActivity",
+    "wk_browser": "com.cat.readall/.activity.BrowserMainActivity",
+    "kuai_shou": "com.smile.gifmaker/com.yxcorp.gifshow.HomeActivity"
+}

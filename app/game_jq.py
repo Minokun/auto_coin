@@ -40,7 +40,46 @@ class JQ():
             self.ad()
         time.sleep(1)
 
+    def zp(self):
+        stats, position = find_screen_text_button_position(self.device_id, "转盘", "转盘")
+        if stats:
+            tap(self.device_id, position)
+            while True:
+                stats, box, result = find_screen_text_position(self.device_id, "立刻抽奖")
+                if stats:
+                    position = find_screen_by_result(result, '立刻抽奖')
+                    if position:
+                        print_help_text(self.device_id, "立即抽奖")
+                        tap(self.device_id, position)
+                        time.sleep(2)
+                        stats, box, result = find_screen_text_position(self.device_id, "开心收下")
+                        if stats:
+                            print_help_text(self.device_id, "开心收下")
+                            position = find_screen_by_result(result, "开心收下")
+                            tap(self.device_id, position)
+                            continue
+                        position = find_screen_by_result(result, "领取")
+                        if position:
+                            print_help_text(self.device_id, "看广告")
+                            tap(self.device_id, position)
+                            self.ad()
+                            continue
+                    position = find_screen_by_result(result, "恢复")
+                    if position:
+                        print_help_text(self.device_id, "恢复")
+                        tap(self.device_id, position)
+                        self.ad()
+                        continue
+                position = find_screen_by_result(result, "恢复次数")
+                if position:
+                    tap(self.device_id, position)
+                    self.ad()
+                    continue
+                break
+            press_back(self.device_id)
+
     def main(self):
+        self.zp()
         while True:
             self.auto_combine_button()
             print_help_text(self.device_id, "自动购买建筑")
@@ -59,7 +98,7 @@ class JQ():
 def main():
     # 解锁所有设备
     # unclock_all_devices()
-    # CurrentDeviceList = ['192.168.101.101:5555']
+    # CurrentDeviceList = ['192.168.101.103:5555']
     max_workers = len(CurrentDeviceList)
     executor = ThreadPoolExecutor(max_workers=max_workers)
     for i in CurrentDeviceList:

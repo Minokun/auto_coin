@@ -29,7 +29,7 @@ def window_controller(device):
 
 def scrcpy_command(device, time_period):
     window_title = device.split(':')[0]
-    command = 'scrcpy.exe -s %s -b 2M -m 720 --window-title %s' % (device, window_title)
+    command = 'scrcpy.exe -s %s -b 2M -m 720 --max-fps 15 --turn-screen-off --stay-awake --window-title %s' % (device, window_title)
     print(command)
     # time.sleep(time_period)
     os.system(command)

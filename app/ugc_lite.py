@@ -23,6 +23,7 @@ class UGCLiteOpt:
         self.ad_continue_menu_position = (530, int(1380 * self.height_scale))
         # 点击宝箱中间得看广告视频
         self.coin_box_ad = (520, int(1370 * self.height_scale))
+        self.coin_box_ad_shut = (530, int(1660 * self.height_scale))
         # 当前金币和现金收益
         self.coin_current = 0.0
         self.cash_current = 0.0
@@ -37,6 +38,14 @@ class UGCLiteOpt:
             status, position = find_screen_text_button_position(self.device_id, "跳过", "跳过")
             if status:
                 tap(self.device_id, position)
+        time.sleep(1)
+        stats, box, result = find_screen_text_position(self.device_id, "我知道")
+        position = find_screen_by_result(result, "拒绝")
+        if position:
+            tap(self.device_id, position)
+        position = find_screen_by_result(result, "我知道")
+        if position:
+            tap(self.device_id, position)
 
     def shut_app(self):
         shut_app(self.device_id, self.app_name)
@@ -45,12 +54,13 @@ class UGCLiteOpt:
         print_help_text(self.device_id, "获取收益")
         # 获取当前金币数量
         self.back_main_coin()
+        time.sleep(2)
         status, position = find_screen_text_button_position(self.device_id, "立即签到", "立即签到")
         if status:
             tap(self.device_id, position)
             time.sleep(1)
             tap(self.device_id, position)
-            self.watch_ad()
+            self.ad()
         self.back_top()
         stats, box, result = find_screen_text_position(self.device_id, "现金收益")
         if not stats:
@@ -99,15 +109,15 @@ class UGCLiteOpt:
         # 点击底部菜单金币按钮 最多10次
         for i in range(10):
             print_help_text(self.device_id, "回到首页")
-            status, _, _ = find_screen_text_position(self.device_id, "首页", top_normal_bottom='bottom')
+            status, _, _ = find_screen_text_position(self.device_id, "推荐", top_normal_bottom='top')
             # 如果在首页就点击，没有就返回
             if status:
                 print_help_text(self.device_id, "进入金币页面")
                 tap(self.device_id, self.main_coin_position)
-                stats, position = find_screen_text_button_position(self.device_id, "看广告视频再赚", "看广告视频再赚")
-                if stats:
-                    tap(self.device_id, position)
-                    self.ad()
+                # stats, position = find_screen_text_button_position(self.device_id, "看广告视频再赚", "看广告视频再赚")
+                # if stats:
+                #     tap(self.device_id, position)
+                #     self.ad()
                 break
             else:
                 press_back(self.device_id)
@@ -122,7 +132,7 @@ class UGCLiteOpt:
 
     # 上滑到最顶部
     def back_top(self):
-        for i in range(4):
+        for i in range(5):
             down_long_swipe(self.device_id)
 
     # 看广告
@@ -143,19 +153,11 @@ class UGCLiteOpt:
                 tap(self.device_id, (60, 150))
                 time.sleep(1)
                 tap(self.device_id, self.ad_shut)
-                stats, position = find_screen_text_button_position(self.device_id, "广告", '广告', top_normal_bottom='top')
-                if stats:
-                    press_back(self.device_id)
-                    break
-            time.sleep(2)
-            status, jx_position = find_screen_text_button_position(self.device_id, "继续", "继续")
-            if status:
-                print_help_text(self.device_id, "继续观看")
-                tap(self.device_id, jx_position)
-                time.sleep(10)
-                print_help_text(self.device_id, "关掉广告")
-                tap(self.device_id, self.ad_shut)
-
+                # stats, position = find_screen_text_button_position(self.device_id, "广告", '广告', top_normal_bottom='top')
+                # if stats:
+                #     press_back(self.device_id)
+                #     break
+            time.sleep(1)
             status, lq_position = find_screen_text_button_position(self.device_id, "领取奖励", "领取奖励")
             if lq_position:
                 print_help_text(self.device_id, "领取奖励")
@@ -166,6 +168,14 @@ class UGCLiteOpt:
                 if ad_status:
                     print_help_text(self.device_id, "再次关闭广告")
                     tap(self.device_id, self.ad_shut)
+
+            status, jx_position = find_screen_text_button_position(self.device_id, "继续", "继续")
+            if status:
+                print_help_text(self.device_id, "继续观看")
+                tap(self.device_id, jx_position)
+                time.sleep(10)
+                print_help_text(self.device_id, "关掉广告")
+                tap(self.device_id, self.ad_shut)
             break
 
     # 刷广告
@@ -181,7 +191,7 @@ class UGCLiteOpt:
                 self.ad()
                 break
             up_long_swipe(self.device_id)
-        print_help_text(self.device_id, "当前无广告可看")
+        print_help_text(self.device_id, "完成看广告")
 
     # 刷宝箱
     def coin_box(self):
@@ -192,10 +202,14 @@ class UGCLiteOpt:
             tap(self.device_id, position)
             time.sleep(1)
             # 点击看广告
-            stats, position = find_screen_text_button_position(self.device_id, "频再赚", "频再赚")
+            stats, box, result = find_screen_text_position(self.device_id, "频再赚")
             if stats:
+                position = find_screen_by_result(result, "频再赚")
                 tap(self.device_id, (position[0] - 10, position[1] + 10))
                 self.ad()
+            position = find_screen_by_result(result, "立赚高额")
+            if position:
+                tap(self.device_id, self.coin_box_ad_shut)
         else:
             print_help_text(self.device_id, "当前无宝箱可看")
 
@@ -281,7 +295,7 @@ class UGCLiteOpt:
             print_help_text(self.device_id, "开始看视频", self.current_step)
             self.watch_video()
         # 看爆款
-        if first_status and watch_baokuan:
+        if watch_baokuan:
             self.current_step = self.app_name_chinese + '(看爆款)'
             print_help_text(self.device_id, "开始刷爆款", self.current_step)
             self.watch_baokuan()
@@ -310,11 +324,11 @@ class UGCLiteOpt:
 
 
 if __name__ == "__main__":
-    # ugc_lite_obj = UGCLiteOpt("192.168.31.228:5555")
-    # ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=False, watch_ad=True,
-    #                       watch_coin_box=True)
-    # print(ugc_lite_obj.get_coin_num())
-    device_id = '192.168.31.228:5555'
-    position = (520, 1318)
-    for i in range(4):
-        tap(device_id, position)
+    ugc_lite_obj = UGCLiteOpt("192.168.101.104:5555")
+    ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=False, watch_ad=False,
+                          watch_coin_box=True)
+    print(ugc_lite_obj.get_coin_num())
+    # device_id = '192.168.31.228:5555'
+    # position = (520, 1318)
+    # for i in range(4):
+    #     tap(device_id, position)

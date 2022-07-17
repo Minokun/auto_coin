@@ -39,8 +39,12 @@ class UGCOpt:
             status, position = find_screen_text_button_position(self.device_id, "跳过", "跳过")
             if status:
                 tap(self.device_id, position)
-        status, position = find_screen_text_button_position(self.device_id, "拒绝", "拒绝")
+        status, box, result = find_screen_text_position(self.device_id, "拒绝")
         if status:
+            position = find_screen_by_result(result, "拒绝")
+            tap(self.device_id, position)
+        position = find_screen_by_result(result, "我知道了")
+        if position:
             tap(self.device_id, position)
 
     def shut_app(self):
@@ -91,6 +95,7 @@ class UGCOpt:
 
     # 返回首页再进入任务页面
     def back_main_coin(self):
+        coin_button_stats = False
         # 点击底部菜单金币按钮 最多10次
         for i in range(10):
             print_help_text(self.device_id, "回到首页")
@@ -111,8 +116,10 @@ class UGCOpt:
                 print_help_text(self.device_id, "点击赚金币")
                 stats, position = find_screen_text_button_position(self.device_id, "赚金币", "赚金币")
                 if stats:
+                    coin_button_stats = True
                     tap(self.device_id, position)
-                break
+                else:
+                    return False
             else:
                 press_back(self.device_id)
                 stats, position = find_screen_text_button_position(self.device_id, "坚持退出", "坚持退出")
@@ -123,6 +130,7 @@ class UGCOpt:
                 time.sleep(1)
                 self.start_ugc_app()
                 break
+        return coin_button_stats
 
     # 上滑到最顶部
     def back_top(self):
@@ -156,8 +164,6 @@ class UGCOpt:
         stats, position = find_screen_text_button_position(self.device_id, "开心收下", "开心收下")
         if stats:
             tap(self.device_id, position)
-
-
 
     # 刷广告
     def watch_ad(self):
@@ -206,14 +212,15 @@ class UGCOpt:
         if watch_video:
             print_help_text(self.device_id, "开始看视频")
             self.watch_video()
-        # 看广告
-        if watch_ad:
-            print_help_text(self.device_id, "开始看广告")
-            self.watch_ad()
-        # 看宝箱
-        if watch_coin_box:
-            print_help_text(self.device_id, "刷宝箱")
-            self.coin_box()
+        if self.back_main_coin():
+            # 看广告
+            if watch_ad:
+                print_help_text(self.device_id, "开始看广告")
+                self.watch_ad()
+            # 看宝箱
+            if watch_coin_box:
+                print_help_text(self.device_id, "刷宝箱")
+                self.coin_box()
         # 获取当前收益
         coin_end, cash_end = self.get_coin_num()
         self.coin_current = coin_end - coin_start

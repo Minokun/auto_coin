@@ -55,6 +55,14 @@ class KuaiShouOpt:
             if status:
                 tap(self.device_id, position)
         self.rm_front_window()
+        stats, box, result = find_screen_text_position(self.device_id, "我知道了")
+        position = find_screen_by_result(result, "我知道了")
+        if position:
+            tap(self.device_id, position)
+        position = find_screen_by_result(result, "点击翻倍")
+        if position:
+            tap(self.device_id, position)
+
 
     def shut_app(self):
         shut_app(self.device_id, self.app_name)
@@ -68,7 +76,12 @@ class KuaiShouOpt:
         status, position = find_screen_text_button_position(self.device_id, "立即签到", "立即签到")
         if status:
             tap(self.device_id, position)
+            time.sleep(0.5)
+            tap(self.device_id, position)
+            self.ad()
+            press_back(self.device_id)
             # 再点击去赚钱
+            tap(self.device_id, self.main_position)
         self.rm_ad()
         time.sleep(1)
         self.back_top()
@@ -86,7 +99,12 @@ class KuaiShouOpt:
                 if n == 1:
                     coin = float(line[1][0])
                 elif n == 2:
-                    cash = float(line[1][0])
+                    str_index = line[1][0].find("领现金")
+                    if str_index >= 0:
+                        cash_str = line[1][0][:str_index]
+                    else:
+                        cash_str = line[1][0]
+                    cash = float(cash_str)
                 else:
                     break
         print_help_text(self.device_id, "当前金币：%s 当前现金：%s" % (str(coin), str(cash)))

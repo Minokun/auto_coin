@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+import time
 
 from utils.phone_opt import *
 import re
@@ -69,6 +70,11 @@ class DragonReadOpt:
             if status:
                 print_help_text(self.device_id, "进入金币页面")
                 tap(self.device_id, self.main_coin_position)
+                time.sleep(1.5)
+                stats, position = find_screen_text_button_position(self.device_id, "立即签到", '立即签到')
+                if stats:
+                    tap(self.device_id, position)
+                    self.ad()
                 break
             else:
                 press_back(self.device_id)

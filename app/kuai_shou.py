@@ -16,7 +16,7 @@ class KSOpt:
         # 首页
         self.main_position = (100, int(2330 * self.height_scale))
         # 红包图标
-        self.task_position = (130, int(490 * self.height_scale))
+        self.task_position = (130, int(330 * self.height_scale))
         # 关闭广告的按键
         self.ad_shut = (980, int(150 * self.height_scale))
         # 看广告中间的继续按钮
@@ -134,6 +134,9 @@ class KSOpt:
                 time.sleep(1)
                 tap(self.device_id, self.ad_end)
             stats, box, result = find_screen_text_position(self.device_id, "再看一")
+            position = find_screen_by_result(result, "首页")
+            if position:
+                break
             if stats:
                 position =find_screen_by_result(result, "再看一")
                 print_help_text(self.device_id, "再看一个")
@@ -217,7 +220,12 @@ class KSOpt:
             print_help_text(self.device_id, "立即签到")
             tap(self.device_id, position)
             time.sleep(2)
-            return True
+        # position = find_screen_by_result(result, "看视频赚")
+        # if position:
+        #     print_help_text(self.device_id, "看视频赚钱")
+        #     tap(self.device_id, position)
+        #     self.ad()
+        #     return True
 
     # 刷宝箱
     def coin_box(self):

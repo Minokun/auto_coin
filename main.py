@@ -43,19 +43,19 @@ def run(device_id, first_status=False):
             ugc_obj.auto_run(light_screen_stats=False)
             ugc_lite_obj.auto_run(first_status=first_status, light_screen_stats=False, watch_video=True, watch_baokuan=True,
                                   watch_coin_box=True, watch_ad=True)
-            dragon_read.auto_run(light_screen_stats=False)
             wk_browser.auto_run()
+            dragon_read.auto_run(light_screen_stats=False)
         else:
-            ks.auto_run()
-            ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=True, watch_baokuan=False, watch_coin_box=True,
-                                  watch_ad=True, shopping=True)
-            ugc_obj.auto_run(light_screen_stats=False, watch_video=True)
             article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=True,
                                       watch_small_video=True,
-                                      watch_coin_box=True, watch_ad=True, watch_goods=False)
+                                      watch_coin_box=True, watch_ad=True, watch_goods=True)
+            ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=True, watch_baokuan=True, watch_coin_box=True,
+                                  watch_ad=True, shopping=True)
+            ugc_obj.auto_run(light_screen_stats=False, watch_video=True)
+            ks.auto_run()
             kuai_shou.auto_run(light_screen_stats=False, watch_ad=True, watch_coin_box=True)
-            dragon_read.auto_run(light_screen_stats=False)
             wk_browser.auto_run()
+            dragon_read.auto_run(light_screen_stats=False)
         total_end_num += 1
         # 计算运行时间
         end_time = datetime.now()
@@ -63,7 +63,8 @@ def run(device_id, first_status=False):
         run_time_minutes = math.ceil(run_time / 60)
         run_time_rest_seconds = run_time % 60
         runtime_text = str(run_time_minutes) + "分" + str(run_time_rest_seconds) + "秒"
-        income_df = pd.DataFrame([(ugc_obj.coin_current, ugc_obj.cash_current, ugc_obj.coin_today, round(ugc_obj.coin_today / 10000, 2), ugc_obj.cash_total),
+        income_df = pd.DataFrame([
+            (ugc_obj.coin_current, ugc_obj.cash_current, ugc_obj.coin_today, round(ugc_obj.coin_today / 10000, 2), ugc_obj.cash_total),
                                   (ugc_lite_obj.coin_current, ugc_lite_obj.cash_current, ugc_lite_obj.coin_today, round(ugc_lite_obj.coin_today / 10000, 2), ugc_lite_obj.cash_total),
                                   (article_lite_opt.coin_current, article_lite_opt.cash_current, article_lite_opt.coin_today, round(article_lite_opt.coin_today / 33000, 2), article_lite_opt.cash_total),
                                   (kuai_shou.coin_current, kuai_shou.cash_current, kuai_shou.coin_today, round(kuai_shou.coin_today / 10000, 2), kuai_shou.cash_total),
@@ -97,6 +98,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # unclock_all_devices()
     # ks_obj = UGCOpt("192.168.101.101:5555")
     # ks_obj.auto_run(light_screen_stats=False, watch_video=True, watch_ad=True, watch_coin_box=True, shopping=True)
     # print(ks_obj.get_coin_num())

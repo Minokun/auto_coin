@@ -28,7 +28,7 @@ app_package_name = {
     "ugc_lite": "com.ss.android.ugc.aweme.lite",
     "article_lite": "com.ss.android.article.lite",
     "kuaishou": "com.kuaishou.nebula",
-    # "dragon_read": "com.dragon.read",
+    "dragon_read": "com.dragon.read",
     "wk_browser": "com.cat.readall",
     "kuai_shou": "com.smile.gifmaker"
 }
@@ -47,19 +47,20 @@ device_passwd = {
     "wxk": "910729",
     "fl": "191729",
     "cpc": "2325",
-    "cpc2": "123456"
+    "cpc2": "123456",
+    "jkd": "1234"
 }
 
 device_user = {
     "wxk": ["192.168.101.101:5555", "192.168.31.124:5555", "QKXUT20329000108", "10.147.20.14:5555"],
     "fl": ["192.168.101.100:5555", "94P0220C01001100"],
     "cpc": ["192.168.101.103:5555", "192.168.31.213:5555", "10.147.20.251:5555"],
-    "cpc2": ["192.168.101.104:5555", "192.168.31.228:5555", "P7CDU18C07001773", "10.147.20.113:5555"]
+    "cpc2": ["192.168.101.104:5555", "192.168.31.228:5555", "P7CDU18C07001773", "10.147.20.113:5555"],
+    "jkd": ["192.168.101.106:5555"]
 }
 
-online_id_list = ["192.168.101.100:5555", "192.168.101.101:5555", "192.168.101.103:5555", "192.168.101.104:5555"]
-offline_id_list = ["192.168.31.12:5555", "192.168.31.236:5555", "192.168.101.10:5555"]
-# offline_id_list = []
+online_id_list = ["192.168.101.100:5555", "192.168.101.101:5555", "192.168.101.103:5555", "192.168.101.104:5555", "192.168.101.106:5555"]
+offline_id_list = ["192.168.31.12:5555", "192.168.101.10:5555", "192.168.101.10:5555"]
 device_id_list = list(set(online_id_list) - set(offline_id_list))
 
 
@@ -264,7 +265,7 @@ def find_screen_text_button_position(device_id, text, button_text, top_normal_bo
         for line in result:
             # 如果找到了该位置
             if line[1][0].find(button_text) >= 0 and line[0][0][1] >= (y_ad - 80) and line[0][0][1] <= (y_ad + 80):
-                x, y = int((line[0][0][0] + line[0][1][0]) / 2), int((line[0][0][1] + line[0][1][1]) / 2)
+                x, y = int((line[0][0][0] + line[0][1][0]) / 2 - 10), int((line[0][0][1] + line[0][1][1]) / 2 - 10)
                 return True, (x, y)
     return False, ()
 
@@ -303,22 +304,22 @@ def swipe(device_id, position_start, position_end, time_period=150):
 
 # 上滑 短程
 def up_short_swipe(device_id):
-    swipe(device_id, (80, 1800), (80, 1400))
+    swipe(device_id, (280, 1800), (280, 1400))
 
 
 # 长上滑
 def up_long_swipe(device_id):
-    swipe(device_id, (80, 1800), (80, 620), 650)
+    swipe(device_id, (280, 1800), (280, 620), 550)
 
 
 # 下滑 短程
 def down_short_swipe(device_id):
-    swipe(device_id, (80, 1600), (80, 1800))
+    swipe(device_id, (280, 1600), (280, 1800))
 
 
 # 长下滑
 def down_long_swipe(device_id):
-    swipe(device_id, (80, 620), (80, 1800), 550)
+    swipe(device_id, (280, 620), (280, 1800), 550)
 
 
 # 启动app
