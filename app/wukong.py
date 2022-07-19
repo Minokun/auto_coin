@@ -19,7 +19,7 @@ class WuKongOpt:
         # 猴子金币按钮
         self.monkey_button = ()
         # 点击弹出的中间看广告按钮坐标
-        self.ads_position = (550, int(1500 * self.height_scale))
+        self.ads_position = (480, int(1440 * self.height_scale))
         # 当前金币和现金收益
         self.coin_current = 0.0
         self.cash_current = 0.0
@@ -77,15 +77,12 @@ class WuKongOpt:
             print_help_text(self.device_id, "领取金币")
             tap(self.device_id, position)
             time.sleep(1)
-            stats, position = find_screen_text_button_position(self.device_id, "看视频再领", "看视频再领")
-            if stats:
-                tap(self.device_id, position)
-            else:
-                tap(self.device_id, self.ads_position)
+            tap(self.device_id, self.ads_position)
             self.ad()
         while True:
             stats, position = find_screen_text_button_position(self.device_id, "看视频", "看视频")
             if stats:
+                print_help_text(self.device_id, "看视频")
                 tap(self.device_id, position)
                 self.ad()
             else:
@@ -98,6 +95,7 @@ class WuKongOpt:
         tap(self.device_id, self.coin_button)
         time.sleep(1)
         self.rm_ad()
+        tap(self.device_id, self.coin_button)
         self.back_top()
         coin = self.coin_current
         cash = self.cash_current
@@ -107,21 +105,21 @@ class WuKongOpt:
             if line[1][0].find('我的金币') >= 0:
                 y_top_limit = line[0][2][1]
                 break
-        crash_stats = False
+        cash_stats = False
         coin_stats = False
         for line in result:
             if line[0][0][1] > y_top_limit:
                 if line[1][0].find('.') >= 0:
-                    g = re.findall(r'^.*?([\d]+\.[\d]+)元$', line[1][0])
+                    g = re.findall(r'^.*?万.*?([\d]+\.[\d]+)元$', line[1][0])
                     if len(g) > 0:
-                        crash = g[0]
-                        crash_stats = True
+                        cash = g[0]
+                        cash_stats = True
 
                 g = re.findall(r'^([\d]+)$', line[1][0])
                 if len(g) > 0:
                     coin = g[0]
                     coin_stats = True
-            if crash_stats and coin_stats:
+            if cash_stats and coin_stats:
                 break
         print_help_text(self.device_id, "当前金币：%s 当前现金：%s" % (str(coin), str(cash)))
         return float(coin), float(cash)
@@ -286,4 +284,4 @@ class WuKongOpt:
 
 if __name__ == "__main__":
     wukong_obj = WuKongOpt("192.168.31.124:5555")
-    wukong_obj.auto_run(light_screen_stats=True)
+    wukong_obj.get_coin_num()
