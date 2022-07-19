@@ -41,6 +41,14 @@ class DragonReadOpt:
 
     def get_coin_num(self):
         self.back_main_coin()
+        stats, box, result = find_screen_text_position(self.device_id, "立即签到")
+        if stats:
+            print_help_text(self.device_id, "签到")
+            position = find_screen_by_result(result, "立即签到")
+            tap(self.device_id, position)
+            time.sleep(0.5)
+            tap(self.device_id, position)
+            self.ad()
         self.back_top()
         stats, box, result = find_screen_text_position(self.device_id, "金币收益")
         if not stats:
@@ -119,9 +127,14 @@ class DragonReadOpt:
         self.back_top()
         for i in range(4):
             print_help_text(self.device_id, "找看广告的按钮")
-            status, position = find_screen_text_button_position(self.device_id, "立即观看", "立即观看")
-            if status:
+            status, box, result = find_screen_text_position(self.device_id, "立即观看")
+            position_1 = find_screen_by_result(result, "立即观看")
+            position_2 = find_screen_by_result(result, "去观看")
+            position = position_1 if position_1 else position_2
+            if position:
                 tap(self.device_id, position)
+                time.sleep(0.5)
+                tap(self.device_id, )
                 self.ad()
                 break
             up_long_swipe(self.device_id)
