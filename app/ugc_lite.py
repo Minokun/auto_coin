@@ -46,6 +46,9 @@ class UGCLiteOpt:
         position = find_screen_by_result(result, "我知道")
         if position:
             tap(self.device_id, position)
+        position = find_screen_by_result(result, "继续观看")
+        if position:
+            tap(self.device_id, position)
 
     def shut_app(self):
         shut_app(self.device_id, self.app_name)

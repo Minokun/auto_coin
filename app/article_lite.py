@@ -121,8 +121,17 @@ class ArticleLiteOpt:
     # 看广告
     def watch_ad(self):
         status = False
+        n = 0
         while not status:
             time.sleep(20)
+            stats, position = find_screen_text_button_position(self.device_id, "个视频领")
+            if position:
+                up_long_swipe(self.device_id)
+                n += 1
+                if n == 3:
+                    tap(self.device_id, self.ads_shut)
+                else:
+                    continue
             stats, box, result = find_screen_text_position(self.device_id, "继续观看")
             if stats:
                 position = find_screen_by_result(result, '继续观看')

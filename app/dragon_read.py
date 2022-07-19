@@ -134,7 +134,7 @@ class DragonReadOpt:
             if position:
                 tap(self.device_id, position)
                 time.sleep(0.5)
-                tap(self.device_id, )
+                tap(self.device_id, position)
                 self.ad()
                 break
             up_long_swipe(self.device_id)
