@@ -65,9 +65,10 @@ class ArticleLiteOpt:
         print_help_text(self.device_id, "获取当前收益")
         # 点击任务
         tap(self.device_id, self.coin_task_position)
-        time.sleep(1.5)
+        time.sleep(2)
         status, position = find_screen_text_button_position(self.device_id, "翻倍领取", "翻倍领取")
         if status:
+            print_help_text(self.device_id, "翻倍签到领取")
             tap(self.device_id, position)
             self.watch_ad()
         self.back_top()
