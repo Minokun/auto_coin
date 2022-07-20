@@ -51,10 +51,10 @@ def run(device_id, first_status=False):
                                       watch_coin_box=True, watch_ad=True, watch_goods=True)
             ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=True, watch_baokuan=True, watch_coin_box=True,
                                   watch_ad=True, shopping=True)
-            ugc_obj.auto_run(light_screen_stats=False, watch_video=True)
-            ks.auto_run()
+            ugc_obj.auto_run(light_screen_stats=False, watch_video=False)
+            ks.auto_run(watch_video=True)
             kuai_shou.auto_run(light_screen_stats=False, watch_ad=True, watch_coin_box=True)
-            wk_browser.auto_run()
+            wk_browser.auto_run(watch_small_video=False)
             dragon_read.auto_run(light_screen_stats=False)
         total_end_num += 1
         # 计算运行时间

@@ -93,7 +93,15 @@ class WuKongOpt:
         self.back_to_main()
         # 点击任务
         tap(self.device_id, self.coin_button)
-        time.sleep(1)
+        time.sleep(2)
+        # 签到
+        stats, position = find_screen_text_button_position(self.device_id, "立即签到", "立即签到")
+        if stats:
+            print_help_text(self.device_id, "签到")
+            tap(self.device_id, position)
+            time.sleep(0.5)
+            tap(self.device_id, position)
+            self.ad()
         self.rm_ad()
         tap(self.device_id, self.coin_button)
         self.back_top()

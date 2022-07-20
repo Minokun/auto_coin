@@ -46,20 +46,22 @@ class UGCLiteOpt:
         position = find_screen_by_result(result, "我知道")
         if position:
             tap(self.device_id, position)
-        position = find_screen_by_result(result, "继续观看")
+        position = find_screen_by_result(result, "继续看")
         if position:
+            print_help_text(self.device_id, "点击继续看")
             tap(self.device_id, position)
 
     def shut_app(self):
         shut_app(self.device_id, self.app_name)
 
     def get_coin_num(self):
-        print_help_text(self.device_id, "获取收益")
         # 获取当前金币数量
         self.back_main_coin()
+        print_help_text(self.device_id, "获取收益")
         time.sleep(2)
-        status, position = find_screen_text_button_position(self.device_id, "立即签到", "立即签到")
+        status, position = find_screen_text_button_position(self.device_id, "立即", "立即")
         if status:
+            print_help_text(self.device_id, "立即签到")
             tap(self.device_id, position)
             time.sleep(1)
             tap(self.device_id, position)
@@ -97,7 +99,11 @@ class UGCLiteOpt:
     def watch_video(self):
         self.back_main_coin()
         # 点击返回
-        press_back(self.device_id)
+        stats, position = find_screen_text_button_position(self.device_id, "推荐", "推荐", top_normal_bottom="top")
+        if stats:
+            tap(self.device_id, position)
+        else:
+            press_back(self.device_id)
         if self.device_id in TIMES[self.app_name]['watch_video_numbers'].keys():
             num = TIMES[self.app_name]['watch_video_numbers'][self.device_id]
         else:
@@ -116,6 +122,9 @@ class UGCLiteOpt:
             # 如果在首页就点击，没有就返回
             if status:
                 print_help_text(self.device_id, "进入金币页面")
+                stats, position = find_screen_text_button_position(self.device_id, "赚钱", "赚钱", top_normal_bottom="top")
+                if position:
+                    self.main_coin_position = position
                 tap(self.device_id, self.main_coin_position)
                 # stats, position = find_screen_text_button_position(self.device_id, "看广告视频再赚", "看广告视频再赚")
                 # if stats:
@@ -143,7 +152,7 @@ class UGCLiteOpt:
         while True:
             print_help_text(self.device_id, "看广告")
             # 点击看广告
-            time.sleep(30)
+            time.sleep(34)
             ad_status, position = find_screen_text_button_position(self.device_id, "反馈", "反馈")
             if ad_status:
                 print_help_text(self.device_id, "关闭广告")
