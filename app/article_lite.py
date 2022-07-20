@@ -66,8 +66,11 @@ class ArticleLiteOpt:
         # 点击任务
         tap(self.device_id, self.coin_task_position)
         time.sleep(2)
-        status, position = find_screen_text_button_position(self.device_id, "翻倍领取", "翻倍领取")
-        if status:
+        status, box, result = find_screen_text_position(self.device_id, "翻倍领取")
+        position_1 = find_screen_by_result(result, "翻倍领取")
+        position_2 = find_screen_by_result(result, "额外再领")
+        position = position_1 if position_1 else position_2
+        if position:
             print_help_text(self.device_id, "翻倍签到领取")
             tap(self.device_id, position)
             self.watch_ad()
