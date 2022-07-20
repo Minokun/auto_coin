@@ -127,8 +127,9 @@ class ArticleLiteOpt:
         n = 0
         while not status:
             time.sleep(20)
-            stats, position = find_screen_text_button_position(self.device_id, "个视频领")
+            stats, position = find_screen_text_button_position(self.device_id, "个视频", "个视频")
             if position:
+                print_help_text(self.device_id, "上滑广告")
                 up_long_swipe(self.device_id)
                 n += 1
                 if n == 3:

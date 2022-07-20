@@ -376,7 +376,7 @@ def check_install_package(devices_id, package_name):
     print(lines)
 
 if __name__ == "__main__":
-    device_id = "192.168.31.124:5555"
+    device_id = "192.168.101.106:5555"
     stats, box, result = find_screen_text_position(device_id, "视频再领")
     for line in result:
         print(line)
