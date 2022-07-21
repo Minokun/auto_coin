@@ -116,11 +116,12 @@ class UGCOpt:
                 else:
                     break
                 up_short_swipe(self.device_id)
-                print_help_text(self.device_id, "点击赚金币")
                 stats, position = find_screen_text_button_position(self.device_id, "赚金币", "赚金币")
                 if stats:
+                    print_help_text(self.device_id, "点击赚金币")
                     coin_button_stats = True
                     tap(self.device_id, position)
+                    return True
                 else:
                     return False
             else:
@@ -233,5 +234,5 @@ class UGCOpt:
 
 
 if __name__ == "__main__":
-    ugc_obj = UGCOpt("192.168.31.212:5555")
+    ugc_obj = UGCOpt("192.168.101.104:5555")
     ugc_obj.auto_run(light_screen_stats=False, watch_video=False, watch_ad=True, watch_coin_box=True)

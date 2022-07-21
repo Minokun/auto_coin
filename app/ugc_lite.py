@@ -59,7 +59,7 @@ class UGCLiteOpt:
         self.back_main_coin()
         print_help_text(self.device_id, "获取收益")
         time.sleep(2)
-        status, position = find_screen_text_button_position(self.device_id, "立即", "立即")
+        status, position = find_screen_text_button_position(self.device_id, "立即签到", "立即签到")
         if status:
             print_help_text(self.device_id, "立即签到")
             tap(self.device_id, position)

@@ -33,17 +33,16 @@ def run(device_id, first_status=False):
         ks = KSOpt(device_id)
         # 悟空浏览器
         wk_browser = WuKongOpt(device_id)
-        if first_status and i == 0:
-            # 每天第一次运行 需要做活跃和只有一次的任务
-            article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=True,
-                                      watch_small_video=True,
-                                      watch_coin_box=True, watch_ad=True, watch_goods=True)
-            kuai_shou.auto_run(light_screen_stats=False, shopping=True)
-            ks.auto_run()
-            ugc_obj.auto_run(light_screen_stats=False)
-            ugc_lite_obj.auto_run(first_status=first_status, light_screen_stats=False, watch_video=True, watch_baokuan=True,
-                                  watch_coin_box=True, watch_ad=True)
-            wk_browser.auto_run()
+        if first_status:
+            article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=False,
+                                      watch_small_video=False,
+                                      watch_coin_box=True, watch_ad=True, watch_goods=False)
+            ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=False, watch_coin_box=True,
+                                  watch_ad=True, shopping=False)
+            ugc_obj.auto_run(light_screen_stats=False, watch_video=False)
+            ks.auto_run(watch_video=False)
+            kuai_shou.auto_run(light_screen_stats=False, watch_video=False, watch_ad=True, watch_coin_box=True)
+            wk_browser.auto_run(watch_small_video=False)
             dragon_read.auto_run(light_screen_stats=False)
         else:
             article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=True,
@@ -51,7 +50,7 @@ def run(device_id, first_status=False):
                                       watch_coin_box=True, watch_ad=True, watch_goods=True)
             ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=True, watch_baokuan=True, watch_coin_box=True,
                                   watch_ad=True, shopping=True)
-            ugc_obj.auto_run(light_screen_stats=False, watch_video=False)
+            ugc_obj.auto_run(light_screen_stats=False, watch_video=True)
             ks.auto_run(watch_video=True)
             kuai_shou.auto_run(light_screen_stats=False, watch_ad=True, watch_coin_box=True)
             wk_browser.auto_run(watch_small_video=False)
@@ -87,7 +86,7 @@ def main():
     max_workers = len(CurrentDeviceList)
     executor = ThreadPoolExecutor(max_workers=max_workers)
     all_task = []
-    first_status = False
+    first_status = True
     for i in CurrentDeviceList:
         all_task.append(
             executor.submit(run, *(i, first_status))
