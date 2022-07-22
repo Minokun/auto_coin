@@ -19,8 +19,8 @@ class JQ():
         print_help_text(self.device_id, "关闭广告")
         self.ad_shut = find_ad_shut(self.device_id)
         tap(self.device_id, self.ad_shut)
-        self.ad_shut = find_ad_shut(self.device_id)
-        tap(self.device_id, self.ad_shut)
+        # self.ad_shut = find_ad_shut(self.device_id)
+        # tap(self.device_id, self.ad_shut)
         stats, position = find_screen_text_button_position(self.device_id, "开心收下", "开心收下")
         if stats:
             tap(self.device_id, position)
