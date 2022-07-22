@@ -151,7 +151,8 @@ class KuaiShouOpt:
             print_help_text(self.device_id, "开始看广告")
             time.sleep(27)
             tap(self.device_id, self.ad_end)
-            stats, position = find_screen_text_button_position(self.device_id, "去完成", "去完成")
+            time.sleep(1)
+            stats, position = find_screen_text_button_position(self.device_id, "完成", "完成")
             if stats:
                 tap(self.device_id, position)
                 time.sleep(1)

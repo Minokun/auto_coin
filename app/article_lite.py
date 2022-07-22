@@ -45,13 +45,7 @@ class ArticleLiteOpt:
         status, position = find_screen_text_button_position(self.device_id, "我知道", "我知道")
         if status:
             tap(self.device_id, position)
-        status, box, result = find_screen_text_position(self.device_id, "翻倍领取")
-        if status:
-            position = find_screen_by_result(result, "翻倍领取")
-            tap(self.device_id, position)
-        position = find_screen_by_result(result, "额外领取")
-        if position:
-            tap(self.device_id, position)
+        status, box, result = find_screen_text_position(self.device_id, "继续阅读")
         position = find_screen_by_result(result, "继续阅读")
         if position:
             tap(self.device_id, position)
@@ -66,6 +60,7 @@ class ArticleLiteOpt:
         # 点击任务
         tap(self.device_id, self.coin_task_position)
         time.sleep(2)
+        print_help_text(self.device_id, "查看是否有签到")
         status, box, result = find_screen_text_position(self.device_id, "翻倍领取")
         position_1 = find_screen_by_result(result, "翻倍领取")
         position_2 = find_screen_by_result(result, "额外再领")
