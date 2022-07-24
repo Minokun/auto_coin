@@ -86,7 +86,7 @@ def main():
     max_workers = len(CurrentDeviceList)
     executor = ThreadPoolExecutor(max_workers=max_workers)
     all_task = []
-    first_status = False
+    first_status = True
     for i in CurrentDeviceList:
         all_task.append(
             executor.submit(run, *(i, first_status))

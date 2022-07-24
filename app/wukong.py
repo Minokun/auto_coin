@@ -47,7 +47,7 @@ class WuKongOpt:
 
     def back_to_main(self):
         for i in range(6):
-            print_help_text(self.device_id, "回到首页")
+            # print_help_text(self.device_id, "回到首页")
             status, position = find_screen_text_button_position(self.device_id, "首页", "首页", top_normal_bottom='bottom')
             # 如果有就退出
             if status:
@@ -64,6 +64,7 @@ class WuKongOpt:
 
     def rm_ad(self):
         print_help_text(self.device_id, "去掉蒙层")
+        time.sleep(0.5)
         stats, position = find_screen_text_button_position(self.device_id, "立即领取", "立即领取")
         if stats:
             tap(self.device_id, position)

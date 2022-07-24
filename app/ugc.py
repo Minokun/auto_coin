@@ -1,6 +1,8 @@
 # -*- coding:utf-8 -*-
 
 import math
+import time
+
 from config import TIMES
 
 from utils.phone_opt import *
@@ -33,6 +35,7 @@ class UGCOpt:
 
     def start_ugc_app(self):
         start_app(self.device_id, self.app_name)
+        time.sleep(2)
         # 启动后识别屏幕顶部 如果有跳过广告 则点击
         jump_ad = False
         if jump_ad:
@@ -101,7 +104,7 @@ class UGCOpt:
         coin_button_stats = False
         # 点击底部菜单金币按钮 最多10次
         for i in range(10):
-            print_help_text(self.device_id, "回到首页")
+            # print_help_text(self.device_id, "回到首页")
             main_status, _, result = find_screen_text_position(self.device_id, "首页", top_normal_bottom='bottom')
             # 如果在首页就点击，没有就返回
             if main_status:
@@ -123,6 +126,7 @@ class UGCOpt:
                     tap(self.device_id, position)
                     return True
                 else:
+                    print_help_text(self.device_id, "没有红包任务")
                     return False
             else:
                 press_back(self.device_id)

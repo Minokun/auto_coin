@@ -117,7 +117,7 @@ class UGCLiteOpt:
     def back_main_coin(self):
         # 点击底部菜单金币按钮 最多10次
         for i in range(10):
-            print_help_text(self.device_id, "回到首页")
+            # print_help_text(self.device_id, "回到首页")
             status, _, _ = find_screen_text_position(self.device_id, "推荐", top_normal_bottom='top')
             # 如果在首页就点击，没有就返回
             if status:

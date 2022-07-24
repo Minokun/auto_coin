@@ -41,6 +41,7 @@ class DragonReadOpt:
 
     def get_coin_num(self):
         self.back_main_coin()
+        time.sleep(3)
         stats, box, result = find_screen_text_position(self.device_id, "立即签到")
         if stats:
             print_help_text(self.device_id, "签到")
@@ -72,7 +73,7 @@ class DragonReadOpt:
     def back_main_coin(self):
         # 点击底部菜单金币按钮 最多10次
         for i in range(10):
-            print_help_text(self.device_id, "回到首页")
+            # print_help_text(self.device_id, "回到首页")
             status, _, _ = find_screen_text_position(self.device_id, "书架", top_normal_bottom='bottom')
             # 如果在首页就点击，没有就返回
             if status:

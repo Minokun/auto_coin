@@ -100,7 +100,7 @@ class KSOpt:
         # 点击底部菜单金币按钮 最多10次
         for i in range(10):
             self.rm_ad()
-            print_help_text(self.device_id, "回到首页")
+            # print_help_text(self.device_id, "回到首页")
             stats, positon = find_screen_text_button_position(self.device_id, "首页", "首页", top_normal_bottom="bottom")
             if stats:
                 break
