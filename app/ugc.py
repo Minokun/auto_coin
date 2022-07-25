@@ -55,6 +55,7 @@ class UGCOpt:
 
     def get_coin_num(self):
         self.back_main_coin()
+        time.sleep(5)
         status, box, result = find_screen_text_position(self.device_id, "去领取")
         position_1 = find_screen_by_result(result, "去领取")
         position_2 = find_screen_by_result(result, "签到")

@@ -58,7 +58,7 @@ class UGCLiteOpt:
         # 获取当前金币数量
         self.back_main_coin()
         print_help_text(self.device_id, "获取收益")
-        time.sleep(2)
+        time.sleep(5)
         status, position = find_screen_text_button_position(self.device_id, "立即签到", "立即签到")
         if status:
             print_help_text(self.device_id, "立即签到")

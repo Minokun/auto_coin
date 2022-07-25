@@ -55,7 +55,7 @@ class KSOpt:
         self.back_main_coin()
         # 点击去赚钱
         tap(self.device_id, self.task_position)
-        time.sleep(1)
+        time.sleep(5)
         self.rm_ad()
         time.sleep(1)
         self.back_top()

@@ -41,7 +41,7 @@ class DragonReadOpt:
 
     def get_coin_num(self):
         self.back_main_coin()
-        time.sleep(3)
+        time.sleep(5)
         stats, box, result = find_screen_text_position(self.device_id, "立即签到")
         if stats:
             print_help_text(self.device_id, "签到")
