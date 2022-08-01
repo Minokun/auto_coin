@@ -38,7 +38,7 @@ class UGCLiteOpt:
             status, position = find_screen_text_button_position(self.device_id, "跳过", "跳过")
             if status:
                 tap(self.device_id, position)
-        time.sleep(1)
+        time.sleep(3)
         stats, box, result = find_screen_text_position(self.device_id, "我知道")
         position = find_screen_by_result(result, "拒绝")
         if position:
@@ -64,6 +64,7 @@ class UGCLiteOpt:
             print_help_text(self.device_id, "立即签到")
             tap(self.device_id, position)
             time.sleep(1)
+            tap(self.device_id, position)
             tap(self.device_id, position)
             self.ad()
         self.back_top()

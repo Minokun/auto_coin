@@ -37,23 +37,23 @@ def run(device_id, first_status=False):
             article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=False,
                                       watch_small_video=False,
                                       watch_coin_box=True, watch_ad=True, watch_goods=False)
+            wk_browser.auto_run(watch_small_video=False)
             ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=False, watch_baokuan=False, watch_coin_box=True,
                                   watch_ad=True, shopping=False)
             ugc_obj.auto_run(light_screen_stats=False, watch_video=False)
             ks.auto_run(watch_video=False)
             kuai_shou.auto_run(light_screen_stats=False, watch_video=False, watch_ad=True, watch_coin_box=True)
-            wk_browser.auto_run(watch_small_video=False)
             dragon_read.auto_run(light_screen_stats=False)
         else:
             article_lite_opt.auto_run(first_status=first_status, light_screen_stats=False, read_article=True,
                                       watch_small_video=True,
                                       watch_coin_box=True, watch_ad=True, watch_goods=True)
+            wk_browser.auto_run(watch_small_video=False)
             ugc_lite_obj.auto_run(light_screen_stats=False, watch_video=True, watch_baokuan=True, watch_coin_box=True,
                                   watch_ad=True, shopping=True)
             ugc_obj.auto_run(light_screen_stats=False, watch_video=True)
             ks.auto_run(watch_video=True)
             kuai_shou.auto_run(light_screen_stats=False, watch_ad=True, watch_coin_box=True)
-            wk_browser.auto_run(watch_small_video=False)
             dragon_read.auto_run(light_screen_stats=False)
         total_end_num += 1
         # 计算运行时间
@@ -86,7 +86,7 @@ def main():
     max_workers = len(CurrentDeviceList)
     executor = ThreadPoolExecutor(max_workers=max_workers)
     all_task = []
-    first_status = False
+    first_status = True
     for i in CurrentDeviceList:
         all_task.append(
             executor.submit(run, *(i, first_status))

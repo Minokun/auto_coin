@@ -60,6 +60,8 @@ class ArticleLiteOpt:
         # 点击任务
         tap(self.device_id, self.coin_task_position)
         time.sleep(2)
+        tap(self.device_id, self.coin_task_position)
+        time.sleep(2)
         print_help_text(self.device_id, "查看是否有签到")
         time.sleep(3)
         status, box, result = find_screen_text_position(self.device_id, "翻倍领取")

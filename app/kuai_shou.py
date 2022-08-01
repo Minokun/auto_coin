@@ -33,7 +33,7 @@ class KSOpt:
 
     def start_kuaishou_app(self):
         start_app(self.device_id, self.app_name)
-        time.sleep(2)
+        time.sleep(3)
         # 启动后识别屏幕顶部 如果有跳过广告 则点击
         jump_ad = False
         if jump_ad:
@@ -114,6 +114,8 @@ class KSOpt:
         stats, position = find_screen_text_button_position(self.device_id, "精选", "精选", top_normal_bottom="bottom")
         if stats:
             tap(self.device_id, position)
+            for i in range(3):
+                up_long_swipe(self.device_id)
         else:
             print_help_text(self.device_id, "快手app有问题")
 
@@ -213,13 +215,13 @@ class KSOpt:
         if position:
             print_help_text(self.device_id, "立即领取")
             tap(self.device_id, position)
-            time.sleep(2)
+            time.sleep(1)
             return True
         position = find_screen_by_result(result, "立即签到")
         if position:
             print_help_text(self.device_id, "立即签到")
             tap(self.device_id, position)
-            time.sleep(2)
+            time.sleep(1)
         # position = find_screen_by_result(result, "看视频赚")
         # if position:
         #     print_help_text(self.device_id, "看视频赚钱")

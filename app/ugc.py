@@ -35,7 +35,7 @@ class UGCOpt:
 
     def start_ugc_app(self):
         start_app(self.device_id, self.app_name)
-        time.sleep(2)
+        time.sleep(3)
         # 启动后识别屏幕顶部 如果有跳过广告 则点击
         jump_ad = False
         if jump_ad:
@@ -64,7 +64,10 @@ class UGCOpt:
             tap(self.device_id, position)
             time.sleep(1)
             tap(self.device_id, position)
-            self.watch_ad()
+            self.ad()
+            stats, position = find_screen_text_button_position(self.device_id, "开心收下", "开心收下")
+            if stats:
+                tap(self.device_id, position)
         self.back_top()
         stats, box, result = find_screen_text_position(self.device_id, "金币收益")
         if not stats:
@@ -120,10 +123,9 @@ class UGCOpt:
                 else:
                     break
                 up_short_swipe(self.device_id)
-                stats, position = find_screen_text_button_position(self.device_id, "赚金币", "赚金币")
+                stats, position = find_screen_text_button_position(self.device_id, "赚金币兑好礼", "赚金币兑好礼")
                 if stats:
                     print_help_text(self.device_id, "点击赚金币")
-                    coin_button_stats = True
                     tap(self.device_id, position)
                     return True
                 else:

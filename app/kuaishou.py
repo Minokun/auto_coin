@@ -46,7 +46,7 @@ class KuaiShouOpt:
 
     def start_kuaishou_app(self):
         start_app(self.device_id, self.app_name)
-        time.sleep(2)
+        time.sleep(3)
         # 启动后识别屏幕顶部 如果有跳过广告 则点击
         jump_ad = False
         if jump_ad:
@@ -104,7 +104,10 @@ class KuaiShouOpt:
                         cash_str = line[1][0][:str_index]
                     else:
                         cash_str = line[1][0]
-                    cash = float(cash_str)
+                    try:
+                        cash = float(cash_str)
+                    except Exception as e:
+                        cash = 0
                 else:
                     break
         print_help_text(self.device_id, "当前金币：%s 当前现金：%s" % (str(coin), str(cash)))
