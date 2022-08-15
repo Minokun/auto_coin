@@ -221,9 +221,11 @@ class WuKongOpt:
             tap(self.device_id, position)
             time.sleep(1)
             # 点击”看视频再领“ 开始看广告
-            tap(self.device_id, self.ads_position)
-            # 循环查看
-            self.ad()
+            stats, position = find_screen_text_button_position(self.device_id, "看视频再", "看视频再")
+            if stats:
+                tap(self.device_id, position)
+                # 循环查看
+                self.ad()
         else:
             print_help_text(self.device_id, "目前不能点击宝箱！")
 
