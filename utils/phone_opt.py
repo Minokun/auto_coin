@@ -61,7 +61,7 @@ device_user = {
 
 online_id_list = ["192.168.101.100:5555", "192.168.101.101:5555", "192.168.101.103:5555", "192.168.101.104:5555",
                   "192.168.101.106:5555"]
-offline_id_list = ["192.168.31.12:5555", "192.168.101.10:5555", "192.168.101.10:5555"]
+offline_id_list = ["192.168.31.12:5555", "192.168.101.101:5555", "192.168.101.100:5555"]
 
 device_id_list = list(set(online_id_list) - set(offline_id_list))
 
@@ -267,7 +267,7 @@ def find_screen_text_button_position(device_id, text, button_text, top_normal_bo
         for line in result:
             # 如果找到了该位置
             if line[1][0].find(button_text) >= 0 and line[0][0][1] >= (y_ad - 80) and line[0][0][1] <= (y_ad + 80):
-                x, y = int((line[0][0][0] + line[0][1][0]) / 2 - 10), int((line[0][0][1] + line[0][1][1]) / 2 - 10)
+                x, y = int((line[0][0][0] + line[0][1][0]) / 2 - 15), int((line[0][0][1] + line[0][1][1]) / 2 - 15)
                 return True, (x, y)
     return False, ()
 
