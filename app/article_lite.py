@@ -198,12 +198,7 @@ class ArticleLiteOpt:
     def browser_article(self, first_stats=False):
         self.back_to_main()
         # 浏览文章
-        if first_stats:
-            time_period = 800000
-        else:
-            time_period = 80000
-        per_time = 8000
-        num = math.ceil(time_period / per_time)
+        num = 20
         print_help_text(self.device_id, "将循环浏览%s次" % str(num))
         # 点击推荐
         tap(self.device_id, self.tuijian_menu_position)

@@ -65,28 +65,27 @@ class WuKongOpt:
     def rm_ad(self):
         print_help_text(self.device_id, "去掉蒙层")
         time.sleep(1)
-        # stats, position = find_screen_text_button_position(self.device_id, "看广告", "看广告")
-        # if stats:
-        #     tap(self.device_id, position)
-        #     self.ad()
+        stats, position = find_screen_text_button_position(self.device_id, "立即领取", "立即领取")
+        if stats:
+            tap(self.device_id, position)
+            tap(self.device_id, position)
+            self.ad()
         stats, position = find_screen_text_button_position(self.device_id, "领取金币", "领取金币")
         if stats:
             print_help_text(self.device_id, "领取金币")
             tap(self.device_id, position)
-            stats, position = find_screen_text_button_position(self.device_id, "看视频再领", "看视频再领")
-            if stats:
-                tap(self.device_id, position)
-                self.ad()
         while True:
             stats, position = find_screen_text_button_position(self.device_id, "看视频", "看视频")
             if stats:
-                print_help_text(self.device_id, "看视频")
+                print_help_text(self.device_id, "循环点击看视频")
                 tap(self.device_id, position)
                 time.sleep(0.5)
                 tap(self.device_id, self.ads_position)
                 self.ad()
             else:
                 break
+            # 点击任务
+            tap(self.device_id, self.coin_button)
             time.sleep(1)
 
     def get_coin_num(self):
