@@ -135,7 +135,7 @@ class WuKongOpt:
     def ad(self):
         status = False
         while not status:
-            time.sleep(18)
+            time.sleep(21)
             stats, box, result = find_screen_text_position(self.device_id, "继续观看")
             if stats:
                 position = find_screen_by_result(result, '继续观看')
