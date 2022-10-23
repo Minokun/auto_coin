@@ -65,11 +65,11 @@ class WuKongOpt:
     def rm_ad(self):
         print_help_text(self.device_id, "去掉蒙层")
         time.sleep(1)
-        stats, position = find_screen_text_button_position(self.device_id, "立即领取", "立即领取")
-        if stats:
-            tap(self.device_id, position)
-            tap(self.device_id, position)
-            self.ad()
+        # stats, position = find_screen_text_button_position(self.device_id, "立即领取", "立即领取")
+        # if stats:
+        #     tap(self.device_id, position)
+        #     tap(self.device_id, position)
+        #     self.ad()
         stats, position = find_screen_text_button_position(self.device_id, "领取金币", "领取金币")
         if stats:
             print_help_text(self.device_id, "领取金币")
